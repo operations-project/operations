@@ -52,36 +52,42 @@ class DevshopTaskCommands extends DrushCommands {
       throw new CommandFailedException(dt('No task found with that ID.'));
     }
 
-      if ($task->field_state->value == self::TASK_RUNNING) {
-        $this->logger()->warning(dt('Task already running: !summary [!link].', [
-          '!summary' => $task->getTitle(),
-          '!link' => $task->toUrl()->setAbsolute(true)->toString(),
-        ]));
-      }
-      elseif ($task->field_state->value == self::TASK_FAILURE) {
-        $this->logger()->error(dt('Task already failed: !summary [!link].', [
-          '!summary' => $task->getTitle(),
-          '!link' => $task->toUrl()->setAbsolute(true)->toString(),
-        ]));
-      }
-      elseif ($task->field_state->value == self::TASK_SUCCESS) {
-        $this->logger()->success(dt('Task already succeeded: !summary [!link].', [
-          '!summary' => $task->getTitle(),
-          '!link' => $task->toUrl()->setAbsolute(true)->toString(),
-        ]));
-      }
-      elseif ($task->field_state->value == self::TASK_QUEUED) {
-        $this->logger()->success(dt('Found Task: !summary [!link].', [
-          '!summary' => $task->getTitle(),
-          '!link' => $task->toUrl()->setAbsolute(true)->toString(),
-        ]));
+    if ($task->field_state->value == self::TASK_QUEUED || $options['force']) {
+      $this->logger()->success(dt('Found Task in state:!state [!summary](!link) !command', [
+        '!summary' => $task->getTitle(),
+        '!link' => $task->toUrl()->setAbsolute(true)->toString(),
+        '!command' => $task->field_command->value,
+        '!state' => $task->field_state->get(0)->getString(),
+      ]));
 
-        $this->taskRunExecute($task);
+      if ($options['force']) {
+        $this->logger()->warning(dt('The command is being run again because the "force" option was used.'));
       }
-      else {
-        # @TODO: (maybe?) Print constant names too.
-        throw new CommandFailedException(dt('Task field_state value is not found in DevShopTaskCommands. Possible states are: 0,1,2,3'));
-      }
+
+      $this->taskRunExecute($task);
+    }
+    elseif ($task->field_state->value == self::TASK_RUNNING) {
+      $this->logger()->warning(dt('Task already running: !summary [!link].', [
+        '!summary' => $task->getTitle(),
+        '!link' => $task->toUrl()->setAbsolute(true)->toString(),
+      ]));
+    }
+    elseif ($task->field_state->value == self::TASK_FAILURE) {
+      $this->logger()->warning(dt('Task already failed: !summary [!link].', [
+        '!summary' => $task->getTitle(),
+        '!link' => $task->toUrl()->setAbsolute(true)->toString(),
+      ]));
+    }
+    elseif ($task->field_state->value == self::TASK_SUCCESS) {
+      $this->logger()->warning(dt('Task already succeeded: !summary [!link].', [
+        '!summary' => $task->getTitle(),
+        '!link' => $task->toUrl()->setAbsolute(true)->toString(),
+      ]));
+    }
+    else {
+      # @TODO: (maybe?) Print constant names too.
+      throw new CommandFailedException(dt('Task field_state value is not found in DevShopTaskCommands. Possible states are: 0,1,2,3'));
+    }
   }
 
   private function taskRunExecute(Node $task) {
