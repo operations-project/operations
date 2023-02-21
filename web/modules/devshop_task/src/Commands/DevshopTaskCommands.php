@@ -84,7 +84,12 @@ class DevshopTaskCommands extends DrushCommands {
     }
   }
 
-  private function taskRunExecute($task) {
+  private function taskRunExecute(Node $task) {
+
+    $task->set('field_state', self::TASK_RUNNING);
+    $task->setNewRevision();
+    $task->save();
+
     $args = explode(' ', $task->field_command->value);
     $process = Drush::process($args);
 
@@ -92,8 +97,14 @@ class DevshopTaskCommands extends DrushCommands {
       $process->mustRun(function ($type, $buffer) {
         echo $buffer;
       });
+      $task->set('field_state', self::TASK_SUCCESS);
+      $task->setNewRevision();
+      $task->save();
     }
     catch (ProcessFailedException $exception) {
+      $task->set('field_state', self::TASK_FAILURE);
+      $task->setNewRevision();
+      $task->save();
       throw $exception;
     }
   }
