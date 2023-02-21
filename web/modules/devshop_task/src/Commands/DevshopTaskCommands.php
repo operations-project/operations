@@ -5,7 +5,10 @@ namespace Drupal\devshop_task\Commands;
 use Consolidation\OutputFormatters\StructuredData\RowsOfFields;
 use Drupal\node\Entity\Node;
 use Drush\Commands\DrushCommands;
+use Drush\Drush;
 use Drush\Exceptions\CommandFailedException;
+use Symfony\Component\Process\Exception\ProcessFailedException;
+use Symfony\Component\Process\Process;
 
 /**
  * A Drush commandfile.
@@ -68,6 +71,8 @@ class DevshopTaskCommands extends DrushCommands {
           '!summary' => $task->getTitle(),
           '!link' => $task->toUrl()->setAbsolute(true)->toString(),
         ]));
+
+        $this->taskRunExecute($task);
       }
       else {
         # @TODO: (maybe?) Print constant names too.
@@ -76,6 +81,20 @@ class DevshopTaskCommands extends DrushCommands {
     }
     else {
       throw new CommandFailedException(dt('No task found with that ID.'));
+    }
+  }
+
+  private function taskRunExecute($task) {
+    $args = explode(' ', $task->field_command->value);
+    $process = Drush::process($args);
+
+    try {
+      $process->mustRun(function ($type, $buffer) {
+        echo $buffer;
+      });
+    }
+    catch (ProcessFailedException $exception) {
+      throw $exception;
     }
   }
 
