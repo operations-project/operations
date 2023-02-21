@@ -3,6 +3,7 @@
 namespace Drupal\devshop_task\Commands;
 
 use Consolidation\OutputFormatters\StructuredData\RowsOfFields;
+use Drupal\Core\Cache\Cache;
 use Drupal\node\Entity\Node;
 use Drush\Commands\DrushCommands;
 use Drush\Drush;
@@ -93,6 +94,7 @@ class DevshopTaskCommands extends DrushCommands {
   private function taskRunExecute(Node $task) {
 
     $task->set('field_state', self::TASK_RUNNING);
+    $task->set('field_output', '');
     $task->setNewRevision();
     $task->save();
 
@@ -102,8 +104,10 @@ class DevshopTaskCommands extends DrushCommands {
     $this->logger()->info(dt('Task starting. Updated state.'));
 
     try {
-      $process->mustRun(function ($type, $buffer) {
+      $process->mustRun(function ($type, $buffer) use ($task){
         echo $buffer;
+        $task->field_output->setValue($task->field_output->value . PHP_EOL . $buffer);
+        $task->save();
       });
       $task->set('field_state', self::TASK_SUCCESS);
       $task->setNewRevision();
