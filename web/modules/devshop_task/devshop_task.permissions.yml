@@ -1,0 +1,4 @@
+administer devshop_task configuration:
+  title: 'Administer devshop_task configuration'
+  description: 'Optional description.'
+  restrict access: true

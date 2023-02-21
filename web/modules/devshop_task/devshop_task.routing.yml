@@ -1,0 +1,7 @@
+devshop_task.settings_form:
+  path: '/admin/config/system/devshop-task'
+  defaults:
+    _title: 'DevShop Tasks settings'
+    _form: 'Drupal\devshop_task\Form\SettingsForm'
+  requirements:
+    _permission: 'administer devshop_task configuration'
