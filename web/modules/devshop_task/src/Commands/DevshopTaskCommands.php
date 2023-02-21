@@ -35,18 +35,22 @@ class DevshopTaskCommands extends DrushCommands {
    *   The ID of the task to run.
    * @param array $options
    *   An associative array of options whose values come from cli, aliases, config, etc.
-   * @option option-name
-   *   Description
+   * @option force
+   *   Force running the task again, regardless of exit state. (Not recommended. Will be replaced with "run-again".)
    * @usage task:run 123
    *   Enter the node ID of the task to run.
    *
    * @command task:run
    * @aliases t
    */
-  public function taskRun($id, $options = ['debug' => false]) {
+  public function taskRun($id, $options = [
+    'force' => false,
+  ]) {
 
     $task = Node::load($id);
-    if ($task) {
+    if (empty($task)) {
+      throw new CommandFailedException(dt('No task found with that ID.'));
+    }
 
       if ($task->field_state->value == self::TASK_RUNNING) {
         $this->logger()->warning(dt('Task already running: !summary [!link].', [
@@ -78,10 +82,6 @@ class DevshopTaskCommands extends DrushCommands {
         # @TODO: (maybe?) Print constant names too.
         throw new CommandFailedException(dt('Task field_state value is not found in DevShopTaskCommands. Possible states are: 0,1,2,3'));
       }
-    }
-    else {
-      throw new CommandFailedException(dt('No task found with that ID.'));
-    }
   }
 
   private function taskRunExecute(Node $task) {
