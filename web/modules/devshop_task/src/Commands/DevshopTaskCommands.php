@@ -93,6 +93,8 @@ class DevshopTaskCommands extends DrushCommands {
     $args = explode(' ', $task->field_command->value);
     $process = Drush::process($args);
 
+    $this->logger()->info(dt('Task starting. Updated state.'));
+
     try {
       $process->mustRun(function ($type, $buffer) {
         echo $buffer;
@@ -100,11 +102,13 @@ class DevshopTaskCommands extends DrushCommands {
       $task->set('field_state', self::TASK_SUCCESS);
       $task->setNewRevision();
       $task->save();
+      $this->logger()->info(dt('Task ended in Success. Updated state.'));
     }
     catch (ProcessFailedException $exception) {
       $task->set('field_state', self::TASK_FAILURE);
       $task->setNewRevision();
       $task->save();
+      $this->logger()->info(dt('Task ended in Failure. Updated state.'));
       throw $exception;
     }
   }
