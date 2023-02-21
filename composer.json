@@ -19,7 +19,8 @@
         "drupal/core-composer-scaffold": "^10.0",
         "drupal/core-project-message": "^10.0",
         "drupal/core-recommended": "^10.0",
-        "drush/drush": "^11.5"
+        "drush/drush": "^11.5",
+        "sensiolabs/ansi-to-html": "^1.2"
     },
     "conflict": {
         "drupal/drupal": "*"

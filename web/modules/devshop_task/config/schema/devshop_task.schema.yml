@@ -6,3 +6,11 @@ devshop_task.settings:
     example:
       type: string
       label: 'Example'
+
+#field.formatter.settings.devshop_task_ansi_output:
+#  type: mapping
+#  label: ANSI Output formatter settings
+#  mapping:
+#    theme:
+#      type: string
+#      label: Theme
