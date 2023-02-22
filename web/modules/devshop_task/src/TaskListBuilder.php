@@ -59,6 +59,8 @@ class TaskListBuilder extends EntityListBuilder {
       ->count()
       ->execute();
 
+
+
     $build['summary']['#markup'] = $this->t('Total tasks: @total', ['@total' => $total]);
     return $build;
   }

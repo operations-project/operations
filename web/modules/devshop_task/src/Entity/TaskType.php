@@ -65,4 +65,18 @@ class TaskType extends ConfigEntityBundleBase {
    */
   protected $label;
 
+  /**
+   * The command to run for tasks of this type.
+   *
+   * @var string
+   */
+  protected $command = '';
+
+  /**
+   * A description of this command.
+   *
+   * @var string
+   */
+  protected $description = '';
+
 }

@@ -36,4 +36,13 @@ class DevshopTaskType extends Plugin {
    */
   public $description;
 
+  /**
+   * The command to run for this plugin
+   *
+   * @var string
+   *
+   * @ingroup plugin_translatable
+   */
+  public $command;
+
 }
