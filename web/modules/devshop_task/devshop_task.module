@@ -4,3 +4,77 @@
  * @file
  * Primary module hooks for DevShop Tasks module.
  */
+
+use Drupal\Core\Render\Element;
+use Drupal\devshop_task\Entity\Task;
+use Drupal\user\UserInterface;
+
+/**
+ * Implements hook_theme().
+ */
+function devshop_task_theme() {
+  return [
+    'task' => [
+      'render element' => 'elements',
+    ],
+  ];
+}
+
+/**
+ * Prepares variables for task templates.
+ *
+ * Default template: task.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - elements: An associative array containing the task information and any
+ *     fields attached to the entity.
+ *   - attributes: HTML attributes for the containing element.
+ */
+function template_preprocess_task(array &$variables) {
+  $variables['view_mode'] = $variables['elements']['#view_mode'];
+  foreach (Element::children($variables['elements']) as $key) {
+    $variables['content'][$key] = $variables['elements'][$key];
+  }
+}
+
+/**
+ * Implements hook_user_cancel().
+ */
+function devshop_task_user_cancel($edit, UserInterface $account, $method) {
+  switch ($method) {
+    case 'user_cancel_reassign':
+      // Anonymize tasks.
+      $storage = \Drupal::entityTypeManager()->getStorage('task');
+      $task_ids = $storage->getQuery()
+        ->condition('uid', $account->id())
+        ->execute();
+      foreach ($storage->loadMultiple($task_ids) as $task) {
+        $task->setOwnerId(0);
+        $task->save();
+      }
+      break;
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_predelete() for user entities.
+ */
+function devshop_task_user_predelete(UserInterface $account) {
+  // Delete tasks.
+  $storage = \Drupal::entityTypeManager()->getStorage('task');
+  $task_ids = $storage->getQuery()
+    ->condition('uid', $account->id())
+    ->execute();
+  $tasks = $storage->loadMultiple($task_ids);
+  $storage->delete($tasks);
+}
+
+/**
+ * Implements hook_entity_bundle_info_alter().
+ */
+function devshop_task_entity_bundle_info_alter(array &$bundles): void {
+  if (isset($bundles['task']['drush'])) {
+    $bundles['task']['drush']['class'] = \Drupal\devshop_task\Entity\Bundle\DrushTaskType::class;
+  }
+}

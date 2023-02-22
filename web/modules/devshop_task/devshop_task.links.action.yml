@@ -1,0 +1,11 @@
+task.type_add:
+  title: 'Add task type'
+  route_name: entity.task_type.add_form
+  appears_on:
+    - entity.task_type.collection
+
+task.add_page:
+  title: 'Add task'
+  route_name: entity.task.add_page
+  appears_on:
+    - entity.task.collection
