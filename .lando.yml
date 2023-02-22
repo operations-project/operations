@@ -2,3 +2,10 @@ name: devshop
 recipe: drupal10
 config:
   webroot: web
+  build_as_root:
+    apt install fish
+
+tooling:
+  drush:
+    env:
+      DRUSH_OPTIONS_URI: devshop.lndo.site

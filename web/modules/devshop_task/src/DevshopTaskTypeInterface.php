@@ -15,4 +15,12 @@ interface DevshopTaskTypeInterface {
    */
   public function label();
 
+  /**
+   * Returns the command
+   *
+   * @return string
+   *   The command to run.
+   */
+  public function command();
+
 }

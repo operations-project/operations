@@ -16,11 +16,4 @@ use Drupal\devshop_task\DevshopTaskTypePluginBase;
  */
 class Foo extends DevshopTaskTypePluginBase {
 
-  public function label(){
-   return "Foo Command";
-  }
-
-  public function command(){
-    return "echo bar";
-  }
 }

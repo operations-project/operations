@@ -39,7 +39,9 @@ class TaskTypeListBuilder extends ConfigEntityListBuilder {
    * {@inheritdoc}
    */
   public function buildHeader() {
-    $header['title'] = $this->t('Label');
+    $header['title'] = $this->t('Type');
+    $header['command'] = $this->t('Command');
+    $header['description'] = $this->t('Description');
 
     return $header + parent::buildHeader();
   }
@@ -48,10 +50,13 @@ class TaskTypeListBuilder extends ConfigEntityListBuilder {
    * {@inheritdoc}
    */
   public function buildRow(EntityInterface $entity) {
+    dsm($entity);
     $row['title'] = [
       'data' => $entity->label(),
       'class' => ['menu-label'],
     ];
+//    $row['command'] = $entity->command();
+//    $row['command'] = $entity->description();
 
     return $row + parent::buildRow($entity);
   }
