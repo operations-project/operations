@@ -1,0 +1,5 @@
+devshop_task.type_add:
+  route_name: entity.task_type.add_form
+  title: 'Add task type'
+  appears_on:
+    - entity.task_type.collection
