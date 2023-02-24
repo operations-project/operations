@@ -5,6 +5,7 @@ namespace Drupal\devshop_task\Form;
 use Drupal\Core\Entity\BundleEntityFormBase;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\devshop_task\Entity\TaskType;
 
 /**
  * Form handler for task type forms.
@@ -42,7 +43,29 @@ class TaskTypeForm extends BundleEntityFormBase {
       '#description' => $this->t('A unique machine-readable name for this task type. It must only contain lowercase letters, numbers, and underscores.'),
     ];
 
+    $form['command'] = [
+      '#type' => 'radios',
+      '#options' => $this->getTaskPluginOptions(),
+      '#title' => t('Command'),
+    ];
+
     return $this->protectBundleIdElement($form);
+  }
+
+  /**
+   * Generate an options list from all TaskType plugins.
+   * @return array
+   */
+  public function getTaskPluginOptions() {
+
+    $type = \Drupal::service('plugin.manager.devshop_task_type');
+    $plugin_definitions = $type->getDefinitions();
+
+    $options = [];
+    foreach ($plugin_definitions as $plugin_definition) {
+      $options[$plugin_definition['id']] = $plugin_definition['label']->render() . '<div class="description">' . $plugin_definition['description']->render() . '</div>';
+    }
+    return $options;
   }
 
   /**
