@@ -1,5 +1,5 @@
 services:
   devshop_task.commands:
-    class: \Drupal\devshop_task\Commands\DevshopTaskCommands
+    class: \Drupal\devshop_task\Commands\TaskCommands
     tags:
       - { name: drush.command }

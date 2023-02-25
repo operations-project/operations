@@ -22,7 +22,7 @@ use Symfony\Component\Process\Process;
  *   - http://cgit.drupalcode.org/devel/tree/src/Commands/DevelCommands.php
  *   - http://cgit.drupalcode.org/devel/tree/drush.services.yml
  */
-class DevshopTaskCommands extends DrushCommands {
+class TaskCommands extends DrushCommands {
 
   public const TASK_QUEUED = 3;
   public const TASK_RUNNING = 2;
