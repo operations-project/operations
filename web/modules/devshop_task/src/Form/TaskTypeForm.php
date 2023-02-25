@@ -18,7 +18,12 @@ class TaskTypeForm extends BundleEntityFormBase {
   public function form(array $form, FormStateInterface $form_state) {
     $form = parent::form($form, $form_state);
 
+    /**
+     * @var TaskType
+     */
     $entity_type = $this->entity;
+
+//    dsm($entity_type);
     if ($this->operation == 'edit') {
       $form['#title'] = $this->t('Edit %label task type', ['%label' => $entity_type->label()]);
     }
@@ -42,11 +47,10 @@ class TaskTypeForm extends BundleEntityFormBase {
       ],
       '#description' => $this->t('A unique machine-readable name for this task type. It must only contain lowercase letters, numbers, and underscores.'),
     ];
-
-    $form['command'] = [
-      '#type' => 'radios',
-      '#options' => $this->getTaskPluginOptions(),
-      '#title' => t('Command'),
+    $form['plugin'] = [
+      '#type' => 'textfield',
+      '#title' => t('Plugin'),
+      '#default_value' => $entity_type->plugin(),
     ];
 
     return $this->protectBundleIdElement($form);
@@ -57,14 +61,13 @@ class TaskTypeForm extends BundleEntityFormBase {
    * @return array
    */
   public function getTaskPluginOptions() {
-
-    $type = \Drupal::service('plugin.manager.devshop_task_type');
-    $plugin_definitions = $type->getDefinitions();
-
     $options = [];
-    foreach ($plugin_definitions as $plugin_definition) {
-      $options[$plugin_definition['id']] = $plugin_definition['label']->render() . '<div class="description">' . $plugin_definition['description']->render() . '</div>';
-    }
+//    $types = \Drupal::service('plugin.manager.tasks');
+//    $plugin_definitions = $types->getDefinitions();
+//dsm($types);
+//    foreach ($plugin_definitions as $plugin_definition) {
+//      $options[$plugin_definition['id']] = $plugin_definition['label']->render() . '<div class="description">' . $plugin_definition['description']->render() . '</div>';
+//    }
     return $options;
   }
 
@@ -86,6 +89,7 @@ class TaskTypeForm extends BundleEntityFormBase {
 
     $entity_type->set('id', trim($entity_type->id()));
     $entity_type->set('label', trim($entity_type->label()));
+    $entity_type->set('plugin', $form_state->getValue('plugin'));
 
     $status = $entity_type->save();
 

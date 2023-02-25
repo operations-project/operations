@@ -3,6 +3,8 @@
 namespace Drupal\devshop_task\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Field\BaseFieldDefinition;
 
 /**
  * Defines the Task type configuration entity.
@@ -46,6 +48,7 @@ use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
  *     "id",
  *     "label",
  *     "uuid",
+ *     "plugin",
  *   }
  * )
  */
@@ -66,17 +69,13 @@ class TaskType extends ConfigEntityBundleBase {
   protected $label;
 
   /**
-   * The command to run for tasks of this type.
+   * The plugin to run for tasks of this type.
    *
    * @var string
    */
-  protected $command = '';
+  protected $plugin = '';
 
-  /**
-   * A description of this command.
-   *
-   * @var string
-   */
-  protected $description = '';
-
+  public function plugin() {
+    return $this->plugin;
+  }
 }

@@ -13,28 +13,6 @@ use Drupal\Core\Url;use Drupal\devshop_task\Entity\TaskType;
  */
 class TaskTypeListBuilder extends ConfigEntityListBuilder {
 
-  function load(){
-
-    $entity_ids = $this->getEntityIds();
-    $entities = $this->storage->loadMultipleOverrideFree($entity_ids);
-
-    // Sort the entities using the entity class's sort() method.
-    // See \Drupal\Core\Config\Entity\ConfigEntityBase::sort().
-    uasort($entities, [$this->entityType->getClass(), 'sort']);
-
-    $type = \Drupal::service('plugin.manager.devshop_task_type');
-    $plugin_definitions = $type->getDefinitions();
-
-
-    $plugin_entities = [];
-    foreach ($plugin_definitions as $plugin_definition) {
-      $values = $plugin_definition;
-      $task_type_entity = new TaskType($values, 'task_type');
-      $plugin_entities[$plugin_definition['id']] = $task_type_entity;
-    }
-    return $entities + $plugin_entities;
-  }
-
   /**
    * {@inheritdoc}
    */
@@ -50,7 +28,6 @@ class TaskTypeListBuilder extends ConfigEntityListBuilder {
    * {@inheritdoc}
    */
   public function buildRow(EntityInterface $entity) {
-    dsm($entity);
     $row['title'] = [
       'data' => $entity->label(),
       'class' => ['menu-label'],

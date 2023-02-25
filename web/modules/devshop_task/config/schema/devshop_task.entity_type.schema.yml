@@ -10,3 +10,6 @@ devshop_task.task_type.*:
       label: 'Label'
     uuid:
       type: string
+    plugin:
+      type: string
+      label: 'Plugin'

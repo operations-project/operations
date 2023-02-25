@@ -58,7 +58,7 @@ use Drupal\user\EntityOwnerTrait;
  *   field_ui_base_route = "entity.task_type.edit_form",
  * )
  */
-class Task extends ContentEntityBase implements TaskInterface {
+class Task extends ContentEntityBase {
 
   use EntityChangedTrait;
   use EntityOwnerTrait;

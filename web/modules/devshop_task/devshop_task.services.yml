@@ -1,4 +1,0 @@
-services:
-  plugin.manager.devshop_task_type:
-    class: Drupal\devshop_task\DevshopTaskTypePluginManager
-    parent: default_plugin_manager
