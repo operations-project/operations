@@ -2,3 +2,8 @@ administer operations configuration:
   title: 'Administer operations configuration'
   description: 'Optional description.'
   restrict access: true
+
+administer operations:
+  title: 'Administer operations content'
+  description: 'Add update and remove sites tasks and servers'
+  restrict access: true

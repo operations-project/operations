@@ -1,6 +1,0 @@
-services:
-  operations.event_subscriber:
-    class: Drupal\operations\EventSubscriber\OperationsSubscriber
-    arguments: ['@messenger']
-    tags:
-      - { name: event_subscriber }

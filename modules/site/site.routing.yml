@@ -1,0 +1,15 @@
+site.example:
+  path: '/site/example'
+  defaults:
+    _title: 'Example'
+    _controller: '\Drupal\site\Controller\SiteController::build'
+  requirements:
+    _permission: 'access content'
+
+site.settings_form:
+  path: '/admin/operations/sites/settings'
+  defaults:
+    _title: 'Site Settings'
+    _form: 'Drupal\site\Form\SettingsForm'
+  requirements:
+    _permission: 'administer site module configuration'

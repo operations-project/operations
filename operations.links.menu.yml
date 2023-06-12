@@ -1,6 +1,14 @@
+
+operations.main:
+  title: Operations
+  description: 'Manage sites, servers & tasks.'
+  route_name: operations.main
+  weight: 8
+  parent: system.admin
+
 operations.settings_form:
   title: 'Operations'
   description: 'Configure Operations.'
   parent: system.admin_config_system
   route_name: operations.settings_form
-  weight: 10
+  weight: 1

@@ -1,0 +1,12 @@
+site.settings_form:
+  title: 'Operations: Sites'
+  description: 'Configure Site Operations.'
+  parent: system.admin_config_system
+  route_name: site.settings_form
+  weight: 10
+
+entity.site_type.collection:
+  title: 'Sites'
+  description: 'Manage Sites'
+  parent: operations.main
+  route_name: entity.site_type.collection

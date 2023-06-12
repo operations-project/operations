@@ -1,0 +1,84 @@
+<?php
+
+/**
+ * @file
+ * Primary module hooks for Site module.
+ */
+
+use Drupal\Core\Render\Element;
+use Drupal\site\Entity\Site;
+use Drupal\user\UserInterface;
+
+/**
+ * Implements hook_theme().
+ */
+function site_theme() {
+  return [
+    'site' => [
+      'render element' => 'elements',
+    ],
+  ];
+}
+
+/**
+ * Prepares variables for site templates.
+ *
+ * Default template: site.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - elements: An associative array containing the site information and any
+ *     fields attached to the entity.
+ *   - attributes: HTML attributes for the containing element.
+ */
+function template_preprocess_site(array &$variables) {
+  $variables['view_mode'] = $variables['elements']['#view_mode'];
+  foreach (Element::children($variables['elements']) as $key) {
+    $variables['content'][$key] = $variables['elements'][$key];
+  }
+}
+
+/**
+ * Implements hook_user_cancel().
+ */
+function site_user_cancel($edit, UserInterface $account, $method) {
+  switch ($method) {
+    case 'user_cancel_block_unpublish':
+      // Unpublish siteentities.
+      $storage = \Drupal::entityTypeManager()->getStorage('site');
+      $site_ids = $storage->getQuery()
+        ->condition('uid', $account->id())
+        ->condition('status', 1)
+        ->execute();
+      foreach ($storage->loadMultiple($site_ids) as $site) {
+        $site->set('status', FALSE);
+        $site->save();
+      }
+      break;
+
+    case 'user_cancel_reassign':
+      // Anonymize siteentities.
+      $storage = \Drupal::entityTypeManager()->getStorage('site');
+      $site_ids = $storage->getQuery()
+        ->condition('uid', $account->id())
+        ->execute();
+      foreach ($storage->loadMultiple($site_ids) as $site) {
+        $site->setOwnerId(0);
+        $site->save();
+      }
+      break;
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_predelete() for user entities.
+ */
+function site_user_predelete(UserInterface $account) {
+  // Delete siteentities.
+  $storage = \Drupal::entityTypeManager()->getStorage('site');
+  $site_ids = $storage->getQuery()
+    ->condition('uid', $account->id())
+    ->execute();
+  $sites = $storage->loadMultiple($site_ids);
+  $storage->delete($sites);
+}
