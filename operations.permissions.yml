@@ -1,0 +1,4 @@
+administer operations configuration:
+  title: 'Administer operations configuration'
+  description: 'Optional description.'
+  restrict access: true
