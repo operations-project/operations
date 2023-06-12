@@ -215,14 +215,9 @@ class SiteEntity extends ContentEntityBase implements SiteInterface {
     $fields['data'] = BaseFieldDefinition::create('map')
       ->setRevisionable(TRUE)
       ->setLabel(t('Report Data'))
-      ->setDescription(t('The raw report data.'))
-      ->setRequired(TRUE)
-      ->setDefaultValueCallback(static::class . '::getNewReportData')
+      ->setDescription(t('A map of arbitrary data about the site.'))
+      ->setRequired(FALSE)
       ->setDisplayConfigurable('view', TRUE)
-      ->setDisplayOptions('view', [
-        'label' => 'above',
-        'type' => 'site_audit_report_html',
-      ])
     ;
     return $fields;
   }
