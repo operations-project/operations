@@ -6,15 +6,15 @@ entity.site.edit_form:
   title: 'Edit'
   route_name: entity.site.edit_form
   base_route: entity.site.canonical
-#entity.site.delete_form:
-#  title: 'Delete'
-#  route_name: entity.site.delete_form
-#  base_route: entity.site.canonical
-#  weight: 10
+entity.site.delete_form:
+  title: 'Delete'
+  route_name: entity.site.delete_form
+  base_route: entity.site.canonical
+  weight: 10
 entity.site.collection:
   title: 'Sites'
   route_name: entity.site.collection
-  base_route: operations.admin
+  base_route: operations.main
   weight: 10
 entity.site_type.edit_form:
   title: 'Edit'
