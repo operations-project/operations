@@ -59,7 +59,7 @@ class SiteListBuilder extends EntityListBuilder {
       ->count()
       ->execute();
 
-    $build['summary']['#markup'] = $this->t('Total siteentities: @total', ['@total' => $total]);
+    $build['summary']['#markup'] = $this->t('Total sites: @total', ['@total' => $total]);
     return $build;
   }
 
