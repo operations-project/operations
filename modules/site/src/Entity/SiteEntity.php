@@ -122,6 +122,20 @@ class SiteEntity extends ContentEntityBase implements SiteInterface {
       ])
       ->setDisplayConfigurable('view', TRUE);
 
+    $fields['site_uri'] = BaseFieldDefinition::create('uri')
+      ->setRevisionable(TRUE)
+      ->setLabel(t('Site URI'))
+      ->setDescription(t('The URI of the site this report was generated for.'))
+      ->setRequired(TRUE)
+      ->setDefaultValueCallback(static::class . '::getDefaultUri')
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayOptions('view', [
+        'label' => 'above',
+        'type' => 'uri',
+      ])
+      ->setDisplayConfigurable('view', TRUE);
+    ;
+
     $fields['status'] = BaseFieldDefinition::create('boolean')
       ->setLabel(t('Status'))
       ->setDefaultValue(TRUE)
@@ -198,7 +212,29 @@ class SiteEntity extends ContentEntityBase implements SiteInterface {
       ->setLabel(t('Changed'))
       ->setDescription(t('The time that the site was last edited.'));
 
+    $fields['data'] = BaseFieldDefinition::create('map')
+      ->setRevisionable(TRUE)
+      ->setLabel(t('Report Data'))
+      ->setDescription(t('The raw report data.'))
+      ->setRequired(TRUE)
+      ->setDefaultValueCallback(static::class . '::getNewReportData')
+      ->setDisplayConfigurable('view', TRUE)
+      ->setDisplayOptions('view', [
+        'label' => 'above',
+        'type' => 'site_audit_report_html',
+      ])
+    ;
     return $fields;
+  }
+
+  /**
+   * Returns the default value for site audit report entity uri base field.
+   *
+   * @return string
+   *   The site's hostname.
+   */
+  public static function getDefaultUri() {
+    return \Drupal::request()->getSchemeAndHttpHost();
   }
 
   /**
