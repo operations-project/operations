@@ -82,7 +82,7 @@ class SiteListBuilder extends EntityListBuilder {
   public function buildRow(EntityInterface $entity) {
     /** @var \Drupal\site\SiteInterface $entity */
     $row['id'] = $entity->id();
-    $row['site_uri'] = $entity->site_uri->view();
+    $row['site_uri'] = $entity->site_uri->value;
     $row['status'] = $entity->get('status')->value ? $this->t('Enabled') : $this->t('Disabled');
     $row['uid']['data'] = [
       '#theme' => 'username',

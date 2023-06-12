@@ -47,8 +47,8 @@ use Drupal\user\EntityOwnerTrait;
  *     "id" = "id",
  *     "bundle" = "bundle",
  *     "site_uuid" = "site_uuid",
+ *     "site_uri" = "site_uri",
  *     "owner" = "uid",
- *     "uri" = "uri",
  *     "data" = "data",
  *   },
  *   links = {
@@ -57,6 +57,7 @@ use Drupal\user\EntityOwnerTrait;
  *     "add-page" = "/site/add",
  *     "canonical" = "/site/{site}",
  *     "edit-form" = "/site/{site}/settings",
+ *     "delete-form" = "/site/{site}/delete",
  *   },
  *   revision_metadata_keys = {
  *     "revision_user" = "revision_uid",
@@ -132,6 +133,9 @@ class SiteEntity extends ContentEntityBase implements SiteInterface {
       ->setDisplayOptions('view', [
         'label' => 'above',
         'type' => 'uri',
+      ])
+      ->setDisplayOptions('form', [
+        'type' => 'string_textfield',
       ])
       ->setDisplayConfigurable('view', TRUE);
     ;
