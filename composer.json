@@ -54,6 +54,7 @@
         "files": ["load.environment.php"]
     },
     "scripts": {
+        "drush": "drush",
         "pre-install-cmd": [
             "DrupalProject\\composer\\ScriptHandler::checkComposerVersion"
         ],
