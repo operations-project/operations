@@ -2,3 +2,4 @@ name: ox
 recipe: drupal9
 config:
   webroot: web
+  php: "8.1"
