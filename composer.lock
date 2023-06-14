@@ -1952,26 +1952,27 @@
         },
         {
             "name": "drupal/site_audit_server",
-            "version": "dev-4.x",
+            "version": "dev-4.0.x",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/site_audit_server.git",
-                "reference": "6c495d7db501794ee08c6eb352d3d7082d5fa72d"
+                "reference": "04e69e5b706a185a64fc5cf9fb622d9dc8ee4390"
             },
             "require": {
                 "drupal/core": "^9 || ^10",
                 "drupal/key_auth": "*",
                 "drupal/restui": "*",
-                "drupal/site_audit": "*"
+                "drupal/site_audit": "^4.0@dev",
+                "php": ">=5.6.0"
             },
             "type": "drupal-module",
             "extra": {
                 "branch-alias": {
-                    "dev-4.x": "4.x-dev"
+                    "dev-4.0.x": "4.0.x-dev"
                 },
                 "drupal": {
-                    "version": "4.0.0+2-dev",
-                    "datestamp": "1682626425",
+                    "version": "4.0.0+3-dev",
+                    "datestamp": "1683912143",
                     "security-coverage": {
                         "status": "not-covered",
                         "message": "Project has not opted into security advisory coverage!"
@@ -1985,10 +1986,11 @@
             "authors": [
                 {
                     "name": "Jon Pugh",
-                    "homepage": "https://www.drupal.org/user/17028"
+                    "homepage": "https://www.drupal.org/user/17028",
+                    "email": "jon@thinkdrop.net"
                 }
             ],
-            "description": "Provides an API endpoint to receive site audit reports.",
+            "description": "This extension provides a rest endpoint for receiving site audit entities.",
             "homepage": "https://www.drupal.org/project/site_audit_server",
             "support": {
                 "source": "https://git.drupalcode.org/project/site_audit_server"
