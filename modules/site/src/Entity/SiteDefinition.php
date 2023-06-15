@@ -5,6 +5,7 @@ namespace Drupal\site\Entity;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\site\SiteDefinitionInterface;
+use Drupal\site\Event\SiteGetState;
 
 /**
  * Defines the site definition entity type.
@@ -49,6 +50,38 @@ class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface
   use StringTranslationTrait;
 
   /**
+   * The site is not operating.
+   */
+  const SITE_ERROR = REQUIREMENT_ERROR;
+
+  /**
+   * The site is operating normally.
+   */
+  const SITE_OK = REQUIREMENT_OK;
+
+  /**
+   * The site is operating but with warnings.
+   */
+  const SITE_WARN = REQUIREMENT_WARNING;
+
+  /**
+   * The site is operating and has information to present.
+   */
+  const SITE_INFO = REQUIREMENT_INFO;
+
+  /**
+   * Human readable strings for state.
+   *
+   * @var string
+   */
+  protected $stateNames = [
+    self::SITE_OK => 'OK',
+    self::SITE_INFO => 'OK (info)',
+    self::SITE_WARN => 'Warning',
+    self::SITE_ERROR => 'Error',
+  ];
+
+  /**
    * The site definition ID.
    *
    * @var string
@@ -56,11 +89,25 @@ class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface
   protected $id;
 
   /**
-   * The site definition label.
+   * The site state: SITE_OK, SITE_WARN, SITE_ERROR
+   *
+   * @var int
+   */
+  protected int $state;
+
+  /**
+   * The site definition label. Defaults to the site's title.
    *
    * @var string
    */
-  protected $label;
+  protected string $label;
+
+  /**
+   * The site_definition description.
+   *
+   * @var string
+   */
+  protected string $description;
 
   /**
    * The site definition status.
@@ -70,18 +117,11 @@ class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface
   protected $status;
 
   /**
-   * The site_definition description.
-   *
-   * @var string
-   */
-  protected $description;
-
-  /**
    * A string representing the host provider of the site.
    * Loaded from DRUPAL_HOST if it exists.
    * @var string
    */
-  protected $host;
+  protected string $host;
 
   /**
    * Sets label from site title
@@ -96,6 +136,7 @@ class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface
     if ($this->isSelf()) {
       $this->label = \Drupal::config('system.site')->get('name');
       $this->host = getenv('DRUPAL_HOST') ?: 'unknown';
+      $this->determineState();
     }
   }
 
@@ -116,16 +157,39 @@ class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface
       ':label' => $this->label(),
       ':description' => $this->description,
       ':host' => $this->host,
+      ':state' => $this->getStateName(),
     ];
     return [
       'info' => [
         '#theme' => 'item_list',
         '#items' => [
+          $this->t("State: :state", $strings),
           $this->t("Title: :label", $strings),
           $this->t("Description: :description", $strings),
           $this->t("Host: :host", $strings),
         ]
       ]
     ];
+  }
+
+  /**
+   * @return int
+   */
+  public function determineState() {
+
+    // Dispatch event.
+    $event = new \Drupal\site\Event\SiteGetState($this);
+    $event_dispatcher = \Drupal::service('event_dispatcher');
+    $event_dispatcher->dispatch($event, SiteGetState::GET_STATE);
+
+    $this->state = $event->siteDefinition->get('state');
+
+  }
+
+  /**
+   * @return int
+   */
+  public function getStateName() {
+    return $this->stateNames[$this->state];
   }
 }

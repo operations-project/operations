@@ -86,9 +86,9 @@ function site_requirements($phase) {
   if ($phase == 'runtime') {
     $site_definition = \Drupal\site\Entity\SiteDefinition::load('self');
     $requirements['site_definition'] = [
-      'title' => t('Site Definition'),
+      'title' => t('Site Status'),
       'value' => $site_definition->view(),
-      'severity' => REQUIREMENT_INFO,
+      'severity' => $site_definition->get('state'),
     ];
   }
 
