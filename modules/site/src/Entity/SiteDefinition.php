@@ -74,19 +74,25 @@ class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface
   protected $description;
 
   /**
+   * Sets label from site title
    * {@inheritdoc}
    */
   public function __construct(array $values, $entity_type) {
-
-    // Load detectable properties if self.
-    if ($values['id'] == 'self') {
-
-      if (empty($values['label'])) {
-        $values['label'] = \Drupal::config('system.site')->get('name');
-      }
-
-    }
-
     parent::__construct($values, $entity_type);
+    $this->setDynamicProperties();
+  }
+
+  public function setDynamicProperties() {
+    if ($this->isSelf()) {
+      $this->label = \Drupal::config('system.site')->get('name');
+    }
+  }
+
+  /**
+   * Is this site definition for this site? Used for detectable fields.
+   * @return bool
+   */
+  public function isSelf() {
+    return $this->id == 'self';
   }
 }
