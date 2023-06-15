@@ -35,12 +35,15 @@ class SettingsForm extends ConfigFormBase {
         '#type' => 'fieldgroup',
         '#title' => $this->t('Site State'),
     ];
-    $form['site_state']['status_report_state'] = [
-      '#type' => 'checkbox',
-      '#title' => $this->t('Use <a href=":url">Status Report</a> to determine site state.', [
-          ':url' => '/admin/reports/status',
-      ]),
-      '#default_value' => $this->config('site.settings')->get('status_report_state'),
+    $form['site_state']['state_sources'] = [
+      '#type' => 'checkboxes',
+      '#title' => $this->t('Choose the factors that will affect site state.'),
+      '#options' => [
+          $this->t('Status Report <a href=":url">view</a>', [
+              ':url' => '/admin/reports/status',
+          ])
+      ],
+      '#default_value' => $this->config('site.settings')->get('state_sources'),
     ];
     return parent::buildForm($form, $form_state);
   }
@@ -57,7 +60,7 @@ class SettingsForm extends ConfigFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->config('site.settings')
-      ->set('status_report_state', $form_state->getValue('status_report_state'))
+      ->set('state_sources', $form_state->getValue('state_sources'))
       ->save();
     parent::submitForm($form, $form_state);
   }
