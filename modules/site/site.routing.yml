@@ -1,15 +1,16 @@
-site.example:
-  path: '/site/example'
-  defaults:
-    _title: 'Example'
-    _controller: '\Drupal\site\Controller\SiteController::build'
-  requirements:
-    _permission: 'access content'
 
-site.settings_form:
+operations.admin_operations_sites:
+  path: '/admin/operations/sites'
+  defaults:
+    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: 'Sites'
+  requirements:
+    _permission: 'administer operations'
+
+operations.admin_operations_sites_settings:
   path: '/admin/operations/sites/settings'
   defaults:
-    _title: 'Site Settings'
+    _title: 'Site Operations Settings'
     _form: 'Drupal\site\Form\SettingsForm'
   requirements:
-    _permission: 'administer site module configuration'
+    _permission: 'administer site operations configuration'

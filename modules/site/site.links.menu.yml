@@ -1,12 +1,33 @@
-site.settings_form:
-  title: 'Operations: Sites'
-  description: 'Configure Site Operations.'
-  parent: system.admin_config_system
-  route_name: site.settings_form
-  weight: 10
+# /admin/operations/sites
+operations.admin_operations_sites:
+  title: Sites
+  route_name: operations.admin_operations_sites
+  parent: operations.admin
+  description: 'Configure sites.'
+  weight: -20
 
+# /admin/operations/sites_types
 entity.site_type.collection:
-  title: 'Sites'
-  description: 'Manage Sites'
-  parent: operations.main
+  title: 'Site Types'
+  description: 'Manage Site Types'
+  parent: operations.admin_operations_sites
   route_name: entity.site_type.collection
+
+# /admin/operations/sites/list
+entity.site.collection:
+  title: 'Sites'
+  description: 'List all site entities.'
+  route_name: entity.site.collection
+  parent: operations.admin_operations_sites
+  position: left
+  weight: -20
+
+# /admin/operations/sites/settings
+operations.admin_operations_sites_settings:
+  title: 'Site Operations Settings'
+  description: 'Configure Site Operations.'
+  route_name: operations.admin_operations_sites_settings
+  parent: operations.admin_operations_sites
+  position: left
+  weight: -20
+

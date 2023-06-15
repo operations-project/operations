@@ -52,7 +52,7 @@ use Drupal\user\EntityOwnerTrait;
  *     "data" = "data",
  *   },
  *   links = {
- *     "collection" = "/admin/operations/sites",
+ *     "collection" = "/admin/operations/sites/list",
  *     "add-form" = "/site/add/{site_type}",
  *     "add-page" = "/site/add",
  *     "canonical" = "/site/{site}",
