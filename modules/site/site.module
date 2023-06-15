@@ -82,3 +82,15 @@ function site_user_predelete(UserInterface $account) {
   $sites = $storage->loadMultiple($site_ids);
   $storage->delete($sites);
 }
+
+/**
+ * Implements hook_preprocess for status_report_general_info page.
+ * @param $vars
+ * @return void
+ */
+function site_preprocess_status_report_general_info(&$vars) {
+  $site_definition = \Drupal\site\Entity\SiteDefinition::load('self');
+  $vars['drupal']['description'] = $site_definition->view();
+
+  $vars['drupal']['description']['#prefix'] = '<h5>' . t('Site Information') . '</h5>';
+}
