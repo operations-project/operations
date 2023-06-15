@@ -24,6 +24,11 @@ entity.site_type.collection:
   route_name: entity.site_type.collection
   base_route: operations.admin_operations_sites
 
+entity.site_definition.collection:
+  title: 'Site Definitions'
+  route_name: entity.site_definition.collection
+  base_route: operations.admin_operations_sites
+
 # Site Types UI
 
 entity.site_type.edit_form:

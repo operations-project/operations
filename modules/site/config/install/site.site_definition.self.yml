@@ -1,0 +1,10 @@
+id: self
+
+# If empty, label will be loaded from site title.
+# label: This Website.
+#
+# If empty, langcode will be loaded from site language.
+# langcode: en
+
+status: true
+dependencies: {  }

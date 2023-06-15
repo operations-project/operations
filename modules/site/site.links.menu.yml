@@ -28,3 +28,8 @@ operations.admin_operations_sites_settings:
   parent: operations.admin_operations_sites
   position: left
 
+entity.site_definition.overview:
+  title: Site Definitions
+  parent: system.admin_structure
+  description: 'List of site definitions.'
+  route_name: entity.site_definition.collection

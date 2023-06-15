@@ -6,3 +6,18 @@ site.settings:
     example:
       type: string
       label: 'Example'
+
+site.site_definition.*:
+  type: config_entity
+  label: Site Definition
+  mapping:
+    id:
+      type: string
+      label: ID
+    label:
+      type: label
+      label: Label
+    uuid:
+      type: string
+    description:
+      type: string

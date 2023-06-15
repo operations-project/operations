@@ -9,3 +9,10 @@ site.add_page:
   route_name: entity.site.add_page
   appears_on:
     - entity.site.collection
+
+# @TODO: Move to Operations Manager module.
+#entity.site_definition.add_form:
+#  route_name: 'entity.site_definition.add_form'
+#  title: 'Add site definition'
+#  appears_on:
+#    - entity.site_definition.collection
