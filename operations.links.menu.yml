@@ -1,14 +1,24 @@
 
-operations.main:
-  title: Operations
+operations.admin:
+  title: 'Operations'
   description: 'Manage sites, servers & tasks.'
-  route_name: operations.main
+  route_name: operations.admin
   weight: 8
   parent: system.admin
 
-operations.settings_form:
-  title: 'Operations'
-  description: 'Configure Operations.'
-  parent: system.admin_config_system
-  route_name: operations.settings_form
-  weight: 1
+operations.admin_operations_settings:
+  title: Settings
+  route_name: operations.admin_operations_settings
+  parent: operations.admin
+  description: 'Configure operations.'
+  weight: -20
+
+operations.admin_operations_settings_general:
+  title: 'General Settings'
+  description: 'Configure the Operations System.'
+  route_name: operations.admin_operations_settings_general
+  parent: operations.admin_operations_settings
+  position: left
+  weight: -20
+
+
