@@ -5,6 +5,7 @@ operations.admin_operations_sites:
   parent: operations.admin
   description: 'Configure sites.'
 
+# @todo: Move to Sites UI module.
 # /admin/operations/sites_types
 entity.site_type.collection:
   title: 'Site Types'
@@ -33,3 +34,11 @@ entity.site_definition.overview:
   parent: system.admin_structure
   description: 'List of site definitions.'
   route_name: entity.site_definition.collection
+
+# /admin/config/system/sites
+operations.admin_settings_sites:
+  title: 'Site State Settings'
+  description: "Configure how this site determines it's state."
+  route_name: operations.admin_operations_sites_settings
+  parent: system.admin_config_system
+  position: left
