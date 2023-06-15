@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bb270fd0a46bdd851e7a91ce024b4b9e",
+    "content-hash": "036638bc20606e4dda5e7ee26a92e48f",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -1911,6 +1911,51 @@
             "support": {
                 "source": "https://git.drupalcode.org/project/key_auth",
                 "issues": "https://www.drupal.org/project/issues/key_auth"
+            }
+        },
+        {
+            "name": "drupal/operations",
+            "version": "dev-1.0.x",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/operations.git",
+                "reference": "092898bfa777139a90ee879696fa788f38d0ac65"
+            },
+            "require": {
+                "drupal/core": "^9 || ^10"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "branch-alias": {
+                    "dev-1.0.x": "1.0.x-dev"
+                },
+                "drupal": {
+                    "version": "1.0.x-dev",
+                    "datestamp": "1686861224",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "Project has not opted into security advisory coverage!"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Jon Pugh",
+                    "homepage": "https://www.drupal.org/user/17028"
+                },
+                {
+                    "name": "matthand",
+                    "homepage": "https://www.drupal.org/user/171527"
+                }
+            ],
+            "description": "Provides tools for operating Drupal sites.",
+            "homepage": "https://www.drupal.org/project/operations",
+            "support": {
+                "source": "https://git.drupalcode.org/project/operations"
             }
         },
         {
@@ -11007,6 +11052,7 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
+        "drupal/operations": 20,
         "drupal/site_audit": 20,
         "drupal/site_audit_server": 20
     },
