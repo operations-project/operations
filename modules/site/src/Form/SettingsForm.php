@@ -39,9 +39,9 @@ class SettingsForm extends ConfigFormBase {
       '#type' => 'checkboxes',
       '#title' => $this->t('Choose the factors that will affect site state.'),
       '#options' => [
-          $this->t('Status Report <a href=":url">view</a>', [
-              ':url' => '/admin/reports/status',
-          ])
+        'system' => $this->t('Status Report <a href=":url">view</a>', [
+          ':url' => '/admin/reports/status',
+        ])
       ],
       '#default_value' => $this->config('site.settings')->get('state_sources'),
     ];

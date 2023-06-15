@@ -1,1 +1,2 @@
-state_sources: true
+state_sources:
+  - system
