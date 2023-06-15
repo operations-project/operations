@@ -77,6 +77,13 @@ class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface
   protected $description;
 
   /**
+   * A string representing the host provider of the site.
+   * Loaded from DRUPAL_HOST if it exists.
+   * @var string
+   */
+  protected $host;
+
+  /**
    * Sets label from site title
    * {@inheritdoc}
    */
@@ -88,6 +95,7 @@ class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface
   public function setDynamicProperties() {
     if ($this->isSelf()) {
       $this->label = \Drupal::config('system.site')->get('name');
+      $this->host = getenv('DRUPAL_HOST') ?: 'unknown';
     }
   }
 
@@ -107,6 +115,7 @@ class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface
     $strings = [
       ':label' => $this->label(),
       ':description' => $this->description,
+      ':host' => $this->host,
     ];
     return [
       'info' => [
@@ -114,6 +123,7 @@ class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface
         '#items' => [
           $this->t("Title: :label", $strings),
           $this->t("Description: :description", $strings),
+          $this->t("Host: :host", $strings),
         ]
       ]
     ];
