@@ -23,7 +23,7 @@ entity.site.collection:
 
 # /admin/operations/sites/settings
 operations.admin_operations_sites_settings:
-  title: 'Site State Settings'
+  title: 'Site Operations Settings'
   description: "Configure how this site determines it's state."
   route_name: operations.admin_operations_sites_settings
   parent: operations.admin_operations_sites
@@ -37,8 +37,8 @@ entity.site_definition.overview:
 
 # /admin/config/system/sites
 operations.admin_settings_sites:
-  title: 'Site State Settings'
-  description: "Configure how this site determines it's state."
+  title: 'Site Operations Settings'
+  description: "Configure how this site operates and determines it's state."
   route_name: operations.admin_operations_sites_settings
   parent: system.admin_config_system
   position: left
