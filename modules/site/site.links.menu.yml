@@ -4,7 +4,6 @@ operations.admin_operations_sites:
   route_name: operations.admin_operations_sites
   parent: operations.admin
   description: 'Configure sites.'
-  weight: -20
 
 # /admin/operations/sites_types
 entity.site_type.collection:
@@ -20,7 +19,6 @@ entity.site.collection:
   route_name: entity.site.collection
   parent: operations.admin_operations_sites
   position: left
-  weight: -20
 
 # /admin/operations/sites/settings
 operations.admin_operations_sites_settings:
@@ -29,5 +27,4 @@ operations.admin_operations_sites_settings:
   route_name: operations.admin_operations_sites_settings
   parent: operations.admin_operations_sites
   position: left
-  weight: -20
 

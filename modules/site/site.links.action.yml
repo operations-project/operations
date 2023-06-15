@@ -3,7 +3,6 @@ site.type_add:
   route_name: entity.site_type.add_form
   appears_on:
     - entity.site_type.collection
-    - entity.site.collection
 
 site.add_page:
   title: 'Add site'
