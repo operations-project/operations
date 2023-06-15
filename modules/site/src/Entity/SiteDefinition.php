@@ -52,22 +52,22 @@ class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface
   /**
    * The site is not operating.
    */
-  const SITE_ERROR = REQUIREMENT_ERROR;
+  const SITE_ERROR = 2;
 
   /**
    * The site is operating normally.
    */
-  const SITE_OK = REQUIREMENT_OK;
+  const SITE_OK = 0;
 
   /**
    * The site is operating but with warnings.
    */
-  const SITE_WARN = REQUIREMENT_WARNING;
+  const SITE_WARN = 1;
 
   /**
    * The site is operating and has information to present.
    */
-  const SITE_INFO = REQUIREMENT_INFO;
+  const SITE_INFO = -1;
 
   /**
    * Human readable strings for state.
