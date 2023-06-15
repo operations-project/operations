@@ -1,8 +1,8 @@
 id: self
 
-# SiteDefinition class sets label.
-# label: null
+label: A site's title. Will be automatically detected.
 description: A site definition representing this site.
+reason: A string explaining why a site is in a certain state.
 
 # If empty, langcode will be loaded from site language.
 langcode: en

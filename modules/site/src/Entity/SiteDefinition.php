@@ -96,6 +96,13 @@ class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface
   protected int $state;
 
   /**
+   * A string to describe the reason a site is in a certain state.
+   *
+   * @var string
+   */
+  protected string $reason;
+
+  /**
    * The site definition label. Defaults to the site's title.
    *
    * @var string
@@ -158,12 +165,14 @@ class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface
       ':description' => $this->description,
       ':host' => $this->host,
       ':state' => $this->getStateName(),
+      '@reason' => check_markup($this->reason),
     ];
     return [
       'info' => [
         '#theme' => 'item_list',
         '#items' => [
           $this->t("State: :state", $strings),
+          $this->t("Reason: @reason", $strings),
           $this->t("Title: :label", $strings),
           $this->t("Description: :description", $strings),
           $this->t("Host: :host", $strings),
@@ -184,6 +193,7 @@ class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface
 
     // Set state from event siteDefinition. If not set, assume site is ok.
     $this->state = $event->siteDefinition->get('state') ?? self::SITE_OK;
+    $this->reason = $event->siteDefinition->get('reason') ?? '';
 
   }
 

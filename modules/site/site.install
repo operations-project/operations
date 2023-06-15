@@ -94,5 +94,14 @@ function site_requirements($phase) {
 //    ];
 //  }
 
+  if ($phase == 'runtime') {
+    $value = mt_rand(0, 100);
+    $requirements['operations_status'] = [
+        'title' => t('Operations status'),
+        'value' => t('Operations value: @value', ['@value' => $value]),
+        'severity' => $value > 50 ? REQUIREMENT_INFO : REQUIREMENT_WARNING,
+    ];
+  }
+
   return $requirements;
 }

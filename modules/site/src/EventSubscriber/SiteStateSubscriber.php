@@ -2,6 +2,7 @@
 
 namespace Drupal\site\EventSubscriber;
 
+use Drupal\Core\Url;
 use Drupal\site\Entity\SiteDefinition;
 use Drupal\site\Event\SiteGetState;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -65,12 +66,36 @@ class SiteStateSubscriber implements EventSubscriberInterface {
       $worst_severity = REQUIREMENT_INFO;
       foreach ($requirements as $requirement) {
         if (isset($requirement['severity'])) {
+
+          if ($requirement['severity'] == REQUIREMENT_ERROR) {
+            $reasons[] = t('Status report ":requirement" returned an error: ":text". See :link.', [
+                ':requirement' => $requirement['title'],
+                ':text' => $requirement['value'],
+                ':link' => Url::fromRoute('system.status')
+                    ->setAbsolute(TRUE)
+                    ->toString(),
+            ])->render();
+          }
+          if ($requirement['severity'] == REQUIREMENT_WARNING) {
+            $reasons[] = t('Status report ":requirement" returned a warning: ":text". See :link.', [
+                ':requirement' => $requirement['title'],
+                ':text' => $requirement['value'],
+                ':link' => Url::fromRoute('system.status')
+                    ->setAbsolute(TRUE)
+                    ->toString(),
+            ])->render();
+            if (!empty($requirement['description'])) {
+              $reasons[] = $requirement['description'];
+            }
+          }
           if ($requirement['severity'] > $worst_severity) {
             $worst_severity = $requirement['severity'];
           }
         }
       }
+
       $event->siteDefinition->set('state', $worst_severity);
+      $event->siteDefinition->set('reason', implode(PHP_EOL, $reasons));
     }
   }
 }
