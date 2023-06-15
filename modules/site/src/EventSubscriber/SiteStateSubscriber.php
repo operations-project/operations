@@ -19,7 +19,7 @@ class SiteStateSubscriber implements EventSubscriberInterface {
    */
   public static function getSubscribedEvents() {
 
-    // If site.settings.status_report_state, load the report data and set the state.
+    // If site.settings.state_sources, load the report data and set the state.
       return [
           SiteGetState::GET_STATE => ['setStateFromSystemStatus'],
       ];
@@ -33,9 +33,9 @@ class SiteStateSubscriber implements EventSubscriberInterface {
    *   Response event.
    */
   public function setStateFromSystemStatus(SiteGetState $event) {
-    if (\Drupal::config('site.settings')->get('status_report_state')) {
+    if (\Drupal::config('site.settings')->get('state_sources')) {
 
-      // If site.settings.status_report_state, load the report data and set the state.
+      // If site.settings.state_sources, load the report data and set the state.
 
       // See system/system.admin.inc function system_status().
       // Load .install files.
