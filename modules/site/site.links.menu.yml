@@ -22,8 +22,8 @@ entity.site.collection:
 
 # /admin/operations/sites/settings
 operations.admin_operations_sites_settings:
-  title: 'Site Operations Settings'
-  description: 'Configure Site Operations.'
+  title: 'Site State Settings'
+  description: "Configure how this site determines it's state."
   route_name: operations.admin_operations_sites_settings
   parent: operations.admin_operations_sites
   position: left

@@ -10,7 +10,7 @@ operations.admin_operations_sites:
 operations.admin_operations_sites_settings:
   path: '/admin/operations/sites/settings'
   defaults:
-    _title: 'Site Operations Settings'
+    _title: 'Site State Settings'
     _form: 'Drupal\site\Form\SettingsForm'
   requirements:
     _permission: 'administer site operations configuration'
