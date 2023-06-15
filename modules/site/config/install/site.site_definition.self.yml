@@ -1,7 +1,7 @@
 id: self
 
 # SiteDefinition class sets label.
-label: null
+# label: null
 
 # If empty, langcode will be loaded from site language.
 langcode: en
