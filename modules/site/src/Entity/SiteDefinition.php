@@ -3,6 +3,7 @@
 namespace Drupal\site\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\site\SiteDefinitionInterface;
 
 /**
@@ -44,6 +45,8 @@ use Drupal\site\SiteDefinitionInterface;
  * )
  */
 class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface {
+
+  use StringTranslationTrait;
 
   /**
    * The site definition ID.
@@ -94,5 +97,25 @@ class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface
    */
   public function isSelf() {
     return $this->id == 'self';
+  }
+
+  /**
+   * Return a build array with a nice summary of the site.
+   * @return array[]
+   */
+  public function view() {
+    $strings = [
+      ':label' => $this->label(),
+      ':description' => $this->description,
+    ];
+    return [
+      'info' => [
+        '#theme' => 'item_list',
+        '#items' => [
+          $this->t("Title: :label", $strings),
+          $this->t("Description: :description", $strings),
+        ]
+      ]
+    ];
   }
 }
