@@ -7,7 +7,7 @@ use Drupal\Core\Entity\EntityChangedTrait;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
-use Drupal\site\SiteInterface;
+use Drupal\site\SiteEntityInterface;
 use Drupal\user\EntityOwnerTrait;
 
 /**
@@ -68,7 +68,7 @@ use Drupal\user\EntityOwnerTrait;
  *   field_ui_base_route = "entity.site_type.edit_form",
  * )
  */
-class SiteEntity extends ContentEntityBase implements SiteInterface {
+class SiteEntity extends ContentEntityBase implements SiteEntityInterface {
 
   use EntityChangedTrait;
   use EntityOwnerTrait;

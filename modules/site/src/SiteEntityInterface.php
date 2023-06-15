@@ -9,6 +9,6 @@ use Drupal\user\EntityOwnerInterface;
 /**
  * Provides an interface defining a site entity type.
  */
-interface SiteInterface extends ContentEntityInterface, EntityOwnerInterface, EntityChangedInterface {
+interface SiteEntityInterface extends ContentEntityInterface, EntityOwnerInterface, EntityChangedInterface {
 
 }
