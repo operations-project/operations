@@ -12,7 +12,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
 /**
  * Site event subscriber.
  */
-class SiteStateSubscriber implements EventSubscriberInterface {
+class SiteStateSubscriberExample implements EventSubscriberInterface {
 
   /**
    * {@inheritdoc}
@@ -24,12 +24,16 @@ class SiteStateSubscriber implements EventSubscriberInterface {
   }
 
   /**
-   * Site Get State handler
    *
-   * @param \Symfony\Component\HttpKernel\Event\RequestEvent $event
+   * Example method for determining site state.
+   *
+   * @param SiteGetState $event
    *   Response event.
    */
   public function setState(SiteGetState $event) {
-    $event->siteDefinition->set('state', SiteDefinition::SITE_WARN);
+
+    // Only set state if not SITE_OK.
+    // $event->siteDefinition->set('state', SiteDefinition::SITE_WARN);
+
   }
 }

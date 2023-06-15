@@ -182,7 +182,8 @@ class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface
     $event_dispatcher = \Drupal::service('event_dispatcher');
     $event_dispatcher->dispatch($event, SiteGetState::GET_STATE);
 
-    $this->state = $event->siteDefinition->get('state');
+    // Set state from event siteDefinition. If not set, assume site is ok.
+    $this->state = $event->siteDefinition->get('state') ?? self::SITE_OK;
 
   }
 

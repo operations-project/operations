@@ -1,5 +1,5 @@
 services:
   site.event_subscriber:
-    class: Drupal\site\EventSubscriber\SiteStateSubscriber
+    class: Drupal\site\EventSubscriber\SiteStateSubscriberExample
     tags:
       - { name: event_subscriber }
