@@ -64,6 +64,8 @@ class SiteStateSubscriber implements EventSubscriberInterface {
       $score_each = 100 / count($requirements_with_severity);
 
       $worst_severity = REQUIREMENT_INFO;
+      $reasons [] = $event->siteDefinition->get('reason');
+
       foreach ($requirements as $requirement) {
         if (isset($requirement['severity'])) {
 
