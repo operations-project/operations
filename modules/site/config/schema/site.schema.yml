@@ -3,9 +3,9 @@ site.settings:
   type: config_object
   label: 'Site settings'
   mapping:
-    example:
-      type: string
-      label: 'Example'
+    status_report_state:
+      type: bool
+      label: "Use the site's Status report to determine site state."
 
 site.site_definition.*:
   type: config_entity
