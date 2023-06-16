@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "38e3e592a3101c5e2829dd6ba0e173ba",
+    "content-hash": "036638bc20606e4dda5e7ee26a92e48f",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -1850,69 +1850,6 @@
                 "source": "https://gitlab.com/drupalspoons/devel",
                 "issues": "https://gitlab.com/drupalspoons/devel/-/issues",
                 "slack": "https://drupal.slack.com/archives/C012WAW1MH6"
-            }
-        },
-        {
-            "name": "drupal/entity_reports",
-            "version": "2.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://git.drupalcode.org/project/entity_reports.git",
-                "reference": "2.0.0"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/entity_reports-2.0.0.zip",
-                "reference": "2.0.0",
-                "shasum": "e6aecde9f237708c9d2dbd7f9b52b7276c075348"
-            },
-            "require": {
-                "drupal/core": "^9.4 || ^10.0"
-            },
-            "require-dev": {
-                "drupal/csv_serialization": "*"
-            },
-            "type": "drupal-module",
-            "extra": {
-                "drupal": {
-                    "version": "2.0.0",
-                    "datestamp": "1673188576",
-                    "security-coverage": {
-                        "status": "covered",
-                        "message": "Covered by Drupal's security advisory policy"
-                    }
-                }
-            },
-            "notification-url": "https://packages.drupal.org/8/downloads",
-            "license": [
-                "GPL-2.0-or-later"
-            ],
-            "authors": [
-                {
-                    "name": "cristiroma",
-                    "homepage": "https://www.drupal.org/user/2267390"
-                },
-                {
-                    "name": "michael_wojcik",
-                    "homepage": "https://www.drupal.org/user/3024393"
-                },
-                {
-                    "name": "stefan.butura",
-                    "homepage": "https://www.drupal.org/user/3535177"
-                },
-                {
-                    "name": "tavib47",
-                    "homepage": "https://www.drupal.org/user/3267166"
-                },
-                {
-                    "name": "VladimirAus",
-                    "homepage": "https://www.drupal.org/user/673120"
-                }
-            ],
-            "description": "Provides reports about the entity type structure of a Drupal installation such as node, terms, files, paragraphs, media and other entity types. Also downloadable as JSON, XML or CSV format for data processing.",
-            "homepage": "https://www.drupal.org/project/entity_reports",
-            "support": {
-                "source": "https://git.drupalcode.org/project/entity_reports"
             }
         },
         {
