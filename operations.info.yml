@@ -3,3 +3,4 @@ type: module
 description: Provides tools for operating Drupal sites.
 package: Operations
 core_version_requirement: ^9 || ^10
+

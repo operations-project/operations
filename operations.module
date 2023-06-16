@@ -4,3 +4,16 @@
  * @file
  * Primary module hooks for Operations module.
  */
+
+/**
+ * Implements hook_toolbar().
+ */
+function operations_toolbar() {
+  $build = [];
+  $build['operations']['#attached'] = [
+    'library' => [
+      'operations/operations',
+    ],
+  ];
+  return $build;
+}
