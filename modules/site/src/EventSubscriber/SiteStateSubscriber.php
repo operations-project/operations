@@ -70,25 +70,27 @@ class SiteStateSubscriber implements EventSubscriberInterface {
         if (isset($requirement['severity'])) {
 
           if ($requirement['severity'] == REQUIREMENT_ERROR) {
-            $reasons[] = t('Status report ":requirement" returned an error: ":text". See :link.', [
-                ':requirement' => $requirement['title'],
-                ':text' => $requirement['value'],
-                ':link' => Url::fromRoute('system.status')
-                    ->setAbsolute(TRUE)
-                    ->toString(),
+            $build = t('Status report "@title" returned an error. See @link. The message was: \n@text \n@description', [
+              '@title' => $requirement['title'],
+              '@text' => is_array($requirement['value'])? \Drupal::service('renderer')->render($requirement['value']) : $requirement['value'],
+              '@description' => (isset($requirement['description']) && is_array($requirement['description']))?
+                  \Drupal::service('renderer')->render($requirement['description']):
+                  ($requirement['description'] ?? ''),
+              '@link' => Url::fromRoute('system.status')
+                ->setAbsolute(TRUE)
+                ->toString()
             ])->render();
+            $reasons[] = $build;
           }
           if ($requirement['severity'] == REQUIREMENT_WARNING) {
-            $reasons[] = t('Status report ":requirement" returned a warning: ":text". See :link.', [
-                ':requirement' => $requirement['title'],
-                ':text' => $requirement['value'],
-                ':link' => Url::fromRoute('system.status')
-                    ->setAbsolute(TRUE)
-                    ->toString(),
+            $reasons[] = t('Status report "@title" returned a warning: See @link. The message was: \n@text \n@description', [
+              '@title' => $requirement['title'],
+              '@text' => $requirement['value'],
+              '@description' => $requirement['description'],
+              '@link' => Url::fromRoute('system.status')
+                ->setAbsolute(TRUE)
+                ->toString(),
             ])->render();
-            if (!empty($requirement['description'])) {
-              $reasons[] = $requirement['description'];
-            }
           }
           if ($requirement['severity'] > $worst_severity) {
             $worst_severity = $requirement['severity'];

@@ -6,19 +6,4 @@ operations.admin:
   weight: 8
   parent: system.admin
 
-operations.admin_operations_settings:
-  title: Settings
-  route_name: operations.admin_operations_settings
-  parent: operations.admin
-  description: 'Configure operations.'
-  weight: -20
-
-operations.admin_operations_settings_general:
-  title: 'General Settings'
-  description: 'Configure the Operations System.'
-  route_name: operations.admin_operations_settings_general
-  parent: operations.admin_operations_settings
-  position: left
-  weight: -20
-
 
