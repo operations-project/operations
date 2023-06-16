@@ -4,6 +4,7 @@ namespace Drupal\site\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
+use Drupal\Core\Serialization\Yaml;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\site\SiteDefinitionInterface;
 use Drupal\site\Event\SiteGetState;
@@ -66,12 +67,20 @@ class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface
   protected string $id;
 
   /**
+   * Configuration properties loaded from $configs_load
+   *
+   * @var string
+   */
+  protected array $config;
+
+  /**
    * Sets label from site title
    * {@inheritdoc}
    */
   public function __construct(array $values, $entity_type) {
     parent::__construct($values, $entity_type);
     $this->setDynamicProperties();
+    $this->setConfig();
   }
 
   public function setDynamicProperties() {
@@ -81,6 +90,15 @@ class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface
       $this->site_uri = \Drupal::request()->getSchemeAndHttpHost();
 
       $this->determineState();
+    }
+  }
+
+  public function setConfig() {
+    if (isset($this->configs_load)) {
+      foreach ($this->configs_load as $config_id) {
+        $config_id = trim($config_id);
+        $this->config[$config_id] = \Drupal::config($config_id)->get();
+      }
     }
   }
 
@@ -104,7 +122,7 @@ class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface
       ':state' => $this->stateName(),
       '@reason' => check_markup($this->reason),
     ];
-    return [
+    $build = [
       'info' => [
         '#theme' => 'item_list',
         '#items' => [
@@ -116,6 +134,21 @@ class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface
         ]
       ]
     ];
+
+    if (!empty($this->config)) {
+      $build['config'] = [
+        '#type' => 'details',
+        '#title' => t('Site Configuration'),
+      ];
+      foreach ($this->config as $config => $data) {
+        $build['config'][$config] = [
+          '#type' => 'item',
+          '#title' => $config,
+          '#markup' => '<pre>' . Yaml::encode($data) . '</pre>',
+        ];
+      }
+    }
+    return $build;
   }
 
   /**
