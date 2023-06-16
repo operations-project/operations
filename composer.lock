@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "036638bc20606e4dda5e7ee26a92e48f",
+    "content-hash": "38e3e592a3101c5e2829dd6ba0e173ba",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -1853,6 +1853,69 @@
             }
         },
         {
+            "name": "drupal/entity_reports",
+            "version": "2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/entity_reports.git",
+                "reference": "2.0.0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/entity_reports-2.0.0.zip",
+                "reference": "2.0.0",
+                "shasum": "e6aecde9f237708c9d2dbd7f9b52b7276c075348"
+            },
+            "require": {
+                "drupal/core": "^9.4 || ^10.0"
+            },
+            "require-dev": {
+                "drupal/csv_serialization": "*"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "2.0.0",
+                    "datestamp": "1673188576",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "cristiroma",
+                    "homepage": "https://www.drupal.org/user/2267390"
+                },
+                {
+                    "name": "michael_wojcik",
+                    "homepage": "https://www.drupal.org/user/3024393"
+                },
+                {
+                    "name": "stefan.butura",
+                    "homepage": "https://www.drupal.org/user/3535177"
+                },
+                {
+                    "name": "tavib47",
+                    "homepage": "https://www.drupal.org/user/3267166"
+                },
+                {
+                    "name": "VladimirAus",
+                    "homepage": "https://www.drupal.org/user/673120"
+                }
+            ],
+            "description": "Provides reports about the entity type structure of a Drupal installation such as node, terms, files, paragraphs, media and other entity types. Also downloadable as JSON, XML or CSV format for data processing.",
+            "homepage": "https://www.drupal.org/project/entity_reports",
+            "support": {
+                "source": "https://git.drupalcode.org/project/entity_reports"
+            }
+        },
+        {
             "name": "drupal/key_auth",
             "version": "2.1.0",
             "source": {
@@ -1919,7 +1982,7 @@
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/operations.git",
-                "reference": "092898bfa777139a90ee879696fa788f38d0ac65"
+                "reference": "826659806da9152758723dca8d8565c62b0f2d11"
             },
             "require": {
                 "drupal/core": "^9 || ^10"
@@ -1931,7 +1994,7 @@
                 },
                 "drupal": {
                     "version": "1.0.x-dev",
-                    "datestamp": "1686861224",
+                    "datestamp": "1686867746",
                     "security-coverage": {
                         "status": "not-covered",
                         "message": "Project has not opted into security advisory coverage!"
@@ -2020,7 +2083,7 @@
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/site_audit.git",
-                "reference": "15e4bb9153227f3b459c12b2205bbd420431a379"
+                "reference": "147cef2c3cecd549e40a6a85e43c336eacd3b451"
             },
             "require": {
                 "drupal/core": "^8 || ^9 || ^10"
@@ -2034,8 +2097,8 @@
                     "dev-4.x": "4.x-dev"
                 },
                 "drupal": {
-                    "version": "4.0.0-beta1+7-dev",
-                    "datestamp": "1686860264",
+                    "version": "4.0.0-beta1+8-dev",
+                    "datestamp": "1686867165",
                     "security-coverage": {
                         "status": "not-covered",
                         "message": "Dev releases are not covered by Drupal security advisories."
@@ -11062,5 +11125,5 @@
         "php": ">=8.1"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.2.0"
+    "plugin-api-version": "2.3.0"
 }
