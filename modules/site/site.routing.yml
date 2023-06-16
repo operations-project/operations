@@ -7,14 +7,6 @@ operations.admin_operations_sites:
   requirements:
     _permission: 'administer operations'
 
-operations.admin_operations_sites_settings:
-  path: '/admin/operations/sites/settings'
-  defaults:
-    _title: 'Site Operations Settings'
-    _form: 'Drupal\site\Form\SettingsForm'
-  requirements:
-    _permission: 'administer site operations configuration'
-
 entity.site_definition.collection:
   path: '/admin/operations/sites/definitions'
   defaults:
@@ -32,13 +24,29 @@ entity.site_definition.collection:
 #  requirements:
 #    _permission: 'administer site_definition'
 #
-#entity.site_definition.edit_form:
-#  path: '/admin/structure/site-definition/{site_definition}'
-#  defaults:
-#    _entity_form: 'site_definition.edit'
-#    _title: 'Edit a site definition'
-#  requirements:
-#    _permission: 'administer site_definition'
+site.advanced:
+  path: '/admin/config/system/settings'
+  defaults:
+    _entity_form: 'site_definition.edit'
+    _title: 'Advanced site settings'
+  requirements:
+    _permission: 'administer site_definition'
+
+entity.site_definition.edit_form:
+  path: '/admin/config/system/settings/{site_definition}'
+  defaults:
+    _entity_form: 'site_definition.edit'
+    _title: 'Site Settings'
+  requirements:
+    _permission: 'administer site_definition'
+
+entity.site_definition.canonical:
+  path: '/admin/reports/site/{site_definition}'
+  defaults:
+    _entity_form: 'site_definition.edit'
+    _title: 'Edit site information'
+  requirements:
+    _permission: 'administer site_definition'
 #
 #entity.site_definition.delete_form:
 #  path: '/admin/structure/site-definition/{site_definition}/delete'
@@ -47,3 +55,11 @@ entity.site_definition.collection:
 #    _title: 'Delete a site definition'
 #  requirements:
 #    _permission: 'administer site_definition'
+
+site.status:
+  path: '/admin/reports/site'
+  defaults:
+    _title: 'Site Status'
+    _controller: '\Drupal\site\Controller\SiteStatusController::build'
+  requirements:
+    _permission: 'access site status'

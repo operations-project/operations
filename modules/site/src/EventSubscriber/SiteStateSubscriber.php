@@ -34,7 +34,7 @@ class SiteStateSubscriber implements EventSubscriberInterface {
    *   Response event.
    */
   public function setStateFromSystemStatus(SiteGetState $event) {
-    if (\Drupal::config('site.settings')->get('state_sources')['system']) {
+    if (in_array('system', \Drupal::config('site.settings')->get('state_sources'))) {
 
       // If site.settings.state_sources, load the report data and set the state.
 

@@ -3,9 +3,11 @@
 namespace Drupal\site\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
+use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\site\SiteDefinitionInterface;
 use Drupal\site\Event\SiteGetState;
+use Drupal\site\SiteEntityTrait;
 
 /**
  * Defines the site definition entity type.
@@ -32,103 +34,36 @@ use Drupal\site\Event\SiteGetState;
  *   admin_permission = "administer site_definition",
  *   links = {
  *    "collection" = "/admin/operations/sites/definitions",
+ *    "edit-form" = "/admin/reports/site/{site_definition}",
  *   },
  *   entity_keys = {
  *     "id" = "id",
- *     "label" = "label",
- *     "uuid" = "uuid"
+ *     "canonical_url" = "canonical_url",
+ *     "git_remote" = "git_remote",
+ *     "description" = "description",
  *   },
  *   config_export = {
  *     "id",
- *     "label",
- *     "description"
+ *     "canonical_url",
+ *     "git_remote",
+ *     "description",
+ *     "configs_load",
+ *     "configs_remote",
+ *     "data"
  *   }
  * )
  */
-class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface {
+class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface, ConfigEntityInterface {
 
   use StringTranslationTrait;
-
-  /**
-   * The site is not operating.
-   */
-  const SITE_ERROR = 2;
-
-  /**
-   * The site is operating normally.
-   */
-  const SITE_OK = 0;
-
-  /**
-   * The site is operating but with warnings.
-   */
-  const SITE_WARN = 1;
-
-  /**
-   * The site is operating and has information to present.
-   */
-  const SITE_INFO = -1;
-
-  /**
-   * Human readable strings for state.
-   *
-   * @var string
-   */
-  protected $stateNames = [
-    self::SITE_OK => 'OK',
-    self::SITE_INFO => 'OK (info)',
-    self::SITE_WARN => 'Warning',
-    self::SITE_ERROR => 'Error',
-  ];
+  use SiteEntityTrait;
 
   /**
    * The site definition ID.
    *
    * @var string
    */
-  protected $id;
-
-  /**
-   * The site state: SITE_OK, SITE_WARN, SITE_ERROR
-   *
-   * @var int
-   */
-  protected int $state;
-
-  /**
-   * A string to describe the reason a site is in a certain state.
-   *
-   * @var string
-   */
-  protected string $reason;
-
-  /**
-   * The site definition label. Defaults to the site's title.
-   *
-   * @var string
-   */
-  protected string $label;
-
-  /**
-   * The site_definition description.
-   *
-   * @var string
-   */
-  protected string $description;
-
-  /**
-   * The site definition status.
-   *
-   * @var bool
-   */
-  protected $status;
-
-  /**
-   * A string representing the host provider of the site.
-   * Loaded from DRUPAL_HOST if it exists.
-   * @var string
-   */
-  protected string $host;
+  protected string $id;
 
   /**
    * Sets label from site title
@@ -141,8 +76,10 @@ class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface
 
   public function setDynamicProperties() {
     if ($this->isSelf()) {
-      $this->label = \Drupal::config('system.site')->get('name');
-      $this->host = getenv('DRUPAL_HOST') ?: 'unknown';
+      $this->site_title = \Drupal::config('system.site')->get('name');
+      $this->site_uuid = \Drupal::config('system.site')->get('uuid');
+      $this->site_uri = \Drupal::request()->getSchemeAndHttpHost();
+
       $this->determineState();
     }
   }
@@ -152,7 +89,7 @@ class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface
    * @return bool
    */
   public function isSelf() {
-    return $this->id == 'self';
+    return $this->id() == 'self';
   }
 
   /**
@@ -161,28 +98,28 @@ class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface
    */
   public function view() {
     $strings = [
-      ':label' => $this->label(),
+      ':label' => $this->site_title,
+      ':git_remote' => $this->git_remote,
       ':description' => $this->description,
-      ':host' => $this->host,
-      ':state' => $this->getStateName(),
+      ':state' => $this->stateName(),
       '@reason' => check_markup($this->reason),
     ];
     return [
       'info' => [
         '#theme' => 'item_list',
         '#items' => [
+          $this->t("Title: :label", $strings),
+          $this->t("Git Remote: :git_remote", $strings),
           $this->t("State: :state", $strings),
           $this->t("Reason: @reason", $strings),
-          $this->t("Title: :label", $strings),
           $this->t("Description: :description", $strings),
-          $this->t("Host: :host", $strings),
         ]
       ]
     ];
   }
 
   /**
-   * @return int
+   * Dispatch the site_get_state event to determine the state of the site.
    */
   public function determineState() {
 
@@ -194,13 +131,5 @@ class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface
     // Set state from event siteDefinition. If not set, assume site is ok.
     $this->state = $event->siteDefinition->get('state') ?? self::SITE_OK;
     $this->reason = $event->siteDefinition->get('reason') ?? '';
-
-  }
-
-  /**
-   * @return int
-   */
-  public function getStateName() {
-    return $this->stateNames[$this->state];
   }
 }

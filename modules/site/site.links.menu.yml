@@ -21,24 +21,25 @@ entity.site.collection:
   parent: operations.admin_operations_sites
   position: left
 
-# /admin/operations/sites/settings
-operations.admin_operations_sites_settings:
-  title: 'Site Operations Settings'
-  description: "Configure how this site determines it's state."
-  route_name: operations.admin_operations_sites_settings
-  parent: operations.admin_operations_sites
-  position: left
-
 entity.site_definition.overview:
   title: Site Definitions
   parent: system.admin_structure
   description: 'List of site definitions.'
   route_name: entity.site_definition.collection
 
-# /admin/config/system/sites
-operations.admin_settings_sites:
-  title: 'Site Operations Settings'
-  description: "Configure how this site operates and determines it's state."
-  route_name: operations.admin_operations_sites_settings
+# /admin/reports/site
+site.status:
+  title: 'Site Status'
+  description: 'Review the status of this site.'
+  route_name: site.status
+  parent: system.admin_reports
+  position: left
+  weight: -100
+
+# /admin/config/system/site
+site.advanced:
+  title: 'Advanced site settings'
+  description: 'Change advanced site configuration such as state factors, git information, and remote connections.'
+  route_name: site.advanced
   parent: system.admin_config_system
   position: left

@@ -35,3 +35,13 @@ entity.site_type.edit_form:
   title: 'Edit'
   route_name: entity.site_type.edit_form
   base_route: entity.site_type.edit_form
+
+site.status:
+  title: 'Site Status'
+  route_name: site.status
+  base_route: site.status
+
+site.advanced:
+  title: 'Site Settings'
+  route_name: site.advanced
+  base_route: site.status
