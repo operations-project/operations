@@ -59,7 +59,7 @@ class SiteDefinitionForm extends EntityForm {
       '#type' => 'textarea',
       '#title' => $this->t('Configuration items to load.'),
       '#default_value' => implode(PHP_EOL, $this->entity->get('configs_load')),
-      '#description' => $this->t('A list of configuration items that should be made available in the Site entity.'),
+      '#description' => $this->t('A list of configuration items that should be made available in the Site entity. Use the main config key, or get a specific item by separating with a color. For example: <pre>system.site</pre> or <pre>core.extension:theme</pre>.'),
     ];
 
     return $form;

@@ -80,7 +80,7 @@ class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface
   public function __construct(array $values, $entity_type) {
     parent::__construct($values, $entity_type);
     $this->setDynamicProperties();
-    $this->setConfig();
+    $this->getConfig();
   }
 
   public function setDynamicProperties() {
@@ -93,11 +93,24 @@ class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface
     }
   }
 
-  public function setConfig() {
+  /**
+   * Parse configs_load and load the config values into the SiteDefinition entity.
+   * @return void
+   */
+  public function getConfig() {
     if (isset($this->configs_load)) {
-      foreach ($this->configs_load as $config_id) {
-        $config_id = trim($config_id);
-        $this->config[$config_id] = \Drupal::config($config_id)->get();
+      foreach ($this->configs_load as $config_string) {
+        $config_items = explode(':', trim($config_string));
+        $config_key = $config_items[0];
+        $config_name = $config_items[1] ?? '';
+        if ($config_name) {
+          $this->config[$config_key] = [
+            $config_name => \Drupal::config($config_key)->get($config_name),
+          ];
+        }
+        else {
+          $this->config[$config_key] = \Drupal::config($config_key)->get();
+        }
       }
     }
   }
