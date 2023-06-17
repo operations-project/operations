@@ -2,7 +2,7 @@
 
 The Site Module provides a way to track your Drupal sites.
 
-The Site Entity has properties such as Git Remote and URI, and can be extended to store additional information like [Site Audit Reports](https://drupal.org/project/site_audit).
+The Site Entity has properties such as Site State, Git Remote and URI, and can be extended to store additional information like [Site Audit Reports](https://drupal.org/project/site_audit).
 
 The Site Entity data can then be sent to a remote server for tracking in a central location, or it can be saved locally
 on a recurring basis to track changes over time.
