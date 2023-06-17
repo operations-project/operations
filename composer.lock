@@ -1919,7 +1919,7 @@
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/operations.git",
-                "reference": "826659806da9152758723dca8d8565c62b0f2d11"
+                "reference": "5e30ef23c8f9930c323f2615cd3d6be12788e129"
             },
             "require": {
                 "drupal/core": "^9 || ^10"
@@ -1931,7 +1931,7 @@
                 },
                 "drupal": {
                     "version": "1.0.x-dev",
-                    "datestamp": "1686867746",
+                    "datestamp": "1686962406",
                     "security-coverage": {
                         "status": "not-covered",
                         "message": "Project has not opted into security advisory coverage!"
