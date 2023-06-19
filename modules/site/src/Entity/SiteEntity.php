@@ -3,14 +3,15 @@
 namespace Drupal\site\Entity;
 
 use Drupal\Core\Entity\ContentEntityBase;
-use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityChangedTrait;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
-use Drupal\site\SiteDefinitionInterface;
-use Drupal\site\SiteEntityInterface;
+use Drupal\site\SiteEntityTrait;
+use Drupal\site\SiteInterface;
 use Drupal\user\EntityOwnerTrait;
+
+use Drupal\site\SiteEntityInterface;
 
 /**
  * Defines the site entity class.
@@ -25,7 +26,6 @@ use Drupal\user\EntityOwnerTrait;
  *     singular = "@count site",
  *     plural = "@count sites",
  *   ),
- *   bundle_label = @Translation("Site type"),
  *   handlers = {
  *     "list_builder" = "Drupal\site\SiteListBuilder",
  *     "views_data" = "Drupal\views\EntityViewsData",
@@ -46,34 +46,35 @@ use Drupal\user\EntityOwnerTrait;
  *   show_revision_ui = TRUE,
  *   admin_permission = "administer sites",
  *   entity_keys = {
- *     "id" = "id",
- *     "bundle" = "bundle",
- *     "site_uuid" = "site_uuid",
- *     "site_uri" = "site_uri",
- *     "owner" = "uid",
- *     "data" = "data",
- *   },
- *   links = {
- *     "collection" = "/admin/operations/sites/list",
- *     "add-form" = "/site/add/{site_type}",
- *     "add-page" = "/site/add",
- *     "canonical" = "/site/{site}",
- *     "edit-form" = "/site/{site}/settings",
- *     "delete-form" = "/site/{site}/delete",
+ *     "id" = "site_uuid",
+ *     "revision" = "vid",
+ *     "label" = "site_title",
+ *     "uid" = "uid",
  *   },
  *   revision_metadata_keys = {
  *     "revision_user" = "revision_uid",
  *     "revision_created" = "revision_timestamp",
  *     "revision_log_message" = "revision_log",
  *   },
- *   bundle_entity_type = "site_type",
  *   field_ui_base_route = "entity.site_type.edit_form",
+ *   common_reference_target = TRUE,
+ *   links = {
+ *     "collection" = "/admin/operations/sites/list",
+ *     "canonical" = "/site/{site}",
+ *     "delete-form" = "/site/{site}/delete",
+ *     "delete-multiple-form" = "/admin/operatoins/sites/delete",
+ *     "edit-form" = "/site/{site}/edit",
+ *     "version-history" = "/site/{site}/revisions",
+ *     "revision" = "/site/{site}/history/{site_revision}/view",
+ *     "create" = "/site/add",
+ *   },
  * )
  */
 class SiteEntity extends ContentEntityBase implements SiteEntityInterface {
 
   use EntityChangedTrait;
   use EntityOwnerTrait;
+  use SiteEntityTrait;
 
   /**
    * {@inheritdoc}
@@ -125,83 +126,132 @@ class SiteEntity extends ContentEntityBase implements SiteEntityInterface {
       ])
       ->setDisplayConfigurable('view', TRUE);
 
-    $fields['site_uri'] = BaseFieldDefinition::create('uri')
-      ->setRevisionable(TRUE)
-      ->setLabel(t('Site URI'))
-      ->setDescription(t('The URI of the site this report was generated for.'))
-      ->setRequired(TRUE)
-      ->setDefaultValueCallback(static::class . '::getDefaultUri')
-      ->setDisplayConfigurable('form', TRUE)
-      ->setDisplayOptions('view', [
-        'label' => 'above',
-        'type' => 'uri',
-      ])
-      ->setDisplayOptions('form', [
-        'type' => 'string_textfield',
-      ])
-      ->setDisplayConfigurable('view', TRUE);
-    ;
-
-    $fields['status'] = BaseFieldDefinition::create('boolean')
-      ->setLabel(t('Status'))
-      ->setDefaultValue(TRUE)
-      ->setSetting('on_label', 'Enabled')
-      ->setDisplayOptions('form', [
-        'type' => 'boolean_checkbox',
-        'settings' => [
-          'display_label' => FALSE,
-        ],
-        'weight' => 0,
-      ])
-      ->setDisplayConfigurable('form', TRUE)
-      ->setDisplayOptions('view', [
-        'type' => 'boolean',
-        'label' => 'above',
-        'weight' => 0,
-        'settings' => [
-          'format' => 'enabled-disabled',
-        ],
-      ])
-      ->setDisplayConfigurable('view', TRUE);
+    $fields['git_remote'] = BaseFieldDefinition::create('text_long')
+        ->setLabel(t('Git Remote URL'))
+        ->setDisplayOptions('form', [
+            'type' => 'text_textfield',
+            'weight' => 10,
+        ])
+        ->setDisplayConfigurable('form', TRUE)
+        ->setDisplayOptions('view', [
+            'type' => 'text_default',
+            'label' => 'inline',
+            'weight' => 10,
+        ])
+        ->setDisplayConfigurable('view', TRUE);
 
     $fields['description'] = BaseFieldDefinition::create('text_long')
-      ->setLabel(t('Description'))
-      ->setDisplayOptions('form', [
-        'type' => 'text_textarea',
-        'weight' => 10,
-      ])
-      ->setDisplayConfigurable('form', TRUE)
-      ->setDisplayOptions('view', [
-        'type' => 'text_default',
-        'label' => 'above',
-        'weight' => 10,
-      ])
-      ->setDisplayConfigurable('view', TRUE);
+        ->setLabel(t('Description'))
+        ->setDisplayOptions('form', [
+            'type' => 'text_textarea',
+            'weight' => 10,
+        ])
+        ->setDisplayConfigurable('form', TRUE)
+        ->setDisplayOptions('view', [
+            'type' => 'text_default',
+            'label' => 'above',
+            'weight' => 10,
+        ])
+        ->setDisplayConfigurable('view', TRUE);
 
-    $fields['uid'] = BaseFieldDefinition::create('entity_reference')
-      ->setLabel(t('Author'))
-      ->setSetting('target_type', 'user')
-      ->setDefaultValueCallback(static::class . '::getDefaultEntityOwner')
-      ->setDisplayOptions('form', [
-        'type' => 'entity_reference_autocomplete',
-        'settings' => [
-          'match_operator' => 'CONTAINS',
-          'size' => 60,
-          'placeholder' => '',
-        ],
-        'weight' => 15,
-      ])
-      ->setDisplayConfigurable('form', TRUE)
-      ->setDisplayOptions('view', [
-        'label' => 'above',
-        'type' => 'author',
-        'weight' => 15,
-      ])
-      ->setDisplayConfigurable('view', TRUE);
+// @TODO: Move to SiteEnvironment entity
+//    $fields['site_uri'] = BaseFieldDefinition::create('uri')
+//      ->setRevisionable(TRUE)
+//      ->setLabel(t('Site URI'))
+//      ->setDescription(t('The URI of the site this report was generated for.'))
+//      ->setRequired(TRUE)
+//      ->setDefaultValueCallback(static::class . '::getDefaultUri')
+//      ->setDisplayConfigurable('form', TRUE)
+//      ->setDisplayOptions('view', [
+//        'label' => 'above',
+//        'type' => 'uri',
+//      ])
+//      ->setDisplayOptions('form', [
+//        'type' => 'string_textfield',
+//      ])
+//      ->setDisplayConfigurable('view', TRUE);
+//    ;
+//
+//    $fields['state'] = BaseFieldDefinition::create('int')
+//      ->setLabel(t('Site State'))
+//      ->setDefaultValue(SiteInterface::SITE_INFO)
+//      ->setDisplayOptions('form', [
+//        'type' => 'select',
+//        'weight' => -1,
+//      ])
+//      ->setDisplayConfigurable('form', TRUE)
+//      ->setDisplayOptions('view', [
+//        'type' => 'integer',
+//        'label' => 'inline',
+//        'weight' => 0,
+//        'settings' => [
+//          'format' => 'enabled-disabled',
+//        ],
+//      ])
+//      ->setDisplayConfigurable('view', TRUE);    $fields['site_uri'] = BaseFieldDefinition::create('uri')
+//      ->setRevisionable(TRUE)
+//      ->setLabel(t('Site URI'))
+//      ->setDescription(t('The URI of the site this report was generated for.'))
+//      ->setRequired(TRUE)
+//      ->setDefaultValueCallback(static::class . '::getDefaultUri')
+//      ->setDisplayConfigurable('form', TRUE)
+//      ->setDisplayOptions('view', [
+//        'label' => 'above',
+//        'type' => 'uri',
+//      ])
+//      ->setDisplayOptions('form', [
+//        'type' => 'string_textfield',
+//      ])
+//      ->setDisplayConfigurable('view', TRUE);
+//    ;
+//
+//    $fields['status'] = BaseFieldDefinition::create('boolean')
+//      ->setLabel(t('Status'))
+//      ->setDefaultValue(TRUE)
+//      ->setSetting('on_label', 'Enabled')
+//      ->setDisplayOptions('form', [
+//        'type' => 'boolean_checkbox',
+//        'settings' => [
+//          'display_label' => FALSE,
+//        ],
+//        'weight' => 0,
+//      ])
+//      ->setDisplayConfigurable('form', TRUE)
+//      ->setDisplayOptions('view', [
+//        'type' => 'boolean',
+//        'label' => 'above',
+//        'weight' => 0,
+//        'settings' => [
+//          'format' => 'enabled-disabled',
+//        ],
+//      ])
+//      ->setDisplayConfigurable('view', TRUE);
+//
+//
+//    $fields['uid'] = BaseFieldDefinition::create('entity_reference')
+//      ->setLabel(t('Author'))
+//      ->setSetting('target_type', 'user')
+//      ->setDefaultValueCallback(static::class . '::getDefaultEntityOwner')
+//      ->setDisplayOptions('form', [
+//        'type' => 'entity_reference_autocomplete',
+//        'settings' => [
+//          'match_operator' => 'CONTAINS',
+//          'size' => 60,
+//          'placeholder' => '',
+//        ],
+//        'weight' => 15,
+//      ])
+//      ->setDisplayConfigurable('form', TRUE)
+//      ->setDisplayOptions('view', [
+//        'label' => 'above',
+//        'type' => 'author',
+//        'weight' => 15,
+//      ])
+//      ->setDisplayConfigurable('view', TRUE);
 
     $fields['created'] = BaseFieldDefinition::create('created')
       ->setLabel(t('Authored on'))
-      ->setDescription(t('The time that the site was created.'))
+      ->setDescription(t('The time that the site entity was created.'))
       ->setDisplayOptions('view', [
         'label' => 'above',
         'type' => 'timestamp',
@@ -216,11 +266,11 @@ class SiteEntity extends ContentEntityBase implements SiteEntityInterface {
 
     $fields['changed'] = BaseFieldDefinition::create('changed')
       ->setLabel(t('Changed'))
-      ->setDescription(t('The time that the site was last edited.'));
+      ->setDescription(t('The time that the site entity was last updated.'));
 
     $fields['data'] = BaseFieldDefinition::create('map')
       ->setRevisionable(TRUE)
-      ->setLabel(t('Report Data'))
+      ->setLabel(t('Site Data'))
       ->setDescription(t('A map of arbitrary data about the site.'))
       ->setRequired(FALSE)
       ->setDisplayConfigurable('view', TRUE)
