@@ -19,23 +19,6 @@ entity.site.collection:
   route_name: entity.site.collection
   base_route: operations.admin_operations_sites
 
-entity.site_type.collection:
-  title: 'Site Types'
-  route_name: entity.site_type.collection
-  base_route: operations.admin_operations_sites
-
-entity.site_definition.collection:
-  title: 'Site Definitions'
-  route_name: entity.site_definition.collection
-  base_route: operations.admin_operations_sites
-
-# Site Types UI
-
-entity.site_type.edit_form:
-  title: 'Edit'
-  route_name: entity.site_type.edit_form
-  base_route: entity.site_type.edit_form
-
 site.status:
   title: 'Site Status'
   route_name: site.status

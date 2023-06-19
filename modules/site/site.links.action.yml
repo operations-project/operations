@@ -1,14 +1,14 @@
-site.type_add:
-  title: 'Add site type'
-  route_name: entity.site_type.add_form
-  appears_on:
-    - entity.site_type.collection
-
-site.add_page:
-  title: 'Add site'
-  route_name: entity.site.add_page
-  appears_on:
-    - entity.site.collection
+#site.type_add:
+#  title: 'Add site type'
+#  route_name: entity.site_type.add_form
+#  appears_on:
+#    - entity.site_type.collection
+#
+#site.add_page:
+#  title: 'Add site'
+#  route_name: getConfig
+#  appears_on:
+#    - entity.site.collection
 
 # @TODO: Move to Operations Manager module.
 #entity.site_definition.add_form:

@@ -7,23 +7,6 @@ operations.admin_operations_sites:
   requirements:
     _permission: 'administer operations'
 
-entity.site_definition.collection:
-  path: '/admin/operations/sites/definitions'
-  defaults:
-    _entity_list: 'site_definition'
-    _title: 'Site Definitions'
-  requirements:
-    _permission: 'administer operations'
-
-# @TODO: Move to Operations Manager module.
-#entity.site_definition.add_form:
-#  path: '/admin/structure/site_definition/add'
-#  defaults:
-#    _entity_form: 'site_definition.add'
-#    _title: 'Add a site definition'
-#  requirements:
-#    _permission: 'administer site_definition'
-#
 site.advanced:
   path: '/admin/config/system/settings'
   defaults:
