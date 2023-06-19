@@ -6,6 +6,7 @@ use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityChangedTrait;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Entity\RevisionableContentEntityBase;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\site\SiteEntityTrait;
 use Drupal\site\SiteInterface;
@@ -70,7 +71,7 @@ use Drupal\site\SiteEntityInterface;
  *   },
  * )
  */
-class SiteEntity extends ContentEntityBase implements SiteEntityInterface {
+class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInterface {
 
   use EntityChangedTrait;
   use EntityOwnerTrait;
@@ -128,6 +129,7 @@ class SiteEntity extends ContentEntityBase implements SiteEntityInterface {
 
     $fields['git_remote'] = BaseFieldDefinition::create('text_long')
         ->setLabel(t('Git Remote URL'))
+        ->setRevisionable(TRUE)
         ->setDisplayOptions('form', [
             'type' => 'text_textfield',
             'weight' => 10,
@@ -142,6 +144,7 @@ class SiteEntity extends ContentEntityBase implements SiteEntityInterface {
 
     $fields['description'] = BaseFieldDefinition::create('text_long')
         ->setLabel(t('Description'))
+        ->setRevisionable(TRUE)
         ->setDisplayOptions('form', [
             'type' => 'text_textarea',
             'weight' => 10,
@@ -228,26 +231,26 @@ class SiteEntity extends ContentEntityBase implements SiteEntityInterface {
 //      ->setDisplayConfigurable('view', TRUE);
 //
 //
-//    $fields['uid'] = BaseFieldDefinition::create('entity_reference')
-//      ->setLabel(t('Author'))
-//      ->setSetting('target_type', 'user')
-//      ->setDefaultValueCallback(static::class . '::getDefaultEntityOwner')
-//      ->setDisplayOptions('form', [
-//        'type' => 'entity_reference_autocomplete',
-//        'settings' => [
-//          'match_operator' => 'CONTAINS',
-//          'size' => 60,
-//          'placeholder' => '',
-//        ],
-//        'weight' => 15,
-//      ])
-//      ->setDisplayConfigurable('form', TRUE)
-//      ->setDisplayOptions('view', [
-//        'label' => 'above',
-//        'type' => 'author',
-//        'weight' => 15,
-//      ])
-//      ->setDisplayConfigurable('view', TRUE);
+    $fields['uid'] = BaseFieldDefinition::create('entity_reference')
+      ->setLabel(t('Author'))
+      ->setSetting('target_type', 'user')
+      ->setDefaultValueCallback(static::class . '::getDefaultEntityOwner')
+      ->setDisplayOptions('form', [
+        'type' => 'entity_reference_autocomplete',
+        'settings' => [
+          'match_operator' => 'CONTAINS',
+          'size' => 60,
+          'placeholder' => '',
+        ],
+        'weight' => 15,
+      ])
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayOptions('view', [
+        'label' => 'above',
+        'type' => 'author',
+        'weight' => 15,
+      ])
+      ->setDisplayConfigurable('view', TRUE);
 
     $fields['created'] = BaseFieldDefinition::create('created')
       ->setLabel(t('Authored on'))

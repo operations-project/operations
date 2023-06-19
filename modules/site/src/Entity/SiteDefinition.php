@@ -178,4 +178,23 @@ class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface
     $this->state = $event->siteDefinition->get('state') ?? self::SITE_OK;
     $this->reason = $event->siteDefinition->get('reason') ?? '';
   }
+
+  public function toEntity() {
+
+    $data = [
+        'site_uuid' => $this->site_uuid,
+        'site_title' => $this->site_title,
+        'site_uri' => $this->site_uri,
+        'data' => $this->toArray(),
+    ];
+    dsm($data);
+    $site = SiteEntity::create($data);
+    return $site;
+  }
+
+  public function saveEntity() {
+    $site = self::toEntity();
+    $site->save();
+    return $site;
+  }
 }

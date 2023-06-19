@@ -15,8 +15,10 @@ class SiteStatusController extends ControllerBase {
    */
   public function build() {
 
-    $site = SiteDefinition::load('self');
-    $build['content'] = $site->view();
+    $site_definition = SiteDefinition::load('self');
+    $build['content'] = $site_definition->view();
+
+    $build['save_entity_form'] = \Drupal::formBuilder()->getForm('Drupal\site\Form\SiteDefinitionEntitySaveForm');
 
     return $build;
   }
