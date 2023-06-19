@@ -3,6 +3,7 @@
 namespace Drupal\site\Entity;
 
 use Drupal\Core\Entity\ContentEntityBase;
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityChangedTrait;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
@@ -69,7 +70,7 @@ use Drupal\user\EntityOwnerTrait;
  *   field_ui_base_route = "entity.site_type.edit_form",
  * )
  */
-class SiteEntity extends ContentEntityBase implements SiteDefinitionInterface, SiteEntityInterface {
+class SiteEntity extends ContentEntityBase implements SiteEntityInterface {
 
   use EntityChangedTrait;
   use EntityOwnerTrait;

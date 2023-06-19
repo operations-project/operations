@@ -54,7 +54,7 @@ use Drupal\site\SiteEntityTrait;
  *   }
  * )
  */
-class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface, ConfigEntityInterface {
+class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface {
 
   use StringTranslationTrait;
   use SiteEntityTrait;

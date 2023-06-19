@@ -10,7 +10,7 @@ use Drupal\site\Entity\SiteDefinition;
 /**
  * Site Definition form.
  *
- * @property \Drupal\site\SiteDefinitionInterface $entity
+ * @property \Drupal\site\SiteEntityIn $entity
  */
 class SiteDefinitionForm extends EntityForm {
 
