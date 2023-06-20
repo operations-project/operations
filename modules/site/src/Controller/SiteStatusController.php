@@ -65,7 +65,7 @@ class SiteStatusController extends ControllerBase {
         $row[] = $site_revision->toLink();
         $row[] = \Drupal::service('renderer')->render($date);
         $row[] = \Drupal::service('renderer')->render($reason);
-        $row[] = $site_revision->vid->value;
+        $row[] = $site_revision->get('vid')->value;
         $rows[] = $row;
       }
 
