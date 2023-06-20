@@ -2,13 +2,13 @@
 
 namespace Drupal\site;
 
-use Consolidation\SiteAlias\SiteAliasInterface;
+use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityChangedInterface;
 use Drupal\user\EntityOwnerInterface;
 
 /**
- * Provides an interface defining a site entity type.
+ * Provides a standard interface that can be used with config and content entities.
  */
 interface SiteEntityInterface extends SiteInterface, ContentEntityInterface, EntityOwnerInterface, EntityChangedInterface {
 

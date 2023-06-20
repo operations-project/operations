@@ -3,15 +3,17 @@
 namespace Drupal\site\Entity;
 
 use Drupal\Core\Entity\ContentEntityBase;
+use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\EntityChangedInterface;
 use Drupal\Core\Entity\EntityChangedTrait;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\RevisionableContentEntityBase;
+use Drupal\Core\Entity\RevisionableEntityBundleInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\site\SiteEntityTrait;
-use Drupal\site\SiteInterface;
+use Drupal\user\EntityOwnerInterface;
 use Drupal\user\EntityOwnerTrait;
-
 use Drupal\site\SiteEntityInterface;
 
 /**
@@ -127,16 +129,16 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
       ])
       ->setDisplayConfigurable('view', TRUE);
 
-    $fields['git_remote'] = BaseFieldDefinition::create('text_long')
+    $fields['git_remote'] = BaseFieldDefinition::create('string')
         ->setLabel(t('Git Remote URL'))
         ->setRevisionable(TRUE)
         ->setDisplayOptions('form', [
-            'type' => 'text_textfield',
+            'type' => 'string_textfield',
             'weight' => 10,
         ])
         ->setDisplayConfigurable('form', TRUE)
         ->setDisplayOptions('view', [
-            'type' => 'text_default',
+            'type' => 'string',
             'label' => 'inline',
             'weight' => 10,
         ])
