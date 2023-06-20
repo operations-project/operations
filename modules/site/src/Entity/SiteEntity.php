@@ -52,15 +52,8 @@ use Drupal\site\SiteEntityInterface;
  *     "id" = "site_uuid",
  *     "revision" = "vid",
  *     "label" = "site_title",
- *     "uid" = "uid",
+ *     "owner" = "uid",
  *   },
- *   revision_metadata_keys = {
- *     "revision_user" = "revision_uid",
- *     "revision_created" = "revision_timestamp",
- *     "revision_log_message" = "revision_log",
- *   },
- *   field_ui_base_route = "entity.site_type.edit_form",
- *   common_reference_target = TRUE,
  *   links = {
  *     "collection" = "/admin/operations/sites/list",
  *     "canonical" = "/site/{site}",
@@ -71,19 +64,26 @@ use Drupal\site\SiteEntityInterface;
  *     "revision" = "/site/{site}/history/{site_revision}/view",
  *     "add-form" = "/admin/operations/sites/add",
  *   },
+ *   revision_metadata_keys = {
+ *     "revision_user" = "revision_uid",
+ *     "revision_created" = "revision_timestamp",
+ *     "revision_log_message" = "revision_log",
+ *   },
+ *   field_ui_base_route = "entity.site_type.edit_form",
+ *   common_reference_target = TRUE,
  * )
  */
 class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInterface {
 
   use EntityChangedTrait;
   use EntityOwnerTrait;
-  use SiteEntityTrait;
-
-  public function save() {
-    dsm($this->toArray(), 'data');
-    dsm($this->fieldDefinitions, 'field def');
-    parent::save();
-  }
+//  use SiteEntityTrait;
+//
+//  public function save() {
+//    dsm($this->toArray(), 'data');
+//    dsm($this->fieldDefinitions, 'field def');
+//    parent::save();
+//  }
 
   /**
    * {@inheritdoc}
@@ -150,21 +150,6 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
         ])
         ->setDisplayConfigurable('view', TRUE);
 
-    $fields['description'] = BaseFieldDefinition::create('text_long')
-        ->setLabel(t('Description'))
-        ->setRevisionable(TRUE)
-        ->setDisplayOptions('form', [
-            'type' => 'text_textarea',
-            'weight' => 10,
-        ])
-        ->setDisplayConfigurable('form', TRUE)
-        ->setDisplayOptions('view', [
-            'type' => 'text_default',
-            'label' => 'above',
-            'weight' => 10,
-        ])
-        ->setDisplayConfigurable('view', TRUE);
-
     $fields['site_uri'] = BaseFieldDefinition::create('uri')
       ->setRevisionable(TRUE)
       ->setLabel(t('Site URI'))
@@ -214,29 +199,44 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
       ])
       ->setDisplayConfigurable('view', TRUE);
     ;
-//
-//    $fields['status'] = BaseFieldDefinition::create('boolean')
-//      ->setLabel(t('Status'))
-//      ->setDefaultValue(TRUE)
-//      ->setSetting('on_label', 'Enabled')
-//      ->setDisplayOptions('form', [
-//        'type' => 'boolean_checkbox',
-//        'settings' => [
-//          'display_label' => FALSE,
-//        ],
-//        'weight' => 0,
-//      ])
-//      ->setDisplayConfigurable('form', TRUE)
-//      ->setDisplayOptions('view', [
-//        'type' => 'boolean',
-//        'label' => 'above',
-//        'weight' => 0,
-//        'settings' => [
-//          'format' => 'enabled-disabled',
-//        ],
-//      ])
-//      ->setDisplayConfigurable('view', TRUE);
-//
+
+    $fields['status'] = BaseFieldDefinition::create('boolean')
+      ->setLabel(t('Status'))
+      ->setDefaultValue(TRUE)
+      ->setSetting('on_label', 'Enabled')
+      ->setDisplayOptions('form', [
+        'type' => 'boolean_checkbox',
+        'settings' => [
+          'display_label' => FALSE,
+        ],
+        'weight' => 0,
+      ])
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayOptions('view', [
+        'type' => 'boolean',
+        'label' => 'above',
+        'weight' => 0,
+        'settings' => [
+          'format' => 'enabled-disabled',
+        ],
+      ])
+      ->setDisplayConfigurable('view', TRUE);
+
+    $fields['description'] = BaseFieldDefinition::create('text_long')
+      ->setLabel(t('Description'))
+      ->setRevisionable(TRUE)
+      ->setDisplayOptions('form', [
+        'type' => 'text_textarea',
+        'weight' => 10,
+      ])
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayOptions('view', [
+        'type' => 'text_default',
+        'label' => 'above',
+        'weight' => 10,
+      ])
+      ->setDisplayConfigurable('view', TRUE);
+
     $fields['uid'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('Author'))
       ->setSetting('target_type', 'user')
