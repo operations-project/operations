@@ -167,7 +167,13 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
       ->setDisplayConfigurable('view', TRUE);
     ;
 
-    $fields['state'] = BaseFieldDefinition::create('integer')
+    $fields['state'] = BaseFieldDefinition::create('list_integer')
+      ->setSetting('allowed_values', [
+        static::SITE_OK => t('OK'),
+        static::SITE_INFO => t('Information Available'),
+        static::SITE_WARN => t('Warning'),
+        static::SITE_ERROR => t('Error'),
+      ])
       ->setLabel(t('Site State'))
       ->setDescription(t('The overall state of the site. OK, INFO, WARN, ERROR'))
       ->setRequired(TRUE)
