@@ -37,6 +37,9 @@ class SiteStatusController extends ControllerBase {
    */
   public function siteStatusHistoryWidget() {
     $site_entity = SiteEntity::loadSelf();
+    if (!$site_entity) {
+      return [];
+    }
     $revisions = $site_entity->revisionIds();
     arsort($revisions);
     $revisions = array_slice($revisions, 0, 5);
