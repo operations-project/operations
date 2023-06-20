@@ -304,4 +304,26 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
   public static function getSiteUuid() {
     return \Drupal::config('system.site')->get('uuid');
   }
+
+  /**
+   * Load the site entity with the same UUID as this site.
+   */
+  public static function loadSelf() {
+    return parent::load(static::getSiteUuid());
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function revisionIds(SiteEntityInterface $site = null)
+  {
+    if (empty($site)) {
+      $site = self::loadSelf();
+    }
+
+    return \Drupal::database()->query(
+        'SELECT [vid] FROM {' . $this->getEntityType()->getRevisionTable() . '} WHERE [site_uuid] = :site_uuid ORDER BY [vid]',
+        [':site_uuid' => $site->id()]
+    )->fetchCol();
+  }
 }
