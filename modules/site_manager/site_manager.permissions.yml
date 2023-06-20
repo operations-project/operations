@@ -1,0 +1,4 @@
+administer site_manager configuration:
+  title: 'Administer site_manager configuration'
+  description: 'Optional description.'
+  restrict access: true

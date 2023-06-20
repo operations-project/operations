@@ -1,0 +1,6 @@
+services:
+  site_manager.event_subscriber:
+    class: Drupal\site_manager\EventSubscriber\SiteManagerSubscriber
+    arguments: ['@messenger']
+    tags:
+      - { name: event_subscriber }

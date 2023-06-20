@@ -1,0 +1,21 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - key_auth
+    - serialization
+    - site_manager
+id: site_receiver
+plugin_id: site_receiver
+granularity: method
+configuration:
+  GET:
+    supported_formats:
+      - json
+    supported_auth:
+      - key_auth
+  POST:
+    supported_formats:
+      - json
+    supported_auth:
+      - key_auth
