@@ -26,10 +26,13 @@ class SiteDefinitionEntitySaveForm extends FormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
 
-//    $site_definition = SiteDefinition::load('self');
-//    $site = $site_definition->toEntity();
-//    $site->set('revision_log', $form_state->getValue('revision_log'));
+    $site_definition = SiteDefinition::load('self');
+    $existing_site = SiteEntity::load($site_definition->get('site_uuid'));
 
+    $form['site_uuid'] = [
+      '#type' => 'value',
+      '#value' => $existing_site ? $existing_site->id(): null,
+    ];
     $form['revision_log'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Log'),
@@ -59,8 +62,18 @@ class SiteDefinitionEntitySaveForm extends FormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
 
     $site_definition = SiteDefinition::load('self');
-    $site = $site_definition->toEntity();
-//    $site->set('revision_log', $form_state->getValue('revision_log'));
+    $site_entity_new = $site_definition->toEntity();
+
+    if ($form_state->getValue('site_uuid')) {
+      $site = SiteEntity::load($form_state->getValue('site_uuid'));
+      $site->setNewRevision(TRUE);
+      foreach ($site_entity_new as $name => $value) {
+        $site->{$name} = $value;
+      }
+    }
+    else {
+      $site = $site_definition->toEntity();
+    }
 
     try {
       $site->validate();
@@ -68,8 +81,6 @@ class SiteDefinitionEntitySaveForm extends FormBase {
     } catch (EntityStorageException $e) {
       $this->messenger()->addError($e->getMessage());
     }
-
-    dsm($site);
 
     $this->messenger()->addStatus($this->t('A site record has been saved: @link', [
       '@link' => $site->toLink()->toString(),
