@@ -189,6 +189,21 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
       ])
     ;
 
+    $fields['reason'] = BaseFieldDefinition::create('text_long')
+        ->setLabel(t('State Reason'))
+        ->setRevisionable(TRUE)
+        ->setDisplayOptions('view', [
+            'type' => 'text_default',
+            'label' => 'above',
+            'weight' => 10,
+        ])
+        ->setDisplayOptions('view', [
+            'type' => 'text_default',
+            'label' => 'above',
+            'weight' => 10,
+        ])
+        ->setDisplayConfigurable('view', TRUE);
+
     $fields['status'] = BaseFieldDefinition::create('boolean')
       ->setLabel(t('Status'))
       ->setDefaultValue(TRUE)
