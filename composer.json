@@ -69,6 +69,11 @@
         ],
         "post-update-cmd": [
             "DrupalProject\\composer\\ScriptHandler::createRequiredFiles"
+         ],
+        "ox:install": [
+          "drush si  --yes",
+          "drush en site operations devel admin_toolbar -y",
+          "drush uli --uri=ox.lndo.site"
         ]
     },
     "extra": {
