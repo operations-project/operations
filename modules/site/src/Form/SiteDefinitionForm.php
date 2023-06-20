@@ -107,6 +107,7 @@ class SiteDefinitionForm extends EntityForm {
     $form['settings']['site_entity']['send_destinations'] = [
       '#title' => $this->t('Site Data Destinations'),
       '#description' => $this->t('Enter the URLs to POST site data to, one per line. To connect to a Site Manager instance, use the path "https://site_manager_url/api/site?api_key=xyz".'),
+      '#default_value' => $settings['site_entity']['send_destinations']  ?? "",
       '#type' => 'textarea',
       '#states' => [
           'invisible' => [
