@@ -67,7 +67,7 @@ use Drupal\site\SiteEntityInterface;
  *     "edit-form" = "/site/{site}/edit",
  *     "version-history" = "/site/{site}/revisions",
  *     "revision" = "/site/{site}/history/{site_revision}/view",
- *     "create" = "/site/add",
+ *     "add-form" = "/admin/operations/sites/add",
  *   },
  * )
  */

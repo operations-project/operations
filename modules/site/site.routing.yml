@@ -54,3 +54,12 @@ site.site_definition_entity_save:
     _form: 'Drupal\site\Form\SiteDefinitionEntitySaveForm'
   requirements:
     _permission: 'save site definition'
+#
+## @TODO: Move to site_ui.module
+#entity.site_environment.settings:
+#  path: 'admin/structure/site-environment'
+#  defaults:
+#    _form: '\Drupal\site\Form\SiteEnvironmentSettingsForm'
+#    _title: 'Site Environment'
+#  requirements:
+#    _permission: 'administer site environment'

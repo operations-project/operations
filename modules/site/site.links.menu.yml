@@ -29,3 +29,15 @@ site.advanced:
   route_name: site.advanced
   parent: system.admin_config_system
   position: left
+
+#entity.site_environment.settings:
+#  title: 'Site Environment'
+#  description: 'Configure a Site Environment entity type.'
+#  route_name:  entity.site_environment.settings
+#  parent: system.admin_config_system
+
+entity.site_environment.collection:
+  title: 'Site Environment'
+  description: "Information about this site's environments."
+  route_name: entity.site_environment.collection
+  parent: system.admin_content

@@ -15,3 +15,7 @@ view site:
   title: View site
 edit site:
   title: Edit site
+
+administer site environment:
+  title: 'Administer site environment settings'
+  restrict access: true
