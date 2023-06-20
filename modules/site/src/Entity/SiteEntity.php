@@ -79,6 +79,12 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
   use EntityOwnerTrait;
   use SiteEntityTrait;
 
+  public function save() {
+    dsm($this->toArray(), 'data');
+    dsm($this->fieldDefinitions, 'field def');
+    parent::save();
+  }
+
   /**
    * {@inheritdoc}
    */
@@ -159,56 +165,55 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
         ])
         ->setDisplayConfigurable('view', TRUE);
 
-// @TODO: Move to SiteEnvironment entity
-//    $fields['site_uri'] = BaseFieldDefinition::create('uri')
-//      ->setRevisionable(TRUE)
-//      ->setLabel(t('Site URI'))
-//      ->setDescription(t('The URI of the site this report was generated for.'))
-//      ->setRequired(TRUE)
-//      ->setDefaultValueCallback(static::class . '::getDefaultUri')
-//      ->setDisplayConfigurable('form', TRUE)
-//      ->setDisplayOptions('view', [
-//        'label' => 'above',
-//        'type' => 'uri',
-//      ])
-//      ->setDisplayOptions('form', [
-//        'type' => 'string_textfield',
-//      ])
-//      ->setDisplayConfigurable('view', TRUE);
-//    ;
-//
-//    $fields['state'] = BaseFieldDefinition::create('int')
-//      ->setLabel(t('Site State'))
-//      ->setDefaultValue(SiteInterface::SITE_INFO)
-//      ->setDisplayOptions('form', [
-//        'type' => 'select',
-//        'weight' => -1,
-//      ])
-//      ->setDisplayConfigurable('form', TRUE)
-//      ->setDisplayOptions('view', [
-//        'type' => 'integer',
-//        'label' => 'inline',
-//        'weight' => 0,
-//        'settings' => [
-//          'format' => 'enabled-disabled',
-//        ],
-//      ])
-//      ->setDisplayConfigurable('view', TRUE);    $fields['site_uri'] = BaseFieldDefinition::create('uri')
-//      ->setRevisionable(TRUE)
-//      ->setLabel(t('Site URI'))
-//      ->setDescription(t('The URI of the site this report was generated for.'))
-//      ->setRequired(TRUE)
-//      ->setDefaultValueCallback(static::class . '::getDefaultUri')
-//      ->setDisplayConfigurable('form', TRUE)
-//      ->setDisplayOptions('view', [
-//        'label' => 'above',
-//        'type' => 'uri',
-//      ])
-//      ->setDisplayOptions('form', [
-//        'type' => 'string_textfield',
-//      ])
-//      ->setDisplayConfigurable('view', TRUE);
-//    ;
+    $fields['site_uri'] = BaseFieldDefinition::create('uri')
+      ->setRevisionable(TRUE)
+      ->setLabel(t('Site URI'))
+      ->setDescription(t('The URI of the site this report was generated for.'))
+      ->setRequired(TRUE)
+      ->setDefaultValueCallback(static::class . '::getDefaultUri')
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayOptions('view', [
+        'label' => 'above',
+        'type' => 'uri',
+      ])
+      ->setDisplayOptions('form', [
+        'type' => 'string_textfield',
+      ])
+      ->setDisplayConfigurable('view', TRUE);
+    ;
+
+    $fields['state'] = BaseFieldDefinition::create('integer')
+      ->setLabel(t('Site State'))
+      ->setDefaultValue(SiteEntityInterface::SITE_INFO)
+      ->setDisplayOptions('form', [
+        'type' => 'options_select',
+        'weight' => -1,
+      ])
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayOptions('view', [
+        'type' => 'integer',
+        'label' => 'inline',
+        'weight' => 0,
+        'settings' => [
+          'format' => 'enabled-disabled',
+        ],
+      ])
+      ->setDisplayConfigurable('view', TRUE);    $fields['site_uri'] = BaseFieldDefinition::create('uri')
+      ->setRevisionable(TRUE)
+      ->setLabel(t('Site URI'))
+      ->setDescription(t('The URI of the site this report was generated for.'))
+      ->setRequired(TRUE)
+      ->setDefaultValueCallback(static::class . '::getDefaultUri')
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayOptions('view', [
+        'label' => 'above',
+        'type' => 'uri',
+      ])
+      ->setDisplayOptions('form', [
+        'type' => 'string_textfield',
+      ])
+      ->setDisplayConfigurable('view', TRUE);
+    ;
 //
 //    $fields['status'] = BaseFieldDefinition::create('boolean')
 //      ->setLabel(t('Status'))
@@ -231,7 +236,6 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
 //        ],
 //      ])
 //      ->setDisplayConfigurable('view', TRUE);
-//
 //
     $fields['uid'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('Author'))
