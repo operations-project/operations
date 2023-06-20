@@ -187,6 +187,7 @@ class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface
         'site_title' => $this->site_title,
         'site_uri' => $this->site_uri,
         'state' => $this->state,
+        'reason' => $this->reason,
         'data' => $this->toArray(),
     ];
     $site = SiteEntity::create($data);
