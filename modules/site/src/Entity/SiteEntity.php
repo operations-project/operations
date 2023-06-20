@@ -169,12 +169,15 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
 
     $fields['state'] = BaseFieldDefinition::create('integer')
       ->setLabel(t('Site State'))
-      ->setDefaultValue(SiteEntityInterface::SITE_INFO)
+      ->setDescription(t('The overall state of the site. OK, INFO, WARN, ERROR'))
+      ->setRequired(TRUE)
+      ->setDefaultValue(static::SITE_INFO)
+      ->setDisplayConfigurable('form', TRUE)
       ->setDisplayOptions('form', [
         'type' => 'options_select',
         'weight' => -1,
       ])
-      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayConfigurable('view', TRUE)
       ->setDisplayOptions('view', [
         'type' => 'integer',
         'label' => 'inline',
@@ -183,21 +186,6 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
           'format' => 'enabled-disabled',
         ],
       ])
-      ->setDisplayConfigurable('view', TRUE);    $fields['site_uri'] = BaseFieldDefinition::create('uri')
-      ->setRevisionable(TRUE)
-      ->setLabel(t('Site URI'))
-      ->setDescription(t('The URI of the site this report was generated for.'))
-      ->setRequired(TRUE)
-      ->setDefaultValueCallback(static::class . '::getDefaultUri')
-      ->setDisplayConfigurable('form', TRUE)
-      ->setDisplayOptions('view', [
-        'label' => 'above',
-        'type' => 'uri',
-      ])
-      ->setDisplayOptions('form', [
-        'type' => 'string_textfield',
-      ])
-      ->setDisplayConfigurable('view', TRUE);
     ;
 
     $fields['status'] = BaseFieldDefinition::create('boolean')
