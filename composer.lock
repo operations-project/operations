@@ -1919,7 +1919,7 @@
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/operations.git",
-                "reference": "5e30ef23c8f9930c323f2615cd3d6be12788e129"
+                "reference": "eb26e879174ef3ae88f3a8ce6729fc972d94f143"
             },
             "require": {
                 "drupal/core": "^9 || ^10"
@@ -1931,7 +1931,7 @@
                 },
                 "drupal": {
                     "version": "1.0.x-dev",
-                    "datestamp": "1686962406",
+                    "datestamp": "1687267897",
                     "security-coverage": {
                         "status": "not-covered",
                         "message": "Project has not opted into security advisory coverage!"
@@ -11062,5 +11062,5 @@
         "php": ">=8.1"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.2.0"
 }
