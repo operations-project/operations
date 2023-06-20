@@ -3,7 +3,7 @@ site.settings:
   type: config_object
   label: 'Site settings'
   mapping:
-    state_sources:
+    state_factors:
       type: bool
       label: "The sources to use to determine site state."
 

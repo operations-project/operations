@@ -50,6 +50,7 @@ use Drupal\site\SiteEntityTrait;
  *     "description",
  *     "configs_load",
  *     "configs_remote",
+ *     "state_factors",
  *     "data"
  *   }
  * )
@@ -185,9 +186,9 @@ class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface
         'site_uuid' => $this->site_uuid,
         'site_title' => $this->site_title,
         'site_uri' => $this->site_uri,
+        'state' => $this->state,
         'data' => $this->toArray(),
     ];
-    dsm($data);
     $site = SiteEntity::create($data);
     return $site;
   }

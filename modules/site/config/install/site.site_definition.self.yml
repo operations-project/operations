@@ -11,6 +11,10 @@ configs_load: {}
 # List of config items to allow loading from remote site entity.
 configs_remote: {}
 
+# List of factors that affect state
+state_factors:
+  - system
+
 # Arbitrary data
 data: {}
 

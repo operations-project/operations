@@ -61,7 +61,17 @@ class SiteDefinitionForm extends EntityForm {
       '#default_value' => implode(PHP_EOL, $this->entity->get('configs_load')),
       '#description' => $this->t('A list of configuration items that should be made available in the Site entity. Use the main config key, or get a specific item by separating with a color. For example: <pre>system.site</pre> or <pre>core.extension:theme</pre>.'),
     ];
-
+    $form['state_factors'] = [
+      '#type' => 'checkboxes',
+      '#title' => $this->t('State Factors'),
+      '#description' => $this->t('Choose the factors that will affect site state.'),
+      '#options' => [
+        'system' => $this->t('Status Report <a href=":url">view</a>', [
+          ':url' => '/admin/reports/status',
+        ])
+      ],
+      '#default_value' => $this->entity->get('state_factors') ?? [],
+    ];
     return $form;
   }
 

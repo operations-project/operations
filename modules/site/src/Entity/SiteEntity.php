@@ -171,6 +171,7 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
       ->setLabel(t('Site State'))
       ->setDescription(t('The overall state of the site. OK, INFO, WARN, ERROR'))
       ->setRequired(TRUE)
+      ->setRevisionable(TRUE)
       ->setDefaultValue(static::SITE_INFO)
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayOptions('form', [

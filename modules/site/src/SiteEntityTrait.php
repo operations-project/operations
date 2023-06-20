@@ -82,6 +82,13 @@ trait SiteEntityTrait {
   protected int $state;
 
   /**
+   * The factors that can affect this site's state.
+   *
+   * @var array
+   */
+  protected array $state_factors;
+
+  /**
    * A string to describe the reason a site is in a certain state.
    *
    * @var string
