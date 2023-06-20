@@ -51,7 +51,8 @@ use Drupal\site\SiteEntityTrait;
  *     "configs_load",
  *     "configs_remote",
  *     "state_factors",
- *     "data"
+ *     "data",
+ *     "settings"
  *   }
  * )
  */
@@ -73,6 +74,11 @@ class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface
    * @var string
    */
   protected array $config;
+
+  /**
+   * @var array An arbitrary array of settings. Modules can alter the form and save more data.
+   */
+  protected array $settings;
 
   /**
    * Sets label from site title

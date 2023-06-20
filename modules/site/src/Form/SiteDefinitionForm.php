@@ -72,6 +72,48 @@ class SiteDefinitionForm extends EntityForm {
       ],
       '#default_value' => $this->entity->get('state_factors') ?? [],
     ];
+
+    $form['settings'] = [
+      '#tree' => true,
+      '#weight' => 10,
+    ];
+
+    $form['settings']['site_entity'] = [
+      '#title' => $this->t('Historical Site Data'),
+      '#type' => 'details',
+      '#open' => TRUE,
+    ];
+
+    $intervals = [60, 900, 1800, 3600, 7200, 10800, 21600, 32400, 43200, 64800, 86400, 172800, 259200, 604800, 1209600, 2419200];
+    $period = array_map([\Drupal::service('date.formatter'), 'formatInterval'], array_combine($intervals, $intervals));
+    $options = [0 => t('Never')] + $period;
+    $settings = $this->getEntity()->get('settings');
+
+    $form['settings']['site_entity']['save_interval'] = [
+        '#type' => 'select',
+        '#title' => t('Save site data every'),
+        '#description' => t('Regularly save site data for later review.'),
+        '#default_value' => $settings['site_entity']['save_interval'] ?? [0],
+        '#options' => $options,
+    ];
+    $form['settings']['site_entity']['send_interval'] = [
+        '#type' => 'select',
+        '#title' => t('Send site data every'),
+        '#description' => t('Regularly send site data to the configured remote server.'),
+        '#default_value' => $settings['site_entity']['send_interval']  ?? [0],
+        '#options' => $options,
+    ];
+
+    $form['settings']['site_entity']['send_destinations'] = [
+      '#title' => $this->t('Site Data Destinations'),
+      '#description' => $this->t('Enter the URLs to POST site data to, one per line. To connect to a Site Manager instance, use the path "https://site_manager_url/api/site?api_key=xyz".'),
+      '#type' => 'textarea',
+      '#states' => [
+          'invisible' => [
+              ':input[name="settings[site_entity][send_interval]"]' => ['value' => 0]
+          ]
+      ]
+    ];
     return $form;
   }
 
