@@ -46,7 +46,12 @@ class SiteDefinitionEntitySaveForm extends FormBase {
       '#type' => 'submit',
       '#value' => $this->t('Save Site Report'),
     ];
-
+    $form['actions']['send'] = [
+      '#title' => $this->t('Send Report'),
+      '#description' => $this->t('If checked, a report will be sent to the configured reporting destinations.'),
+      '#type' => 'checkbox',
+      '#default_value' => true,
+    ];
     return $form;
   }
 
@@ -81,6 +86,11 @@ class SiteDefinitionEntitySaveForm extends FormBase {
 
       $site->validate();
       $site->save();
+
+      if ($form_state->getValue('send')) {
+        $site->send();
+      }
+
     } catch (EntityStorageException $e) {
       $this->messenger()->addError($e->getMessage());
     }

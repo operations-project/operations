@@ -2,6 +2,7 @@
 
 namespace Drupal\site\Entity;
 
+use Drupal\Component\Serialization\Json;
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityChangedInterface;
@@ -15,6 +16,9 @@ use Drupal\site\SiteEntityTrait;
 use Drupal\user\EntityOwnerInterface;
 use Drupal\user\EntityOwnerTrait;
 use Drupal\site\SiteEntityInterface;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\Psr7\Response;
 
 /**
  * Defines the site entity class.
@@ -350,5 +354,64 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
         'SELECT [vid] FROM {' . $this->getEntityType()->getRevisionTable() . '} WHERE [site_uuid] = :site_uuid ORDER BY [vid]',
         [':site_uuid' => $site->id()]
     )->fetchCol();
+  }
+
+  /**
+   * Sends entity to the configured remotes.
+   * @return void
+   */
+  public function send() {
+    $settings = $this->toArray()['settings'][0];
+
+    // Validate URLs
+    $urls = explode("\n", $settings['send_destinations']);
+    foreach (array_filter($urls) as $url) {
+      $url = trim($url);
+
+      try {
+        $client = new Client([
+          'base_url' => $url,
+          'allow_redirects' => TRUE,
+        ]);
+
+        $payload = [];
+        foreach ($this->getFields() as $field_id => $field) {
+
+          $first = $field->first();
+          if ($first) {
+            $field_data = $first->getValue();
+            $field_key = $first->getDataDefinition()->getMainPropertyName();
+            // If there is no main property name, pass the entire thing.
+            // ie. for the data field.
+            if (empty($field_key)) {
+              $payload['report'][$field_id] = $field_data;
+            } else {
+              $payload['report'][$field_id] = $field_data[$field_key];
+            }
+          }
+        }
+
+        \Drupal::moduleHandler()->alter('site_audit_remote_payload', $payload);
+
+        $response = $client->get($url, [
+          'headers' => [
+            'Accept' => 'application/json',
+          ],
+          'json' => $payload
+        ]);
+
+        \Drupal::messenger()->addStatus('Site report was sent successfully.');
+
+        return $response;
+
+      } catch (GuzzleException $e) {
+        if ($e->hasResponse()) {
+          return $e->getResponse();
+        } else {
+          return new Response(599, [], NULL, '1.1',
+            t('Could not connect to server.'));
+        }
+      }
+    }
   }
 }
