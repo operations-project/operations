@@ -1,10 +1,9 @@
 <?php
 
-namespace Drupal\site_manager\Plugin\rest\resource;
+namespace Drupal\site\Plugin\rest\resource;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
-use Drupal\custom_events\Event\SiteAuditReceiveEvent;
 use Drupal\rest\ModifiedResourceResponse;
 use Drupal\rest\Plugin\ResourceBase;
 use Drupal\rest\ResourceResponse;
@@ -14,13 +13,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * Represents Site entities as resources.
+ * Represents Site Entities as resources.
  *
  * @RestResource (
- *   id = "site_receiver",
- *   label = @Translation("SiteReceiverAPI"),
+ *   id = "site_api",
+ *   label = @Translation("Site API"),
  *   uri_paths = {
- *     "canonical" = "/api/site/{site}",
+ *     "canonical" = "/api/site/{id}",
  *     "create" = "/api/site/create"
  *   }
  * )
@@ -47,7 +46,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * Drupal core.
  * @see \Drupal\rest\Plugin\rest\resource\EntityResource
  */
-class SiteReceiverAPI extends ResourceBase {
+class SiteApiResource extends ResourceBase {
 
   /**
    * {@inheritdoc}
@@ -84,9 +83,7 @@ class SiteReceiverAPI extends ResourceBase {
    * @return \Drupal\rest\ModifiedResourceResponse
    *   The HTTP response object.
    */
-  public function post($string = '') {
-    return [];
-
+  public function post(array $data) {
     $request = \Drupal::request();
 
     if (isset($data['test']) && $data['test']) {
