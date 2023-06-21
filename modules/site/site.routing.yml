@@ -57,7 +57,7 @@ site.site_definition_entity_save:
 
 
 entity.site.revision:
-  path: '/site/{site}/revisions/{site_revision}/view'
+  path:  '/admin/reports/site/{site}/revisions/{site_revision}/view'
   defaults:
     _controller: '\Drupal\site\Controller\SiteController::revisionShow'
   requirements:

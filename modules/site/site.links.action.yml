@@ -4,11 +4,11 @@
 #  appears_on:
 #    - entity.site_type.collection
 #
-site.add_page:
-  title: 'Add site'
-  route_name: 'entity.site.add_form'
-  appears_on:
-    - entity.site.collection
+#site.add_page:
+#  title: 'Add site'
+#  route_name: 'entity.site.add_form'
+#  appears_on:
+#    - entity.site.collection
 
 # @TODO: Move to Operations Manager module.
 #entity.site_definition.add_form:
@@ -17,8 +17,8 @@ site.add_page:
 #  appears_on:
 #    - entity.site_definition.collection
 
-site_environment.add_form:
-  title: 'Add environment'
-  route_name: entity.site_environment.add_form
-  appears_on:
-    - entity.site_environment.collection
+#site_environment.add_form:
+#  title: 'Add environment'
+#  route_name: entity.site_environment.add_form
+#  appears_on:
+#    - entity.site_environment.collection

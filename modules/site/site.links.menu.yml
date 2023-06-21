@@ -6,12 +6,12 @@ operations.admin_operations_sites:
   description: 'Configure sites.'
 
 # /admin/operations/sites/list
-entity.site.collection:
-  title: 'Sites'
-  description: 'List all site entities.'
-  route_name: entity.site.collection
-  parent: operations.admin_operations_sites
-  position: left
+#entity.site.collection:
+#  title: 'Sites'
+#  description: 'List all site entities.'
+#  route_name: entity.site.collection
+#  parent: operations.admin_operations_sites
+#  position: left
 
 # /admin/reports/site
 site.status:
@@ -36,8 +36,8 @@ site.advanced:
 #  route_name:  entity.site_environment.settings
 #  parent: system.admin_config_system
 
-entity.site_environment.collection:
-  title: 'Site Environment'
-  description: "Information about this site's environments."
-  route_name: entity.site_environment.collection
-  parent: system.admin_content
+#entity.site_environment.collection:
+#  title: 'Site Environment'
+#  description: "Information about this site's environments."
+#  route_name: entity.site_environment.collection
+#  parent: system.admin_content

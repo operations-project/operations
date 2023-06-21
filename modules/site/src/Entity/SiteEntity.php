@@ -55,14 +55,10 @@ use Drupal\site\SiteEntityInterface;
  *     "owner" = "uid",
  *   },
  *   links = {
- *     "collection" = "/admin/operations/sites/list",
- *     "canonical" = "/site/{site}",
- *     "delete-form" = "/site/{site}/delete",
- *     "delete-multiple-form" = "/admin/operatoins/sites/delete",
+ *     "canonical" = "/admin/reports/site/{site}",
  *     "edit-form" = "/site/{site}/edit",
  *     "version-history" = "/site/{site}/revisions",
  *     "revision" = "/site/{site}/history/{site_revision}/view",
- *     "add-form" = "/admin/operations/sites/add",
  *   },
  *   revision_metadata_keys = {
  *     "revision_user" = "revision_uid",
