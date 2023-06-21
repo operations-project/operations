@@ -69,30 +69,35 @@ class SiteStateSubscriber implements EventSubscriberInterface {
 
       foreach ($requirements as $requirement) {
         if (isset($requirement['severity'])) {
-
-          if ($requirement['severity'] == REQUIREMENT_ERROR) {
-            $build = t('Status report "@title" returned an error. See @link. The message was: \n@text \n@description', [
-              '@title' => $requirement['title'],
-              '@text' => is_array($requirement['value'])? \Drupal::service('renderer')->render($requirement['value']) : $requirement['value'],
-              '@description' => (isset($requirement['description']) && is_array($requirement['description']))?
-                  \Drupal::service('renderer')->render($requirement['description']):
-                  ($requirement['description'] ?? ''),
-              '@link' => Url::fromRoute('system.status')
-                ->setAbsolute(TRUE)
-                ->toString()
-            ])->render();
-            $reasons[] = $build;
-          }
           if ($requirement['severity'] == REQUIREMENT_WARNING) {
-            $reasons[] = t('Status report "@title" returned a warning: See @link. The message was: \n@text \n@description', [
-              '@title' => $requirement['title'],
-              '@text' => $requirement['value'],
-              '@description' => $requirement['description'],
-              '@link' => Url::fromRoute('system.status')
-                ->setAbsolute(TRUE)
-                ->toString(),
-            ])->render();
+            $type = t('a warning');
           }
+          elseif ($requirement['severity'] == REQUIREMENT_ERROR) {
+            $type = t('an error');
+          }
+          else {
+            // @TODO: Add option to add INFO status entries?
+            continue;
+          }
+
+          $reason = t('Status report "@title" returned :thing: See @link:', [
+            ':thing' => $type,
+            '@title' => $requirement['title'],
+            '@link' => Url::fromRoute('system.status')
+              ->setAbsolute(TRUE)
+              ->toString(),
+          ])->render();
+
+          if (!empty($requirement['description'])) {
+            $string = is_array($requirement['description'])?
+              \Drupal::service('renderer')->render($requirement['description']):
+              $requirement['description']
+            ;
+            $reason .= "<blockquote>$string</blockquote>";
+          }
+
+          $reasons[] = "<p>$reason</p>";
+
           if ($requirement['severity'] > $worst_severity) {
             $worst_severity = $requirement['severity'];
           }
@@ -100,7 +105,7 @@ class SiteStateSubscriber implements EventSubscriberInterface {
       }
 
       $event->siteDefinition->set('state', $worst_severity);
-      $event->siteDefinition->set('reason', implode(PHP_EOL, $reasons));
+      $event->siteDefinition->set('reason', implode(" \n ", $reasons));
     }
   }
 }

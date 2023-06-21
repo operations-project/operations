@@ -21,12 +21,25 @@ class SiteStatusController extends ControllerBase {
   public function build() {
 
     $site_definition = SiteDefinition::load('self');
-
-    $build['history'] = $this->siteStatusHistoryWidget();
-
-    $build['content'] = $site_definition->view();
-
-    $build['save_entity_form'] = \Drupal::formBuilder()->getForm('Drupal\site\Form\SiteDefinitionEntitySaveForm');
+    $build['site_definition'] = [
+      '#title' => $this->t('Current Status'),
+      '#type' => 'details',
+      '#open' => true,
+      'table' => $site_definition->view(),
+    ];
+    $build['site_definition']['save'] = [
+      '#type' => 'fieldset',
+      '#title' => $this->t('Save report'),
+      '#open' => true,
+      '#collapsible' => false,
+      'save' => \Drupal::formBuilder()->getForm('Drupal\site\Form\SiteDefinitionEntitySaveForm'),
+    ];
+    $build['history'] = [
+      '#title' => $this->t('Status History'),
+      '#type' => 'details',
+      '#open' => true,
+      'table' => $this->siteStatusHistoryWidget(),
+    ];
 
     return $build;
   }
@@ -71,9 +84,8 @@ class SiteStatusController extends ControllerBase {
         $rows[] = $row;
       }
 
-      $build['history'] = [
+      $build = [
         '#type' => 'table',
-        '#caption' => $this->t('Status Reports'),
         '#rows' => $rows,
         '#header' => [
           'State',

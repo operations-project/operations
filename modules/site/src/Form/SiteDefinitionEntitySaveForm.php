@@ -44,7 +44,7 @@ class SiteDefinitionEntitySaveForm extends FormBase {
     ];
     $form['actions']['submit'] = [
       '#type' => 'submit',
-      '#value' => $this->t('Save Site Record'),
+      '#value' => $this->t('Save Site Report'),
     ];
 
     return $form;

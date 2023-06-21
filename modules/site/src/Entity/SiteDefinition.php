@@ -135,39 +135,33 @@ class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface
    * @return array[]
    */
   public function view() {
-    $strings = [
-      ':label' => $this->site_title,
-      ':git_remote' => $this->git_remote,
-      ':description' => $this->description,
-      ':state' => $this->stateName(),
-      '@reason' => check_markup($this->reason),
-    ];
-    $build = [
-      'info' => [
-        '#theme' => 'item_list',
-        '#items' => [
-          $this->t("Title: :label", $strings),
-          $this->t("Git Remote: :git_remote", $strings),
-          $this->t("State: :state", $strings),
-          $this->t("Reason: @reason", $strings),
-          $this->t("Description: :description", $strings),
-        ]
-      ]
-    ];
+    $entity_object = $this->toEntity();
 
-    if (!empty($this->config)) {
-      $build['config'] = [
-        '#type' => 'details',
-        '#title' => t('Site Configuration'),
-      ];
-      foreach ($this->config as $config => $data) {
-        $build['config'][$config] = [
-          '#type' => 'item',
-          '#title' => $config,
-          '#markup' => '<pre>' . Yaml::encode($data) . '</pre>',
-        ];
-      }
-    }
+    $label_inline = ['label' => 'inline'];
+    $label_hidden = ['label' => 'hidden'];
+
+    $build['site_title'] = $entity_object->site_title->view($label_inline);
+    $build['site_uri'] = $entity_object->site_uri->view($label_inline);
+
+    $build['state'] = $entity_object->state->view($label_inline);
+    $build['state']['0']['reason'] = $entity_object->reason->view($label_hidden);
+    $build['state']['0']['reason']['#prefix'] = '<blockquote>';
+    $build['state']['0']['reason']['#suffix'] = '</blockquote>';
+    $build['state']['0']['reason'][0]['#format'] = 'basic_html';
+
+//    if (!empty((array) $this->config)) {
+//      $build['config'] = [
+//        '#type' => 'details',
+//        '#title' => t('Site Configuration'),
+//      ];
+//      foreach ($this->config as $config => $data) {
+//        $build['config'][$config] = [
+//          '#type' => 'item',
+//          '#title' => $config,
+//          '#markup' => '<pre>' . Yaml::encode($data) . '</pre>',
+//        ];
+//      }
+//    }
     return $build;
   }
 
