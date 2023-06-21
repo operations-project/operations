@@ -2,25 +2,26 @@
 
 namespace Drupal\site\Plugin\rest\resource;
 
-use Drupal\Component\Serialization\Json;
 use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
 use Drupal\rest\ModifiedResourceResponse;
 use Drupal\rest\Plugin\ResourceBase;
 use Drupal\rest\ResourceResponse;
+use Drupal\site\Entity\SiteDefinition;
+use Drupal\site\Entity\SiteEntity;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * Represents Site Entities as resources.
+ * Exposes simple Site API for getting and saving data.
  *
  * @RestResource (
  *   id = "site_api",
  *   label = @Translation("Site API"),
  *   uri_paths = {
- *     "canonical" = "/api/site/{id}",
- *     "create" = "/api/site/create"
+ *     "canonical" = "/api/site/data",
  *   }
  * )
  *
@@ -51,26 +52,13 @@ class SiteApiResource extends ResourceBase {
   /**
    * {@inheritdoc}
    */
-  public function __construct(
-    array $configuration,
-    $plugin_id,
-    $plugin_definition,
-    array $serializer_formats,
-    LoggerInterface $logger
-  ) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $serializer_formats, $logger, );
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     return new static(
       $configuration,
       $plugin_id,
       $plugin_definition,
       $container->getParameter('serializer.formats'),
-      $container->get('logger.factory')->get('rest')
+      $container->get('logger.factory')->get('rest'),
     );
   }
 
@@ -84,74 +72,93 @@ class SiteApiResource extends ResourceBase {
    *   The HTTP response object.
    */
   public function post(array $data) {
-    $request = \Drupal::request();
+    $this->logger->notice('Saving site entity...');
 
-    if (isset($data['test']) && $data['test']) {
-      $headers['Message'] = $this->t('Test POST was successful.');
-      $this->logger->notice($this->t('Remote Test Received from IP :ip',[
-        ':ip' => $request->getClientIp(),
-      ]));
-      return new ModifiedResourceResponse($data, 200, $headers);
-    }
-    elseif (isset($data['report']) && $data['report']) {
-      $entity_data = $data['report'];
-
-      // currentUser should be the REST API Authenticated user (Usually API key.))
-      $entity_data['uid'] = \Drupal::currentUser()->id();
-
-      $report_entity =  \Drupal::entityTypeManager()
-        ->getStorage('site_audit_report')
-        ->create($entity_data)
-      ;
-      $report_entity->save();
-      $url =  $report_entity->toUrl('canonical', [
-        'absolute' => TRUE,
-      ])->toString();
-      $this->logger->notice($this->t('Remote Report Received from :ip: :label - :url', [
-        ':label' => $report_entity->label(),
-        ':url' => $url,
-        ':ip' => $request->getClientIp(),
-      ]));
-
-      # @TODO: Allow modules to add to responses.
-      $headers = [
-        'Message' => $this->t('Report Received.'),
-        'ReportUri' => $url,
-      ];
-      $response = new ModifiedResourceResponse($data, 200, $headers);
-      $response->headers->set('report', json_encode($data['report']));
-
-      // Invoke hook_site_audit_server_response.
-      \Drupal::moduleHandler()->alter('site_audit_server_response', $response, $report_entity);
-
-      return $response;
-
-    }
-    else {
-      $headers['Message'] = $this->t('No "test" or "report" found in POST data: $data = :var', [
-        ':var' => var_export($data),
-      ]);
-      return new ModifiedResourceResponse($data, 400, $headers);
-    }
+    // Return the newly created record in the response body.
+    $data['received_by'] = \Drupal::request()->getClientIP();
+    return new ModifiedResourceResponse($data, 201);
   }
 
   /**
-   * Responds to GET requests.
+   * Generate and return a SiteEntity Object.
+   *
+   * @TODO: Do we need to save a local siteEntity for every GET request?
+   * I think it's good because then we can tell what was reported to API clients.
+   *
+   * @return JsonResponse
+   *   The response containing the record.
+   */
+  public function get() {
+    $site_definition = SiteDefinition::load('self');
+    $new_site_entity = $site_definition->saveEntity($this->t("Saving site entity via Site API GET request from :ip", [
+        ':ip' => \Drupal::request()->getClientIp()
+    ]));
+
+    if (empty($new_site_entity)) {
+      throw new BadRequestHttpException();
+    }
+    return new JsonResponse($new_site_entity->toArray());
+  }
+
+  /**
+   * Responds to PATCH requests.
+   *
+   * @param int $id
+   *   The ID of the record.
+   * @param array $data
+   *   Data to write into the storage.
+   *
+   * @return \Drupal\rest\ModifiedResourceResponse
+   *   The HTTP response object.
+   */
+  public function patch($id, array $data) {
+    if (!$this->storage->has($id)) {
+      throw new NotFoundHttpException();
+    }
+    $stored_data = $this->storage->get($id);
+    $data += $stored_data;
+    $this->storage->set($id, $data);
+    $this->logger->notice('The site api record @id has been updated.');
+    return new ModifiedResourceResponse($data, 200);
+  }
+
+  /**
+   * Responds to DELETE requests.
    *
    * @param int $id
    *   The ID of the record.
    *
-   * @return \Drupal\rest\ResourceResponse
-   *   The response containing the record.
+   * @return \Drupal\rest\ModifiedResourceResponse
+   *   The HTTP response object.
    */
-  public function get($id) {
-    $items = \Drupal::entityTypeManager()
-      ->getStorage('site_audit_report') 
-      ->load($id)
-      ->toArray();
-    
-    // @TODO: What's the right way?
-    print Json::encode($items);
-    return;
+  public function delete($id) {
+    if (!$this->storage->has($id)) {
+      throw new NotFoundHttpException();
+    }
+    $this->storage->delete($id);
+    $this->logger->notice('The site api record @id has been deleted.', ['@id' => $id]);
+    // Deleted responses have an empty body.
+    return new ModifiedResourceResponse(NULL, 204);
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getBaseRoute($canonical_path, $method) {
+    $route = parent::getBaseRoute($canonical_path, $method);
+    // Set ID validation pattern.
+    if ($method != 'POST') {
+      $route->setRequirement('id', '\d+');
+    }
+    return $route;
+  }
+
+  /**
+   * Returns next available ID.
+   */
+  private function getNextId() {
+    $ids = \array_keys($this->storage->getAll());
+    return count($ids) > 0 ? max($ids) + 1 : 1;
+  }
+
 }

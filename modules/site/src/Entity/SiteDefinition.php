@@ -186,23 +186,48 @@ class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface
     $this->reason = $event->siteDefinition->get('reason') ?? '';
   }
 
-  public function toEntity() {
-
+  /**
+   * Transform SiteDefinition data to SiteEntity data.
+   * @return array
+   */
+  public function toEntityData() {
     $data = [
         'site_uuid' => $this->site_uuid,
         'site_title' => $this->site_title,
         'site_uri' => $this->site_uri,
         'state' => $this->state,
         'reason' => $this->reason,
-        'data' => $this->toArray(),
+        'data' => $this->data,
+        'settings' => $this->settings,
     ];
-    $site = SiteEntity::create($data);
+    return $data;
+  }
+
+  public function toEntity() {
+    $site = SiteEntity::create($this->toEntityData());
     return $site;
   }
 
-  public function saveEntity() {
-    $site = self::toEntity();
-    $site->save();
-    return $site;
+  /**
+   * Saves a site entity (or a new revision of the existing one.)
+   * @return \Drupal\Core\Entity\ContentEntityBase|\Drupal\Core\Entity\EntityBase|\Drupal\Core\Entity\EntityInterface|SiteEntity
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  public function saveEntity($revision_log = '') {
+
+    $site_entity = SiteEntity::load($this->site_uuid);
+    if ($site_entity) {
+      $site_entity->setNewRevision();
+      $site_entity->revision_log = $revision_log;
+      $site_entity_properties = $this->toEntityData();
+      foreach ($site_entity_properties as $property => $value) {
+        $site_entity->set($property, $value);
+      }
+    }
+    else {
+      $site_entity = $this->toEntity();
+    }
+    $site_entity->save();
+    return $site_entity;
   }
 }
