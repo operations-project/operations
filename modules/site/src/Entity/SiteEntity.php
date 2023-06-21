@@ -63,10 +63,10 @@ use GuzzleHttp\Psr7\Response;
  *   },
  *   links = {
  *     "canonical" = "/admin/reports/site/{site}",
- *     "edit-form" = "/site/{site}/edit",
- *     "delete-form" = "/site/{site}/delete",
- *     "version-history" = "/site/{site}/revisions",
- *     "revision" = "/site/{site}/history/{site_revision}/view",
+ *     "edit-form" = "/admin/reports/site/{site}/edit",
+ *     "delete-form" = "/admin/reports/site/{site}/delete",
+ *     "version-history" = "/admin/reports/site/{site}/revisions",
+ *     "revision" = "/admin/reports/site/{site}/revisions/{site_revision}/view",
  *   },
  *   revision_metadata_keys = {
  *     "revision_user" = "revision_uid",
