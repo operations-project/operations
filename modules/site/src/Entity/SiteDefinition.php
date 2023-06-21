@@ -151,7 +151,7 @@ class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface
     $build['state']['0']['reason']['#suffix'] = '</blockquote>';
     $build['state']['0']['reason'][0]['#format'] = 'basic_html';
 
-    if (!empty((array) $this->config)) {
+    if (!empty($this->config)) {
       $build['config'] = [
         '#type' => 'details',
         '#title' => t('Current Site Configuration'),
