@@ -17,6 +17,7 @@ state_factors:
 
 # Arbitrary data
 data: {}
+settings: {}
 
 # Derived properties
 #site_title: "This site's title."
