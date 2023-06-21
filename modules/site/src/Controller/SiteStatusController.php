@@ -57,12 +57,14 @@ class SiteStatusController extends ControllerBase {
             'label' => 'hidden'
         ]);
         $reason = $site_revision->reason->view([
-            'label' => 'hidden'
+            'label' => 'hidden',
+            'type'=> 'text_trimmed',
         ]);
 
         $row = [];
         $row[] = \Drupal::service('renderer')->render($state);
         $row[] = $site_revision->toLink();
+        $row[] = $site_revision->get('revision_log')->value;
         $row[] = \Drupal::service('renderer')->render($date);
         $row[] = \Drupal::service('renderer')->render($reason);
         $row[] = $site_revision->get('vid')->value;
@@ -76,6 +78,7 @@ class SiteStatusController extends ControllerBase {
         '#header' => [
           'State',
           'Title',
+          'Log',
           'Date',
           'State Reason',
           'Report #'
