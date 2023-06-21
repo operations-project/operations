@@ -150,19 +150,19 @@ class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface
     $build['state']['0']['reason']['#suffix'] = '</blockquote>';
     $build['state']['0']['reason'][0]['#format'] = 'basic_html';
 
-//    if (!empty((array) $this->config)) {
-//      $build['config'] = [
-//        '#type' => 'details',
-//        '#title' => t('Site Configuration'),
-//      ];
-//      foreach ($this->config as $config => $data) {
-//        $build['config'][$config] = [
-//          '#type' => 'item',
-//          '#title' => $config,
-//          '#markup' => '<pre>' . Yaml::encode($data) . '</pre>',
-//        ];
-//      }
-//    }
+    if (!empty((array) $this->config)) {
+      $build['config'] = [
+        '#type' => 'details',
+        '#title' => t('Current Site Configuration'),
+      ];
+      foreach ($this->config as $config => $data) {
+        $build['config'][$config] = [
+          '#type' => 'item',
+          '#title' => $config,
+          '#markup' => '<pre>' . Yaml::encode($data) . '</pre>',
+        ];
+      }
+    }
     return $build;
   }
 
