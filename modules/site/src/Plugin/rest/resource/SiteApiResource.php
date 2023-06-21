@@ -13,6 +13,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\RouteCollection;
 
 /**
  * Exposes simple Site API for getting and saving data.
@@ -98,18 +99,5 @@ class SiteApiResource extends ResourceBase {
       throw new BadRequestHttpException();
     }
     return new JsonResponse($new_site_entity->toArray());
-  }
-
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function getBaseRoute($canonical_path, $method) {
-    $route = parent::getBaseRoute($canonical_path, $method);
-    // Set ID validation pattern.
-    if ($method != 'POST') {
-      $route->setRequirement('id', '\d+');
-    }
-    return $route;
   }
 }
