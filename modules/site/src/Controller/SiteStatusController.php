@@ -71,8 +71,12 @@ class SiteStatusController extends ControllerBase {
         ]);
         $reason = $site_revision->reason->view([
             'label' => 'hidden',
-            'type'=> 'text_trimmed',
+            'type'=> 'text',
         ]);
+        $reason[0]['#format'] = 'basic_html';
+        $reason[0]['#prefix'] = '<blockquote>';
+        $reason[0]['#suffix'] = '</blockquote>';
+
         $title = $site_revision->site_title->view([
           'label' => 'hidden',
         ]);
