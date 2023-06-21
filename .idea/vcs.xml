@@ -4,7 +4,7 @@
     <mapping directory="" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/web/modules/contrib/operations" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/web/modules/contrib/site_audit" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/web/modules/contrib/site_audit_server" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/web/modules/custom/devshop_tasks" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/web/modules/custom/site_audit_server" vcs="Git" />
   </component>
 </project>
