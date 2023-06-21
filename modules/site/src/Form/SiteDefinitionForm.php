@@ -34,7 +34,7 @@ class SiteDefinitionForm extends EntityForm {
     );
     $form['info'] = array(
       '#type' => 'details',
-      '#title' => $this->t('Information & Settings'),
+      '#title' => $this->t('Information'),
       '#group' => 'information',
     );
     $form['state'] = array(
@@ -52,7 +52,12 @@ class SiteDefinitionForm extends EntityForm {
       '#title' => $this->t('Site Config'),
       '#group' => 'information',
     );
-
+    $form['site_state'] = [
+      '#type' => 'item',
+      '#title' => $this->t('Site State'),
+      '#markup' => $this->entity->stateName(),
+      '#description' => $this->t('The current state of the site.'),
+    ];
     $form['site_title'] = [
       '#type' => 'item',
       '#title' => $this->t('Site Title'),
@@ -77,6 +82,13 @@ class SiteDefinitionForm extends EntityForm {
     ];
     $form['id'] = [
       '#value' => $this->entity->id(),
+    ];
+
+    $form['info']['git_remote'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Git Remote URL'),
+      '#default_value' => $this->entity->get('git_remote'),
+      '#description' => $this->t('The URL of the git repository this site is built from.'),
     ];
 
     $form['info']['description'] = [
@@ -104,11 +116,6 @@ class SiteDefinitionForm extends EntityForm {
       '#default_value' => $this->entity->get('state_factors') ?? [],
     ];
 
-    $form['info']['settings'] = [
-      '#tree' => true,
-      '#weight' => 10,
-    ];
-
     $intervals = [60, 900, 1800, 3600, 7200, 10800, 21600, 32400, 43200, 64800, 86400, 172800, 259200, 604800, 1209600, 2419200];
     $period = array_map([\Drupal::service('date.formatter'), 'formatInterval'], array_combine($intervals, $intervals));
     $options = [0 => t('Never')] + $period;
@@ -118,27 +125,30 @@ class SiteDefinitionForm extends EntityForm {
         '#type' => 'select',
         '#title' => t('Save site data every'),
         '#description' => t('Regularly save site data for later review.'),
-        '#default_value' => $settings['site_entity']['save_interval'] ?? [0],
+        '#default_value' => $settings['save_interval'] ?? [0],
         '#options' => $options,
+      '#parents' => ['settings', 'save_interval']
     ];
     $form['reporting']['send_interval'] = [
         '#type' => 'select',
         '#title' => t('Send site data every'),
         '#description' => t('Regularly send site data to the configured remote server.'),
-        '#default_value' => $settings['site_entity']['send_interval']  ?? [0],
+        '#default_value' => $settings['send_interval']  ?? [0],
         '#options' => $options,
+        '#parents' => ['settings', 'send_interval']
     ];
 
     $form['reporting']['send_destinations'] = [
       '#title' => $this->t('Site Data Destinations'),
-      '#description' => $this->t('Enter the URLs to POST site data to, one per line. To connect to a Site Manager instance, use the path "https://site_manager_url/api/site?api_key=xyz".'),
-      '#default_value' => $settings['site_entity']['send_destinations']  ?? "",
+      '#description' => $this->t('Enter the URLs to POST site data to, one per line. To connect to a Site Manager instance, use the path "https://site_manager_url/api/site/data?api-key=xyz".'),
+      '#default_value' => $settings['send_destinations']  ?? "",
       '#type' => 'textarea',
       '#states' => [
           'invisible' => [
               ':input[name="settings[site_entity][send_interval]"]' => ['value' => 0]
           ]
-      ]
+      ],
+      '#parents' => ['settings', 'send_destinations']
     ];
     return $form;
   }
@@ -157,7 +167,7 @@ class SiteDefinitionForm extends EntityForm {
     $settings = $form_state->getValue('settings');
 
     // Validate URLs
-    $urls = explode("\n", $settings['site_entity']['send_destinations']);
+    $urls = explode("\n", $settings['send_destinations']);
     foreach (array_filter($urls) as $url) {
       $url = trim($url);
       try {
