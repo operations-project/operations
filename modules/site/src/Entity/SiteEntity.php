@@ -294,6 +294,13 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
       ->setRequired(FALSE)
       ->setDisplayConfigurable('view', TRUE)
     ;
+    $fields['settings'] = BaseFieldDefinition::create('map')
+      ->setRevisionable(TRUE)
+      ->setLabel(t('Site Settings'))
+      ->setDescription(t('A map of arbitrary settings for the site. Use for editable things.'))
+      ->setRequired(FALSE)
+      ->setDisplayConfigurable('view', TRUE)
+    ;
     return $fields;
   }
 
