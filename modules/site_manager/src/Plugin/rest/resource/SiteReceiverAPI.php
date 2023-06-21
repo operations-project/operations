@@ -21,7 +21,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  *   label = @Translation("SiteReceiverAPI"),
  *   uri_paths = {
  *     "canonical" = "/api/site/{site}",
- *     "create" = "/api/site"
+ *     "create" = "/api/site/create"
  *   }
  * )
  *
@@ -84,7 +84,9 @@ class SiteReceiverAPI extends ResourceBase {
    * @return \Drupal\rest\ModifiedResourceResponse
    *   The HTTP response object.
    */
-  public function post(array $data) {
+  public function post($string = '') {
+    return [];
+
     $request = \Drupal::request();
 
     if (isset($data['test']) && $data['test']) {
