@@ -2,6 +2,7 @@
 
 namespace Drupal\site\Entity;
 
+use _PHPStan_978789531\Nette\PhpGenerator\Parameter;
 use _PHPStan_978789531\Symfony\Contracts\Service\Attribute\Required;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Entity\ContentEntityBase;
@@ -63,6 +64,7 @@ use GuzzleHttp\Psr7\Response;
  *   links = {
  *     "canonical" = "/admin/reports/site/{site}",
  *     "edit-form" = "/site/{site}/edit",
+ *     "delete-form" = "/site/{site}/delete",
  *     "version-history" = "/site/{site}/revisions",
  *     "revision" = "/site/{site}/history/{site_revision}/view",
  *   },
@@ -302,6 +304,21 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
       ->setDescription(t('A map of arbitrary settings for the site. Use for editable things.'))
       ->setRequired(FALSE)
       ->setDisplayConfigurable('view', TRUE)
+    ;
+    $fields['config_overrides'] = BaseFieldDefinition::create('string')
+      ->setRevisionable(TRUE)
+      ->setLabel(t('Site Config Overrides'))
+      ->setDescription(t('A Yaml map of Drupal configuration to apply to this site.'))
+      ->setRequired(FALSE)
+      ->setDisplayConfigurable('view', TRUE)
+      ->setDisplayOptions('view', [
+        'label' => 'above',
+        'type' => 'text_default',
+      ])
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayOptions('form', [
+        'type' => 'text_textarea',
+      ])
     ;
     return $fields;
   }
