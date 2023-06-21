@@ -4,6 +4,7 @@ namespace Drupal\site\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Serialization\Yaml;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\site\SiteDefinitionInterface;
@@ -49,7 +50,7 @@ use Drupal\site\SiteEntityTrait;
  *     "git_remote",
  *     "description",
  *     "configs_load",
- *     "configs_remote",
+ *     "configs_allow_override",
  *     "state_factors",
  *     "data",
  *     "settings"

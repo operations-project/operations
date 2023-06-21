@@ -54,18 +54,18 @@ trait SiteEntityTrait {
    *
    * @var array
    */
-  protected array $configs_load;
+  protected array $configs_load = [];
 
   /**
    * A list of config objects to allow setting from remote Site Manager.
    *
    * The Site Connect module sends this entity to Site API, which can return
-   * config data. If the configs are in $configs_remote, they will be set
+   * config data. If the configs are in $configs_allow_override, they will be set
    * on the client site.
    *
    * @var array
    */
-  protected array $configs_remote;
+  protected array $configs_allow_override = [];
 
   /**
    * An arbitrary array of data.

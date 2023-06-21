@@ -6,10 +6,10 @@ git_remote: ""
 description: "A site definition representing this site."
 
 # List of config items to load into a Site Entity.
-configs_load: {}
+configs_load: []
 
 # List of config items to allow loading from remote site entity.
-configs_remote: {}
+configs_allow_override: []
 
 # List of factors that affect state
 state_factors:
