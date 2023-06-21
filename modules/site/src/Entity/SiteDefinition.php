@@ -112,12 +112,12 @@ class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface
         $config_key = $config_items[0];
         $config_name = $config_items[1] ?? '';
         if ($config_name) {
-          $this->config[$config_key] = [
+          $this->data['config'][$config_key] = [
             $config_name => \Drupal::config($config_key)->get($config_name),
           ];
         }
         else {
-          $this->config[$config_key] = \Drupal::config($config_key)->get();
+          $this->data['config'][$config_key] = \Drupal::config($config_key)->get();
         }
       }
     }
