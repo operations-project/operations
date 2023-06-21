@@ -100,46 +100,6 @@ class SiteApiResource extends ResourceBase {
     return new JsonResponse($new_site_entity->toArray());
   }
 
-  /**
-   * Responds to PATCH requests.
-   *
-   * @param int $id
-   *   The ID of the record.
-   * @param array $data
-   *   Data to write into the storage.
-   *
-   * @return \Drupal\rest\ModifiedResourceResponse
-   *   The HTTP response object.
-   */
-  public function patch($id, array $data) {
-    if (!$this->storage->has($id)) {
-      throw new NotFoundHttpException();
-    }
-    $stored_data = $this->storage->get($id);
-    $data += $stored_data;
-    $this->storage->set($id, $data);
-    $this->logger->notice('The site api record @id has been updated.');
-    return new ModifiedResourceResponse($data, 200);
-  }
-
-  /**
-   * Responds to DELETE requests.
-   *
-   * @param int $id
-   *   The ID of the record.
-   *
-   * @return \Drupal\rest\ModifiedResourceResponse
-   *   The HTTP response object.
-   */
-  public function delete($id) {
-    if (!$this->storage->has($id)) {
-      throw new NotFoundHttpException();
-    }
-    $this->storage->delete($id);
-    $this->logger->notice('The site api record @id has been deleted.', ['@id' => $id]);
-    // Deleted responses have an empty body.
-    return new ModifiedResourceResponse(NULL, 204);
-  }
 
   /**
    * {@inheritdoc}
@@ -152,13 +112,4 @@ class SiteApiResource extends ResourceBase {
     }
     return $route;
   }
-
-  /**
-   * Returns next available ID.
-   */
-  private function getNextId() {
-    $ids = \array_keys($this->storage->getAll());
-    return count($ids) > 0 ? max($ids) + 1 : 1;
-  }
-
 }
