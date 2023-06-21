@@ -27,6 +27,32 @@ class SiteDefinitionForm extends EntityForm {
       $this->setEntity(SiteDefinition::load('self'));
     }
     $form = parent::form($form, $form_state);
+    $form['information'] = array(
+      '#type' => 'vertical_tabs',
+      '#default_tab' => 'edit-info',
+      '#weight' => 10,
+    );
+    $form['info'] = array(
+      '#type' => 'details',
+      '#title' => $this->t('Information & Settings'),
+      '#group' => 'information',
+    );
+    $form['state'] = array(
+      '#type' => 'details',
+      '#title' => $this->t('State'),
+      '#group' => 'information',
+    );
+    $form['reporting'] = array(
+      '#type' => 'details',
+      '#title' => $this->t('Site Reporting'),
+      '#group' => 'information',
+    );
+    $form['config'] = array(
+      '#type' => 'details',
+      '#title' => $this->t('Site Config'),
+      '#group' => 'information',
+    );
+
     $form['site_title'] = [
       '#type' => 'item',
       '#title' => $this->t('Site Title'),
@@ -53,20 +79,20 @@ class SiteDefinitionForm extends EntityForm {
       '#value' => $this->entity->id(),
     ];
 
-    $form['description'] = [
+    $form['info']['description'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Description'),
       '#default_value' => $this->entity->get('description'),
-      '#description' => $this->t('Description of the site definition.'),
+      '#description' => $this->t('A description of this site. This will not be shown to visitors.'),
     ];
 
-    $form['configs_load'] = [
+    $form['config']['configs_load'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Configuration items to load.'),
       '#default_value' => implode(PHP_EOL, $this->entity->get('configs_load')),
       '#description' => $this->t('A list of configuration items that should be made available in the Site entity. Use the main config key, or get a specific item by separating with a color. For example: <pre>system.site</pre> or <pre>core.extension:theme</pre>.'),
     ];
-    $form['state_factors'] = [
+    $form['state']['state_factors'] = [
       '#type' => 'checkboxes',
       '#title' => $this->t('State Factors'),
       '#description' => $this->t('Choose the factors that will affect site state.'),
@@ -78,15 +104,9 @@ class SiteDefinitionForm extends EntityForm {
       '#default_value' => $this->entity->get('state_factors') ?? [],
     ];
 
-    $form['settings'] = [
+    $form['info']['settings'] = [
       '#tree' => true,
       '#weight' => 10,
-    ];
-
-    $form['settings']['site_entity'] = [
-      '#title' => $this->t('Historical Site Data'),
-      '#type' => 'details',
-      '#open' => TRUE,
     ];
 
     $intervals = [60, 900, 1800, 3600, 7200, 10800, 21600, 32400, 43200, 64800, 86400, 172800, 259200, 604800, 1209600, 2419200];
@@ -94,14 +114,14 @@ class SiteDefinitionForm extends EntityForm {
     $options = [0 => t('Never')] + $period;
     $settings = $this->getEntity()->get('settings');
 
-    $form['settings']['site_entity']['save_interval'] = [
+    $form['reporting']['save_interval'] = [
         '#type' => 'select',
         '#title' => t('Save site data every'),
         '#description' => t('Regularly save site data for later review.'),
         '#default_value' => $settings['site_entity']['save_interval'] ?? [0],
         '#options' => $options,
     ];
-    $form['settings']['site_entity']['send_interval'] = [
+    $form['reporting']['send_interval'] = [
         '#type' => 'select',
         '#title' => t('Send site data every'),
         '#description' => t('Regularly send site data to the configured remote server.'),
@@ -109,7 +129,7 @@ class SiteDefinitionForm extends EntityForm {
         '#options' => $options,
     ];
 
-    $form['settings']['site_entity']['send_destinations'] = [
+    $form['reporting']['send_destinations'] = [
       '#title' => $this->t('Site Data Destinations'),
       '#description' => $this->t('Enter the URLs to POST site data to, one per line. To connect to a Site Manager instance, use the path "https://site_manager_url/api/site?api_key=xyz".'),
       '#default_value' => $settings['site_entity']['send_destinations']  ?? "",
