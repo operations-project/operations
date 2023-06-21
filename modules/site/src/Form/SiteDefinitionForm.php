@@ -146,12 +146,13 @@ class SiteDefinitionForm extends EntityForm {
           'allow_redirects' => TRUE,
         ]);
         $payload = $this->getEntity()->toArray();
-        $response = $client->post($url, [
+        $options = [
           'headers' => [
             'Accept' => 'application/json',
           ],
-          'json' => [],
-        ]);
+          'json' => Json::encode($payload),
+        ];
+        $response = $client->get($url, $options);
 
         \Drupal::messenger()->addStatus($this->t("Successfully connected to :url: :code", [
             ':url' => $url,
