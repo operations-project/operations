@@ -8,6 +8,7 @@ use Drupal\rest\Plugin\ResourceBase;
 use Drupal\rest\ResourceResponse;
 use Drupal\site\Entity\SiteDefinition;
 use Drupal\site\Entity\SiteEntity;
+use http\QueryString;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -94,6 +95,18 @@ class SiteApiResource extends ResourceBase {
     $new_site_entity = $site_definition->saveEntity($this->t("Saving site entity via Site API GET request from :ip", [
         ':ip' => \Drupal::request()->getClientIp()
     ]));
+
+    $new_site_entity->data->remote_report_received_from = \Drupal::request()->getClientIp();
+    $new_site_entity->data->remote_report_received_query = \Drupal::request()->query->all();
+    $new_site_entity->data->remote_site_entity_url = $new_site_entity->toUrl('canonical', [
+      'absolute' => true,
+    ])->toString();
+
+    foreach (\Drupal::request()->query->all() as $field => $value) {
+      if ($field != 'vid' && $new_site_entity->getFieldDefinition($field)) {
+        $new_site_entity->set($field, $value);
+      }
+    }
 
     if (empty($new_site_entity)) {
       throw new BadRequestHttpException();

@@ -2,6 +2,7 @@
 
 namespace Drupal\site\Entity;
 
+use _PHPStan_978789531\Symfony\Contracts\Service\Attribute\Required;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\ContentEntityInterface;
@@ -12,6 +13,7 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\RevisionableContentEntityBase;
 use Drupal\Core\Entity\RevisionableEntityBundleInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Url;
 use Drupal\site\SiteEntityTrait;
 use Drupal\user\EntityOwnerInterface;
 use Drupal\user\EntityOwnerTrait;
@@ -384,32 +386,55 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
             // If there is no main property name, pass the entire thing.
             // ie. for the data field.
             if (empty($field_key)) {
-              $payload['report'][$field_id] = $field_data;
+              $payload[$field_id] = $field_data;
             } else {
-              $payload['report'][$field_id] = $field_data[$field_key];
+              $payload[$field_id] = $field_data[$field_key];
             }
           }
         }
 
         \Drupal::moduleHandler()->alter('site_audit_remote_payload', $payload);
+        $payload['sent_from'] = $_SERVER['HTTP_HOST'];
 
-        $response = $client->get($url, [
+        // @TODO: Fix the SiteApiResource to accept POST.
+        $url = Url::fromUri($url, [
+          'query' => $payload,
+          'absolute' => true,
+        ]);
+
+        $response = $client->get($url->toString(), [
           'headers' => [
             'Accept' => 'application/json',
           ],
-          'json' => $payload
-        ]);
+        ], $payload);
 
         \Drupal::messenger()->addStatus('Site report was sent successfully.');
 
-        return $response;
+        $response_entity_data = Json::decode($response->getBody()->getContents());
+        $uuid = $response_entity_data['site_uuid'][0]['value'];
+        $site_entity = SiteEntity::load($uuid);
+        $site_entity->setNewRevision();
+        $site_entity->revision_log = t('Set from remote response');
+
+        foreach ($response_entity_data as $field => $value) {
+          $site_entity->set($field, $value);
+        }
+
+        $site_entity->save();
+
+        // @TODO: Save locally.
+        return true;
 
       } catch (GuzzleException $e) {
         if ($e->hasResponse()) {
+          \Drupal::messenger()->addError(t('There was an error when posting to the remote server: :message', [
+            ':message' => $e->getMessage(),
+          ]));
+
           return $e->getResponse();
         } else {
-          return new Response(599, [], NULL, '1.1',
-            t('Could not connect to server.'));
+          \Drupal::messenger()->addError(t('Could not connect to server.'));
+          return null;
         }
       }
     }
