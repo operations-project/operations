@@ -54,3 +54,17 @@ site.site_definition_entity_save:
     _form: 'Drupal\site\Form\SiteDefinitionEntitySaveForm'
   requirements:
     _permission: 'save site definition'
+
+
+entity.site.revision:
+  path: '/site/{site}/revisions/{site_revision}/view'
+  defaults:
+    _controller: '\Drupal\site\Controller\SiteController::revisionShow'
+  requirements:
+    _permission: 'view site entity revisions'
+  options:
+    parameters:
+      site:
+        type: entity:site
+      site_revision:
+        type: entity_revision:site

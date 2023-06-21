@@ -19,3 +19,7 @@ edit site:
 administer site environment:
   title: 'Administer site environment settings'
   restrict access: true
+
+view site entity revisions:
+  title: 'view site entity revisions'
+  restrict access: true
