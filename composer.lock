@@ -1919,10 +1919,15 @@
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/operations.git",
-                "reference": "e44eaa8528a4aac4e2c55bc46a3727deed13444e"
+                "reference": "642f31d27a0dae495dafdbf1dfcd073460b4c656"
             },
             "require": {
                 "drupal/core": "^9 || ^10"
+            },
+            "require-dev": {
+                "drupal/key_auth": "*",
+                "drupal/serialization-serialization": "*",
+                "drupal/site": "*"
             },
             "type": "drupal-module",
             "extra": {
@@ -1931,7 +1936,7 @@
                 },
                 "drupal": {
                     "version": "1.0.x-dev",
-                    "datestamp": "1687294848",
+                    "datestamp": "1687378462",
                     "security-coverage": {
                         "status": "not-covered",
                         "message": "Project has not opted into security advisory coverage!"
@@ -11062,5 +11067,5 @@
         "php": ">=8.1"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.2.0"
 }
