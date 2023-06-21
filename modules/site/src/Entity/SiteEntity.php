@@ -380,6 +380,10 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
    * @return void
    */
   public function send() {
+    if (empty($this->toArray()['settings'][0]['send_destinations'])) {
+      \Drupal::messenger()->addError('There are no send destinations configured. Unable to send Site data.');
+      return;
+    }
     $settings = $this->toArray()['settings'][0];
 
     // Validate URLs

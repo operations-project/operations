@@ -50,7 +50,8 @@ class SiteDefinitionEntitySaveForm extends FormBase {
       '#title' => $this->t('Send Report'),
       '#description' => $this->t('If checked, a report will be sent to the configured reporting destinations.'),
       '#type' => 'checkbox',
-      '#default_value' => true,
+      '#default_value' => !empty($site_definition->get('settings')['send_destinations']),
+      '#access' => !empty($site_definition->get('settings')['send_destinations']),
     ];
     return $form;
   }
