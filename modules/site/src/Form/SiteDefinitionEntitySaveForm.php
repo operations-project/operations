@@ -66,7 +66,7 @@ class SiteDefinitionEntitySaveForm extends FormBase {
 
     if ($form_state->getValue('site_uuid')) {
       $site = SiteEntity::load($form_state->getValue('site_uuid'));
-      $site->setNewRevision(TRUE);
+
       foreach ($site_entity_new as $name => $value) {
         $site->{$name} = $value;
       }
@@ -76,6 +76,9 @@ class SiteDefinitionEntitySaveForm extends FormBase {
     }
 
     try {
+      $site->setNewRevision(TRUE);
+      $site->setRevisionLogMessage($form_state->getValue('revision_log'));
+
       $site->validate();
       $site->save();
     } catch (EntityStorageException $e) {
