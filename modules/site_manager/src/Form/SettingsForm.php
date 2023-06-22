@@ -56,7 +56,7 @@ class SettingsForm extends ConfigFormBase {
     foreach ($global_config_items as $config_name) {
       try {
         $settings = Yaml::parse($form_state->getValue('global_' . $config_name));
-        if (is_string($settings) || !is_string(key($settings))) {
+        if (is_string($settings) || (is_array($settings) && !is_string(key($settings)))) {
           $form_state->setErrorByName('global_' . $config_name, $this->t('Global Site Overrides must be a yaml mapping. Use the format "name: value".'));
         }
       } catch (ParseException $e) {
