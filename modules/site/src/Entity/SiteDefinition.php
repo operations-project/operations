@@ -54,7 +54,6 @@ use Drupal\site\SiteEntityTrait;
  *     "states_load",
  *     "states_allow_override",
  *     "state_factors",
- *     "data",
  *     "settings"
  *   }
  * )
@@ -91,7 +90,7 @@ class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface
     parent::__construct($values, $entity_type);
     $this->setDynamicProperties();
     $this->getConfig();
-    //$this->getDrupalStates();
+    $this->getDrupalStates();
   }
 
   public function setDynamicProperties() {

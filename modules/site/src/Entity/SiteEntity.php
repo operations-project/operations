@@ -357,6 +357,12 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
       ->setDescription(t('A Yaml map of Drupal configuration to apply to this site.'))
       ->setRequired(FALSE)
     ;
+    $fields['state_overrides'] = BaseFieldDefinition::create('map')
+      ->setRevisionable(TRUE)
+      ->setLabel(t('Site State Overrides'))
+      ->setDescription(t('A Yaml map of Drupal states to apply to this site. See https://www.drupal.org/docs/8/api/state-api/overview'))
+      ->setRequired(FALSE)
+    ;
     return $fields;
   }
 
