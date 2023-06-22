@@ -20,22 +20,22 @@ entity.site.edit_form:
 #  base_route: operations.admin_operations_sites
 
 site.status:
-  title: 'Site Status'
+  title: 'Status'
   route_name: site.status
   base_route: site.status
 
 site.advanced:
-  title: 'Site Settings'
+  title: 'Settings'
   route_name: site.advanced
   base_route: site.status
 
 site.edit:
-  title: 'Edit Site Information'
+  title: 'Edit Info'
   route_name: site.edit
   base_route: site.status
 
 site.fields:
-  title: 'Manage Fields'
+  title: 'Manage fields'
   route_name: site.fields
   base_route: site.status
 
