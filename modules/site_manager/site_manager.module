@@ -35,3 +35,27 @@ function site_manager_site_presave(\Drupal\Core\Entity\EntityInterface $entity) 
   }
 
 }
+/**
+ * Add to entity type definitions.
+ *
+ * Modules may implement this hook to add information to defined entity types,
+ * as defined in \Drupal\Core\Entity\EntityTypeInterface.
+ *
+ * To alter existing information or to add information dynamically, use
+ * hook_entity_type_alter().
+ *
+ * @param \Drupal\Core\Entity\EntityTypeInterface[] $entity_types
+ *   An associative array of all entity type definitions, keyed by the entity
+ *   type name. Passed by reference.
+ *
+ * @see \Drupal\Core\Entity\Entity
+ * @see \Drupal\Core\Entity\EntityTypeInterface
+ * @see hook_entity_type_alter()
+ */
+function site_manager_entity_type_build(array &$entity_types) {
+  /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
+
+  // Enable the site collection page.
+  $entity_types['site']->setLinkTemplate('collection', '/admin/operations/sites');
+
+}
