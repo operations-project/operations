@@ -150,13 +150,15 @@ class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface
     $build['site_title'] = $entity_object->site_title->view($label_inline);
     $build['site_uri'] = $entity_object->site_uri->view($label_inline);
     $build['site_uuid'] = $entity_object->site_uuid->view($label_inline);
+//    $build['data'] = $entity_object->data->view($label_inline);
 
-    if (!empty($this->config)) {
+    if (!empty($this->data['config'])) {
       $build['config'] = [
         '#type' => 'details',
-        '#title' => t('Current Site Configuration'),
+        '#title' => t('Site Configuration'),
+        '#description' => $this->t('This data is configured with the "Configuration items to load." setting. It represents live configuration of this site.'),
       ];
-      foreach ($this->config as $config => $data) {
+      foreach ($this->data['config'] as $config => $data) {
         $build['config'][$config] = [
           '#type' => 'item',
           '#title' => $config,
