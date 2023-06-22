@@ -26,6 +26,29 @@ site.fields:
   requirements:
     _permission: 'administer site_definition'
 
+site.display:
+  path: '/admin/config/system/display'
+  defaults:
+    _entity_form: "entity_view_display.edit"
+    _title: "Manage Display"
+    view_mode_name: "default"
+    entity_type_id: "site"
+    bundle: "default"
+  requirements:
+    _permission: 'administer site_definition'
+#
+#site.form:
+#  path: '/admin/config/system/form'
+#  defaults:
+#    _controller: \Drupal\field_ui\Controller\FieldConfigListController::listing
+#    _title: 'Manage Fields'
+#    entity_type_id: 'site'
+#    site_type: 'default'
+#    view_mode_name: 'default'
+#
+#  requirements:
+#    _permission: 'administer site_definition'
+
 site.advanced:
   path: '/admin/config/system/settings'
   defaults:
