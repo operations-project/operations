@@ -27,8 +27,4 @@ function site_manager_site_presave(\Drupal\Core\Entity\EntityInterface $entity) 
     );
     $entity->config_overrides = $entity_config_overrides;
   }
-
-  $entity->config_overrides = [
-    'test' => ['none' => true]
-  ];
 }
