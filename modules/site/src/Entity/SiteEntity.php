@@ -264,7 +264,7 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
 //      ])
       ->setDisplayOptions('view', [
         'label' => 'above',
-        'type' => 'uri',
+        'type' => 'uri_link',
       ])
       ->setDisplayConfigurable('view', TRUE);
     ;
@@ -288,7 +288,7 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
 //      ])
       ->setDisplayConfigurable('view', TRUE)
       ->setDisplayOptions('view', [
-        'type' => 'integer',
+        'type' => 'number_integer',
         'label' => 'inline',
         'weight' => 0,
         'settings' => [

@@ -7,6 +7,25 @@ operations.admin_operations_sites:
   requirements:
     _permission: 'administer operations'
 
+site.edit:
+  path: '/admin/config/system/edit'
+  defaults:
+    _entity_form: 'site.edit'
+    _title: 'Edit Site Information'
+    type: 'default'
+  requirements:
+    _permission: 'administer site_definition'
+
+site.fields:
+  path: '/admin/config/system/fields'
+  defaults:
+    _controller: \Drupal\field_ui\Controller\FieldConfigListController::listing
+    _title: 'Manage Fields'
+    entity_type_id: 'site'
+    bundle: 'default'
+  requirements:
+    _permission: 'administer site_definition'
+
 site.advanced:
   path: '/admin/config/system/settings'
   defaults:
@@ -14,6 +33,7 @@ site.advanced:
     _title: 'Advanced site settings'
   requirements:
     _permission: 'administer site_definition'
+
 
 entity.site_definition.edit_form:
   path: '/admin/config/system/settings/{site_definition}'

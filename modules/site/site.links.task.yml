@@ -29,6 +29,16 @@ site.advanced:
   route_name: site.advanced
   base_route: site.status
 
+site.edit:
+  title: 'Edit Site Information'
+  route_name: site.edit
+  base_route: site.status
+
+site.fields:
+  title: 'Manage Fields'
+  route_name: site.fields
+  base_route: site.status
+
 #entity.site_environment.settings:
 #  title: 'Settings'
 #  route_name: entity.site_environment.settings

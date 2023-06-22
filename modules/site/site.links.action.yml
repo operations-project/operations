@@ -22,3 +22,10 @@
 #  route_name: entity.site_environment.add_form
 #  appears_on:
 #    - entity.site_environment.collection
+site.field_add:
+  title: 'Add field'
+  route_name: field_ui.field_storage_config_add_site
+  route_parameters:
+    site_type: default
+  appears_on:
+    - site.fields
