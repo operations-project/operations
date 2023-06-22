@@ -81,13 +81,6 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
 
   use EntityChangedTrait;
   use EntityOwnerTrait;
-//  use SiteEntityTrait;
-//
-//  public function save() {
-//    dsm($this->toArray(), 'data');
-//    dsm($this->fieldDefinitions, 'field def');
-//    parent::save();
-//  }
 
   /**
    * {@inheritdoc}
@@ -97,6 +90,53 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
     if (!$this->getOwnerId()) {
       // If no owner has been set explicitly, make the anonymous user the owner.
       $this->setOwnerId(0);
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function save() {
+    parent::save();
+
+    $site_entity = $this;
+    $site_config = SiteDefinition::load('self');
+    $allowed_configs = $site_config->get('configs_allow_override');
+    $config_overrides = $site_entity->config_overrides->getValue();
+
+    $config_factory = \Drupal::configFactory();
+    if ($this->isSelf() && !empty($config_overrides[0])) {
+      $config_overrides = $config_overrides[0];
+      foreach ($allowed_configs as $config_slug) {
+        $slugs = explode(':', $config_slug);
+        $config_name = $slugs[0];
+        $config = $config_factory->getEditable($config_name);
+
+        // If config override was found...
+        if (!empty($config_overrides[$config_name])) {
+
+          // If allowed config contains a key...
+          if ($config_key = $slugs[1]) {
+            if ($config_value = $config_overrides[$config_name][$config_key]) {
+              $config
+                ->set($config_key, $config_value)
+                ->save()
+              ;
+            }
+          }
+          else {
+            if ($config_item = $config_overrides[$config_name]) {
+              foreach ($config_item as $key => $value) {
+                $config
+                  ->set($key, $value)
+                  ->save()
+                ;
+              }
+            }
+          }
+        }
+      }
+      // @TODO: If the site title changed, update the entity.
     }
   }
 
@@ -336,6 +376,13 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
    */
   public static function getSiteUuid() {
     return \Drupal::config('system.site')->get('uuid');
+  }
+
+  /**
+   * Load the site entity with the same UUID as this site.
+   */
+  public function isSelf() {
+    return static::getSiteUuid() == $this->site_uuid->value;
   }
 
   /**
