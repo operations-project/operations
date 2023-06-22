@@ -57,5 +57,6 @@ function site_manager_entity_type_build(array &$entity_types) {
 
   // Enable the site collection page.
   $entity_types['site']->setLinkTemplate('collection', '/admin/operations/sites');
+  $entity_types['site_type']->setLinkTemplate('collection', '/admin/operations/site_types');
 
 }
