@@ -4,3 +4,27 @@
  * @file
  * Primary module hooks for Site Manager module.
  */
+
+/**
+ * Act on a specific type of entity before it is created or updated.
+ *
+ * You can get the original entity object from $entity->original when it is an
+ * update of the entity.
+ *
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   The entity object.
+ *
+ * @ingroup entity_crud
+ * @see hook_entity_presave()
+ */
+function site_manager_site_presave(\Drupal\Core\Entity\EntityInterface $entity) {
+  $global_config_overrides = \Drupal::config('site_manager.settings')->get('global_config_overrides');
+  if ($global_config_overrides) {
+    $global_config_overrides = \Drupal\Core\Serialization\Yaml::decode($global_config_overrides);
+    $entity_config_overrides = array_merge(
+      $global_config_overrides,
+      (array) $entity->config_overrides->value,
+    );
+    $entity->config_overrides = $entity_config_overrides;
+  }
+}
