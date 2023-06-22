@@ -7,3 +7,4 @@ configure: entity.site_definition.collection
 dependencies:
   - serialization:serialization
   - key_auth:key_auth
+  - rest:rest
