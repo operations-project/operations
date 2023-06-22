@@ -37,6 +37,7 @@ use GuzzleHttp\Psr7\Response;
  *     singular = "@count site",
  *     plural = "@count sites",
  *   ),
+ *   bundle_label = @Translation("Site type"),
  *   handlers = {
  *     "list_builder" = "Drupal\site\SiteListBuilder",
  *     "views_data" = "Drupal\views\EntityViewsData",
@@ -58,6 +59,7 @@ use GuzzleHttp\Psr7\Response;
  *   admin_permission = "administer sites",
  *   entity_keys = {
  *     "id" = "site_uuid",
+ *     "bundle" = "type",
  *     "revision" = "vid",
  *     "label" = "site_title",
  *     "owner" = "uid",
@@ -74,6 +76,7 @@ use GuzzleHttp\Psr7\Response;
  *     "revision_created" = "revision_timestamp",
  *     "revision_log_message" = "revision_log",
  *   },
+ *   bundle_entity_type = "site_dummy_type",
  *   field_ui_base_route = "entity.site_type.edit_form",
  *   common_reference_target = TRUE,
  * )
