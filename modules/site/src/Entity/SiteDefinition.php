@@ -161,6 +161,7 @@ class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface
     $build['state']['0']['reason']['#prefix'] = '<blockquote>';
     $build['state']['0']['reason']['#suffix'] = '</blockquote>';
     $build['state']['0']['reason'][0]['#format'] = 'basic_html';
+    $build['state']['0']['reason']['#access'] = !empty($entity_object->reason->value);
 
     $build['site_title'] = $entity_object->site_title->view($label_inline);
     $build['site_uri'] = $entity_object->site_uri->view($label_inline);
