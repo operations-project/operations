@@ -43,11 +43,11 @@ site.display:
   title: 'Manage display'
   route_name: site.display
   base_route: site.status
-#
-#site.form:
-#  title: 'Manage form'
-#  route_name: site.form
-#  base_route: site.status
+
+site.form:
+  title: 'Manage form'
+  route_name: site.form
+  base_route: site.status
 
 #entity.site_environment.settings:
 #  title: 'Settings'
