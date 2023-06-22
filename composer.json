@@ -1,0 +1,20 @@
+{
+    "name": "drupal/operations",
+    "description": "Tools for operating Drupal sites.",
+    "type": "drupal-module",
+    "authors": [
+        {
+            "name": "Jon Pugh",
+            "email": "jon@thinkdrop.net"
+        }
+    ],
+    "repositories": {
+        "drupal": {
+            "type": "composer",
+            "url": "https://packages.drupal.org/8"
+        }
+    },
+    "require": {
+        "drupal/key_auth": "^2.1"
+    }
+}
