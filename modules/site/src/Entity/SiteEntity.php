@@ -76,7 +76,7 @@ use GuzzleHttp\Psr7\Response;
  *     "revision_created" = "revision_timestamp",
  *     "revision_log_message" = "revision_log",
  *   },
- *   bundle_entity_type = "site_dummy_type",
+ *   bundle_entity_type = "site_type",
  *   field_ui_base_route = "entity.site_type.edit_form",
  *   common_reference_target = TRUE,
  * )
