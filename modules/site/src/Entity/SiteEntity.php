@@ -97,9 +97,20 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
   /**
    * {@inheritdoc}
    */
-  public function save() {
+  public function save()
+  {
     parent::save();
+    $this->saveConfig();
+    $this->saveState();
+  }
 
+  /**
+   * Save drupal config items that are listed in self::config_overrides.
+   */
+  public function saveConfig() {
+    if (!$this->isSelf()) {
+      return;
+    }
     $site_entity = $this;
     $site_config = SiteDefinition::load('self');
     $allowed_configs = $site_config->get('configs_allow_override');
@@ -107,7 +118,7 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
     $revision_url = $this->toUrl('canonical', ['absolute'=>true])->toString() . '/revisions/' . $site_entity->vid->value . '/view';
 
     $config_factory = \Drupal::configFactory();
-    if ($this->isSelf() && !empty($config_overrides[0])) {
+    if (!empty($config_overrides[0])) {
       $config_overrides = $config_overrides[0];
       foreach ($allowed_configs as $config_slug) {
         $slugs = explode(':', $config_slug);
@@ -149,6 +160,39 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
         }
       }
       // @TODO: If the site title changed, update the entity.
+    }
+
+    // @TODO: Set State
+
+  }
+
+  /**
+   * Save drupal state items that are listed in self::config_overrides.
+   */
+  public function saveState() {
+    if (!$this->isSelf()) {
+      return;
+    }
+
+    $site_entity = $this;
+    $site_config = SiteDefinition::load('self');
+    $allowed_states = $site_config->get('states_allow_override');
+    $state_overrides = $site_entity->state_overrides->getValue();
+    $revision_url = $this->toUrl('canonical', ['absolute'=>true])->toString() . '/revisions/' . $site_entity->vid->value . '/view';
+
+    if (!empty($state_overrides[0])) {
+      $state_overrides = $state_overrides[0];
+      foreach ($allowed_states as $state_name) {
+
+        // If config override was found...
+        if (!empty($state_overrides[$state_name])) {
+          \Drupal::state()->set($state_name, $state_overrides[$state_name]);
+          \Drupal::logger('site')->info('Site state (:state) set from Site entity: :url', [
+            ':url' => $revision_url,
+            ':state' => "{$state_name}: " . Yaml::encode($state_overrides[$state_name]),
+          ]);
+        }
+      }
     }
   }
 
