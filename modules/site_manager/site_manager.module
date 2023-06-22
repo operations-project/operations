@@ -18,13 +18,20 @@
  * @see hook_entity_presave()
  */
 function site_manager_site_presave(\Drupal\Core\Entity\EntityInterface $entity) {
-  $global_config_overrides = \Drupal::config('site_manager.settings')->get('global_config_overrides');
-  if ($global_config_overrides) {
-    $global_config_overrides = \Drupal\Core\Serialization\Yaml::decode($global_config_overrides);
-    $entity_config_overrides = array_merge(
-      $global_config_overrides,
-      (array) $entity->config_overrides->value,
-    );
-    $entity->config_overrides = $entity_config_overrides;
+  $global_config_items = [
+    'config_overrides',
+    'state_overrides'
+  ];
+  foreach ($global_config_items as $config_name) {
+    $global_config_overrides = \Drupal::config('site_manager.settings')->get('global_' . $config_name);
+    if ($global_config_overrides) {
+      $global_config_overrides = \Drupal\Core\Serialization\Yaml::decode($global_config_overrides);
+      $entity_config_overrides = array_merge(
+        $global_config_overrides,
+        (array) $entity->{$config_name}->value,
+      );
+      $entity->{$config_name} = $entity_config_overrides;
+    }
   }
+
 }

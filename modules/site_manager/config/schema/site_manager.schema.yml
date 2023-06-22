@@ -6,4 +6,9 @@ site_manager.settings:
     global_config_overrides:
       type: string
       label: 'Global Site Config Overrides'
-      description: 'Enter YAML to load into all Site entities.'
+      description: 'Config values to set on the site.'
+
+    global_state_overrides:
+      type: string
+      label: 'Global Site State Overrides'
+      description: 'State values to set on the site.'

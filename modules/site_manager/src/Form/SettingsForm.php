@@ -33,8 +33,14 @@ class SettingsForm extends ConfigFormBase {
     $form['global_config_overrides'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Global Site Config Overrides'),
-      '#description' => $this->t('Enter YAML to load into all Site entities.'),
+      '#description' => $this->t("Enter YAML to load into all Site entities' 'config_overrides' property."),
       '#default_value' => $this->config('site_manager.settings')->get('global_config_overrides'),
+    ];
+    $form['global_state_overrides'] = [
+      '#type' => 'textarea',
+      '#title' => $this->t('Global Site State Overrides'),
+      '#description' => $this->t("Enter YAML to load into all Site entities' 'state_overrides' property"),
+      '#default_value' => $this->config('site_manager.settings')->get('global_state_overrides'),
     ];
     return parent::buildForm($form, $form_state);
   }
@@ -43,15 +49,21 @@ class SettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    try {
-      $settings = Yaml::parse($form_state->getValue('global_config_overrides'));
-      if (is_string($settings) || !is_string(key($settings))) {
-        $form_state->setErrorByName('global_config_overrides', $this->t('Global Site Config Overrides must be a yaml mapping. Use the format "name: value".'));
+    $global_config_items = [
+      'config_overrides',
+      'state_overrides'
+    ];
+    foreach ($global_config_items as $config_name) {
+      try {
+        $settings = Yaml::parse($form_state->getValue('global_' . $config_name));
+        if (is_string($settings) || !is_string(key($settings))) {
+          $form_state->setErrorByName('global_' . $config_name, $this->t('Global Site Overrides must be a yaml mapping. Use the format "name: value".'));
+        }
+      } catch (ParseException $e) {
+        $form_state->setErrorByName('global_' . $config_name, $this->t('Invalid Yaml: :message', [
+          ':message' => $e->getMessage(),
+        ]));
       }
-    } catch (ParseException $e) {
-      $form_state->setErrorByName('global_config_overrides', $this->t('Invalid Yaml: :message', [
-        ':message' => $e->getMessage(),
-      ]));
     }
     parent::validateForm($form, $form_state);
   }
@@ -62,6 +74,7 @@ class SettingsForm extends ConfigFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->config('site_manager.settings')
       ->set('global_config_overrides', $form_state->getValue('global_config_overrides'))
+      ->set('global_state_overrides', $form_state->getValue('global_state_overrides'))
       ->save();
     parent::submitForm($form, $form_state);
   }

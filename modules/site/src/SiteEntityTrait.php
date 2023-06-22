@@ -68,6 +68,20 @@ trait SiteEntityTrait {
   protected array $configs_allow_override = [];
 
   /**
+   * A list of state objects to load into the Entity.
+   *
+   * @var array
+   */
+  protected array $states_load = [];
+
+  /**
+   * A list of states to allow setting from remote Site Manager.
+   *
+   * @var array
+   */
+  protected array $states_allow_override = [];
+
+  /**
    * An arbitrary array of data.
    *
    * @var array

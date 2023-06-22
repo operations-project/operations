@@ -51,6 +51,8 @@ use Drupal\site\SiteEntityTrait;
  *     "description",
  *     "configs_load",
  *     "configs_allow_override",
+ *     "states_load",
+ *     "states_allow_override",
  *     "state_factors",
  *     "data",
  *     "settings"
@@ -89,6 +91,7 @@ class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface
     parent::__construct($values, $entity_type);
     $this->setDynamicProperties();
     $this->getConfig();
+    //$this->getDrupalStates();
   }
 
   public function setDynamicProperties() {
@@ -100,24 +103,37 @@ class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface
       $this->determineState();
     }
   }
+  /**
+   * Parse states_load and load the state values into the SiteDefinition entity "data: state" property.
+   * @return void
+   */
+  public function getDrupalStates() {
+    if (isset($this->states_load)) {
+      foreach ($this->states_load as $state_string) {
+        $this->data['states'][$state_string] = \Drupal::state()->get($state_string);
+      }
+    }
+  }
 
   /**
-   * Parse configs_load and load the config values into the SiteDefinition entity.
+   * Parse configs_load and load the config values into the SiteDefinition entity "data: config" property.
    * @return void
    */
   public function getConfig() {
     if (isset($this->configs_load)) {
       foreach ($this->configs_load as $config_string) {
         $config_items = explode(':', trim($config_string));
-        $config_key = $config_items[0];
-        $config_name = $config_items[1] ?? '';
-        if ($config_name) {
-          $this->data['config'][$config_key] = [
-            $config_name => \Drupal::config($config_key)->get($config_name),
+        $config_name = $config_items[0];
+        $config_key = $config_items[1] ?? null;
+        if ($config_key) {
+          $value = \Drupal::config($config_name)->get($config_key);
+          $this->data['config'][$config_name] = [
+            $config_key => $value,
           ];
         }
         else {
-          $this->data['config'][$config_key] = \Drupal::config($config_key)->get();
+          $value = \Drupal::config($config_name)->get();
+          $this->data['config'][$config_name] = $value;
         }
       }
     }
@@ -162,6 +178,20 @@ class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface
         $build['config'][$config] = [
           '#type' => 'item',
           '#title' => $config,
+          '#markup' => '<pre>' . Yaml::encode($data) . '</pre>',
+        ];
+      }
+    }
+    if (!empty($this->data['states'])) {
+      $build['states'] = [
+        '#type' => 'details',
+        '#title' => t('State Values'),
+        '#description' => $this->t('This data is configured with the "State items to load." setting. It represents live StateAPI values of this site.'),
+      ];
+      foreach ($this->data['states'] as $state => $data) {
+        $build['states'][$state] = [
+          '#type' => 'item',
+          '#title' => $state,
           '#markup' => '<pre>' . Yaml::encode($data) . '</pre>',
         ];
       }

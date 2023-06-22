@@ -110,6 +110,18 @@ class SiteDefinitionForm extends EntityForm {
       '#default_value' => implode(PHP_EOL, $this->entity->get('configs_allow_override')),
       '#description' => $this->t('A list of configuration items to load into the site from the Site Entity.'),
     ];
+    $form['config']['states_load'] = [
+      '#type' => 'textarea',
+      '#title' => $this->t('State items to load.'),
+      '#default_value' => implode(PHP_EOL, $this->entity->get('states_load')),
+      '#description' => $this->t('A list of state items that should be made available in the Site entity.'),
+    ];
+    $form['config']['states_allow_override'] = [
+      '#type' => 'textarea',
+      '#title' => $this->t('Allowed State Overrides'),
+      '#default_value' => implode(PHP_EOL, $this->entity->get('states_allow_override')),
+      '#description' => $this->t('A list of state items to load into the site from the Site Entity.'),
+    ];
     $form['state']['state_factors'] = [
       '#type' => 'checkboxes',
       '#title' => $this->t('State Factors'),
@@ -161,7 +173,7 @@ class SiteDefinitionForm extends EntityForm {
 
   public function buildEntity(array $form, FormStateInterface $form_state) {
 
-    foreach (['configs_load' , 'configs_allow_override'] as $name) {
+    foreach (['configs_load' , 'configs_allow_override', 'states_load', 'states_allow_override'] as $name) {
       $config_load = $form_state->getValue($name);
       if (is_string($config_load)) {
         $config_load = explode(PHP_EOL, $config_load);
@@ -217,6 +229,7 @@ class SiteDefinitionForm extends EntityForm {
    * {@inheritdoc}
    */
   public function save(array $form, FormStateInterface $form_state) {
+
     $result = parent::save($form, $form_state);
     $message_args = ['%label' => $this->entity->label()];
 
