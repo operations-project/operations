@@ -113,10 +113,10 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
       ->setRequired(true)
       ->setRevisionable(TRUE)
       ->setDefaultValueCallback(static::class . '::getDefaultSiteTitle')
-      ->setDisplayOptions('form', [
-        'type' => 'string_textfield',
-      ])
-      ->setDisplayConfigurable('form', TRUE)
+//      ->setDisplayOptions('form', [
+//        'type' => 'string_textfield',
+//      ])
+//      ->setDisplayConfigurable('form', TRUE)
       ->setDisplayOptions('view', [
         'label' => 'inline',
         'type' => 'string',
@@ -127,12 +127,11 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
       ->setLabel(t('Site UUID'))
       ->setDescription(t('The Drupal site UUID.'))
       ->setRequired(true)
-      ->setReadOnly(true)
       ->setDefaultValueCallback(static::class . '::getSiteUuid')
-      ->setDisplayOptions('form', [
-        'type' => 'string_textfield',
-      ])
-      ->setDisplayConfigurable('form', TRUE)
+//      ->setDisplayOptions('form', [
+//        'type' => 'string_textfield',
+//      ])
+//      ->setDisplayConfigurable('form', TRUE)
       ->setDisplayOptions('view', [
         'label' => 'inline',
         'type' => 'string',
@@ -161,12 +160,12 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
       ->setRequired(TRUE)
       ->setDefaultValueCallback(static::class . '::getDefaultUri')
       ->setDisplayConfigurable('form', TRUE)
+//      ->setDisplayOptions('form', [
+//        'type' => 'string_textfield',
+//      ])
       ->setDisplayOptions('view', [
         'label' => 'above',
         'type' => 'uri',
-      ])
-      ->setDisplayOptions('form', [
-        'type' => 'string_textfield',
       ])
       ->setDisplayConfigurable('view', TRUE);
     ;
@@ -184,10 +183,10 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
       ->setRevisionable(TRUE)
       ->setDefaultValue(static::SITE_INFO)
       ->setDisplayConfigurable('form', TRUE)
-      ->setDisplayOptions('form', [
-        'type' => 'options_select',
-        'weight' => -1,
-      ])
+//      ->setDisplayOptions('form', [
+//        'type' => 'options_select',
+//        'weight' => -1,
+//      ])
       ->setDisplayConfigurable('view', TRUE)
       ->setDisplayOptions('view', [
         'type' => 'integer',
@@ -202,11 +201,6 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
     $fields['reason'] = BaseFieldDefinition::create('text_long')
         ->setLabel(t('State Reason'))
         ->setRevisionable(TRUE)
-        ->setDisplayOptions('view', [
-            'type' => 'text_default',
-            'label' => 'above',
-            'weight' => 10,
-        ])
         ->setDisplayOptions('view', [
             'type' => 'text_default',
             'label' => 'above',
@@ -240,7 +234,7 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
       ->setLabel(t('Description'))
       ->setRevisionable(TRUE)
       ->setDisplayOptions('form', [
-        'type' => 'text_textarea',
+        'type' => 'string_textarea',
         'weight' => 10,
       ])
       ->setDisplayConfigurable('form', TRUE)
@@ -305,20 +299,11 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
       ->setRequired(FALSE)
       ->setDisplayConfigurable('view', TRUE)
     ;
-    $fields['config_overrides'] = BaseFieldDefinition::create('string')
+    $fields['config_overrides'] = BaseFieldDefinition::create('map')
       ->setRevisionable(TRUE)
       ->setLabel(t('Site Config Overrides'))
       ->setDescription(t('A Yaml map of Drupal configuration to apply to this site.'))
       ->setRequired(FALSE)
-      ->setDisplayConfigurable('view', TRUE)
-      ->setDisplayOptions('view', [
-        'label' => 'above',
-        'type' => 'text_default',
-      ])
-      ->setDisplayConfigurable('form', TRUE)
-      ->setDisplayOptions('form', [
-        'type' => 'text_textarea',
-      ])
     ;
     return $fields;
   }
