@@ -41,7 +41,7 @@ class SiteTypeListBuilder extends ConfigEntityListBuilder {
     $build = parent::render();
 
     $build['table']['#empty'] = $this->t(
-      'No site types  available. <a href=":link">Add site type</a>.',
+      'No site types available. <a href=":link">Add site type</a>.',
       [':link' => Url::fromRoute('entity.site_type.add_form')->toString()]
     );
 

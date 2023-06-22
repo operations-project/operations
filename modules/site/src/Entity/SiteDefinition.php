@@ -222,6 +222,7 @@ class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface
    */
   public function toEntityData() {
     $data = [
+        'type' => 'default',
         'site_uuid' => $this->site_uuid,
         'site_title' => $this->site_title,
         'site_uri' => $this->site_uri,
