@@ -1919,13 +1919,15 @@
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/operations.git",
-                "reference": "642f31d27a0dae495dafdbf1dfcd073460b4c656"
+                "reference": "48fc5cd607588c4ea9af1d5b04e584e8ba928da8"
             },
             "require": {
-                "drupal/core": "^9 || ^10"
+                "drupal/core": "^9 || ^10",
+                "drupal/key_auth": "^2.1"
             },
             "require-dev": {
                 "drupal/key_auth": "*",
+                "drupal/rest-rest": "*",
                 "drupal/serialization-serialization": "*",
                 "drupal/site": "*"
             },
@@ -1936,7 +1938,7 @@
                 },
                 "drupal": {
                     "version": "1.0.x-dev",
-                    "datestamp": "1687378462",
+                    "datestamp": "1687461453",
                     "security-coverage": {
                         "status": "not-covered",
                         "message": "Project has not opted into security advisory coverage!"
@@ -1950,14 +1952,15 @@
             "authors": [
                 {
                     "name": "Jon Pugh",
-                    "homepage": "https://www.drupal.org/user/17028"
+                    "homepage": "https://www.drupal.org/user/17028",
+                    "email": "jon@thinkdrop.net"
                 },
                 {
                     "name": "matthand",
                     "homepage": "https://www.drupal.org/user/171527"
                 }
             ],
-            "description": "Provides tools for operating Drupal sites.",
+            "description": "Tools for operating Drupal sites.",
             "homepage": "https://www.drupal.org/project/operations",
             "support": {
                 "source": "https://git.drupalcode.org/project/operations"
@@ -11067,5 +11070,5 @@
         "php": ">=8.1"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.2.0"
+    "plugin-api-version": "2.3.0"
 }
