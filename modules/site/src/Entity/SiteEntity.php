@@ -14,6 +14,7 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\RevisionableContentEntityBase;
 use Drupal\Core\Entity\RevisionableEntityBundleInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Serialization\Yaml;
 use Drupal\Core\Url;
 use Drupal\site\SiteEntityTrait;
 use Drupal\user\EntityOwnerInterface;
@@ -103,6 +104,7 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
     $site_config = SiteDefinition::load('self');
     $allowed_configs = $site_config->get('configs_allow_override');
     $config_overrides = $site_entity->config_overrides->getValue();
+    $revision_url = $this->toUrl('canonical', ['absolute'=>true])->toString() . '/revisions/' . $site_entity->vid->value . '/view';
 
     $config_factory = \Drupal::configFactory();
     if ($this->isSelf() && !empty($config_overrides[0])) {
@@ -122,15 +124,25 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
                 ->set($config_key, $config_value)
                 ->save()
               ;
+
+              \Drupal::logger('site')->info('Site configuration (:config) set from Site entity: :url', [
+                ':url' => $revision_url,
+                ':config' => "{$config_name}: {$config_key}: " . Yaml::encode($config_value),
+              ]);
             }
           }
           else {
             if ($config_item = $config_overrides[$config_name]) {
-              foreach ($config_item as $key => $value) {
+              foreach ($config_item as $config_key => $config_value) {
                 $config
-                  ->set($key, $value)
+                  ->set($config_key, $config_value)
                   ->save()
                 ;
+
+                \Drupal::logger('site')->info('Site configuration (:config) set from Site entity: :url', [
+                  ':url' => $revision_url,
+                  ':config' => "{$config_name}: {$config_key}: " . Yaml::encode($config_value),
+                ]);
               }
             }
           }
