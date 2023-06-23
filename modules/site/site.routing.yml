@@ -7,6 +7,16 @@ operations.admin_operations_sites:
   requirements:
     _permission: 'administer operations'
 
+site.history:
+  path: '/admin/reports/site/history'
+  defaults:
+    _title: 'Site History'
+    _controller: '\Drupal\site\Controller\SiteStatusController::siteStatusHistoryWidget'
+    type: 'default'
+
+  requirements:
+    _permission: 'site.view site history'
+
 site.edit:
   path: '/admin/config/system/edit'
   defaults:

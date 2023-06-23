@@ -39,4 +39,16 @@ interface SiteInterface {
       self::SITE_ERROR => 'Error',
   ];
 
+  /**
+   * Short string slugs
+   *
+   * @var string
+   */
+  const STATE_CLASSES = [
+      self::SITE_OK => 'success',
+      self::SITE_INFO => 'info',
+      self::SITE_WARN => 'warning',
+      self::SITE_ERROR => 'error',
+  ];
+
 }

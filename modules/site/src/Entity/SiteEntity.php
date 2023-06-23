@@ -557,4 +557,9 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
       }
     }
   }
+
+
+  public function getStateClass() {
+    return SiteDefinition::getStateClass($this->state->value);
+  }
 }

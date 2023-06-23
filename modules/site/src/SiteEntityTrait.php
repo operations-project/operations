@@ -126,6 +126,15 @@ trait SiteEntityTrait {
   }
 
   /**
+   * @param $state
+   * @return string
+   */
+  static public function getStateClass($state): string
+  {
+    return self::STATE_CLASSES[$state] ?? '';
+  }
+
+  /**
    * Return the current state name.
    * @return string
    */

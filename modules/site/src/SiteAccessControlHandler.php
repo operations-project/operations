@@ -18,6 +18,9 @@ class SiteAccessControlHandler extends EntityAccessControlHandler {
   protected function checkAccess(EntityInterface $entity, $operation, AccountInterface $account) {
 
     switch ($operation) {
+      case 'view site history':
+        return AccessResult::allowedIfHasPermission($account, 'view site');
+
       case 'view':
         return AccessResult::allowedIfHasPermission($account, 'view site');
 

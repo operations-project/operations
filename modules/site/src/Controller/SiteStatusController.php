@@ -64,18 +64,31 @@ class SiteStatusController extends ControllerBase {
       foreach ($revisions as $vid) {
         $site_revision = $storage->loadRevision($vid);
         $date = $site_revision->revision_timestamp->view([
-            'label' => 'hidden'
+            'label' => 'hidden',
+            'type' => 'timestamp_ago'
         ]);
+
         $state = $site_revision->state->view([
-            'label' => 'hidden'
+          'label' => 'hidden'
         ]);
-        $reason = $site_revision->reason->view([
+
+        $state['#attributes']['class'][] = $site_revision->getStateClass();
+
+        if ($site_revision->reason->value) {
+          $reason = $site_revision->reason->view([
             'label' => 'hidden',
             'type'=> 'text',
-        ]);
-        $reason[0]['#format'] = 'basic_html';
-        $reason[0]['#prefix'] = '<blockquote>';
-        $reason[0]['#suffix'] = '</blockquote>';
+          ]);
+          $reason[0]['#format'] = 'basic_html';
+          $reason[0]['#prefix'] = '<blockquote>';
+          $reason[0]['#suffix'] = '</blockquote>';
+          $reason['#type'] = 'details';
+          $reason['#title'] = t('Reason');
+
+        }
+        else {
+          $reason = [];
+        }
 
         $title = $site_revision->site_title->view([
           'label' => 'hidden',
@@ -84,11 +97,17 @@ class SiteStatusController extends ControllerBase {
         $row = [];
         $row[] = \Drupal::service('renderer')->render($state);
         $row[] = Link::fromTextAndUrl($site_revision->site_title->value, $site_revision->toUrl('revision'));
-        $row[] = $site_revision->get('revision_log')->value;
         $row[] = \Drupal::service('renderer')->render($date);
         $row[] = \Drupal::service('renderer')->render($reason);
+        $row[] = $site_revision->get('revision_log')->value;
         $row[] = $site_revision->get('vid')->value;
-        $rows[] = $row;
+        $rows[] = [
+          'data' => $row,
+          'class' => [
+            'color-' . $site_revision->getStateClass(),
+          ],
+          'valign' => 'top',
+        ];
       }
 
       $build = [
@@ -97,9 +116,9 @@ class SiteStatusController extends ControllerBase {
         '#header' => [
           'State',
           'Title',
-          'Log',
           'Date',
           'State Reason',
+          'Log',
           'Report #'
         ],
       ];
