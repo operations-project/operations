@@ -238,7 +238,9 @@ class SiteDefinitionForm extends EntityForm {
   public function save(array $form, FormStateInterface $form_state) {
 
     $result = parent::save($form, $form_state);
-    SiteDefinition::load('self')->saveEntity();
+    SiteDefinition::load('self')->saveEntity(t('Saved from Site Settings form: :url', [
+      ':url' => \Drupal::request()->getSchemeAndHttpHost(),
+    ]));
 
     $message_args = ['%label' => $this->entity->label()];
 
