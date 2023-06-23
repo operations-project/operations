@@ -90,7 +90,7 @@ class SiteStateSubscriber implements EventSubscriberInterface {
 
           if (!empty($requirement['description'])) {
             $string = is_array($requirement['description'])?
-              \Drupal::service('renderer')->render($requirement['description']):
+              \Drupal::service('renderer')->renderRoot($requirement['description']):
               $requirement['description']
             ;
             $reason .= "<blockquote>$string</blockquote>";
