@@ -156,9 +156,8 @@ class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface
     $label_inline = ['label' => 'inline'];
     $label_hidden = ['label' => 'hidden'];
 
-    $build['state'] = $entity_object->state->view($label_inline);
+    $build['state'] = $entity_object->state->view($label_hidden);
     $build['state']['#type'] = 'fieldset';
-    $build['state']['#title'] = '';
     $build['state']['#attributes']['class'][] = 'color-' . $entity_object->getStateClass();
     $build['state']['0']['reason'] = $entity_object->reason->view($label_hidden);
     $build['state']['0']['reason']['#prefix'] = '<blockquote>';
