@@ -30,6 +30,7 @@
         "drupal/core-composer-scaffold": "^10.0.0",
         "drupal/core-recommended": "^10.0.0",
         "drupal/devel": "^5.1",
+        "drupal/operations": "1.1.x-dev",
         "drupal/restui": "^1.21",
         "drupal/site_audit": "4.x-dev",
         "drupal/site_audit_server": "^4.0@dev",
