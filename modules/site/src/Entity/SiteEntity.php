@@ -514,17 +514,12 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
         \Drupal::moduleHandler()->alter('site_audit_remote_payload', $payload);
         $payload['sent_from'] = $_SERVER['HTTP_HOST'];
 
-        // @TODO: Fix the SiteApiResource to accept POST.
-        $url = Url::fromUri($url, [
-          'query' => $payload,
-          'absolute' => true,
-        ]);
-
-        $response = $client->get($url->toString(), [
+        $response = $client->post($url->toString(), [
           'headers' => [
             'Accept' => 'application/json',
           ],
-        ], $payload);
+          'json' => $payload
+        ]);
 
         \Drupal::messenger()->addStatus('Site report was sent successfully.');
 
