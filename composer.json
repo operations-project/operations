@@ -1,12 +1,14 @@
 {
-    "name": "drupal-composer/drupal-project",
-    "description": "Project template for Drupal 10 projects with Composer",
+    "name": "drupal/ox",
+    "description": "Operations Experience Platform",
     "type": "project",
     "license": "GPL-2.0-or-later",
     "authors": [
         {
-            "name": "",
-            "role": ""
+            "name": "Jon Pugh",
+            "role": "author",
+            "email": "jon@thinkdrop.net",
+            "homepage": "https://thinkdrop.net"
         }
     ],
     "repositories": [
