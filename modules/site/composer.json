@@ -1,0 +1,19 @@
+{
+    "name": "drupal/site",
+    "description": "Tools for operating Drupal sites.",
+    "type": "drupal-module",
+    "authors": [
+        {
+            "name": "Jon Pugh",
+            "email": "jon@thinkdrop.net"
+        }
+    ],
+    "repositories": {
+        "drupal": {
+            "type": "composer",
+            "url": "https://packages.drupal.org/8"
+        }
+    },
+    "require": {
+    }
+}
