@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0005c110ffe83ed0eadb18a3b96bf69c",
+    "content-hash": "7ca53a14e7adf4b647eb46b60f3735c6",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -2027,11 +2027,11 @@
         },
         {
             "name": "drupal/operations",
-            "version": "dev-1.1.x",
+            "version": "dev-1.2.x",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/operations.git",
-                "reference": "e4f897880a5ef18319be28fa6231d7e0708da4a6"
+                "reference": "8c5bfa9428a90fb693216707cc9849e0b538900e"
             },
             "require": {
                 "drupal/core": "^9 || ^10",
@@ -2043,11 +2043,11 @@
             "type": "drupal-module",
             "extra": {
                 "branch-alias": {
-                    "dev-1.1.x": "1.1.x-dev"
+                    "dev-1.2.x": "1.2.x-dev"
                 },
                 "drupal": {
-                    "version": "1.1.0-beta1+3-dev",
-                    "datestamp": "1687485668",
+                    "version": "1.2.0-alpha1+2-dev",
+                    "datestamp": "1687526032",
                     "security-coverage": {
                         "status": "not-covered",
                         "message": "Project has not opted into security advisory coverage!"
@@ -11416,7 +11416,6 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "drupal-operations/git-split": 20,
-        "drupal/operations": 20,
         "drupal/site_audit": 20,
         "drupal/site_audit_server": 20
     },
@@ -11426,5 +11425,5 @@
         "php": ">=8.1"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.2.0"
+    "plugin-api-version": "2.3.0"
 }
