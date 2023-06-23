@@ -1,6 +1,6 @@
 <?php
 
-namespace DevShop\Component\GitSplit;
+namespace Operations\Composer\Plugin\GitSplit;
 
 /**
  * Splitter offers a command to split a git repository into multiple sub repositories using the splitsh script.

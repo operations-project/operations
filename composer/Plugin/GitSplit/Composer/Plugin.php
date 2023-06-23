@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace DevShop\Component\GitSplit\Composer;
+namespace Operations\Composer\Plugin\GitSplit\Composer;
 
-use DevShop\Component\GitSplit\Splitter;
+use Operations\Composer\Plugin\GitSplit\Splitter;
 use Composer\Composer;
 use Composer\EventDispatcher\Event;
 use Composer\EventDispatcher\EventSubscriberInterface;
@@ -82,7 +82,7 @@ class Plugin implements PluginInterface, Capable, EventSubscriberInterface
   public function getCapabilities()
     {
         return array(
-            'Composer\Plugin\Capability\CommandProvider' => 'DevShop\Component\GitSplit\Composer\CommandProvider',
+            'Composer\Plugin\Capability\CommandProvider' => 'Operations\Composer\Plugin\GitSplit\Composer\CommandProvider',
         );
     }
 }

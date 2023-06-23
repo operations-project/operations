@@ -17,7 +17,7 @@ Composer\Command\BaseCommand;
 
 ### "Console command" classes
 ```php
-DevShop\Component\GitSplit\GitSplitConsoleCommand;
+Operations\Composer\Plugin\GitSplit\GitSplitConsoleCommand;
 Symfony\Component\Console\Command\Command;
 ```
 
