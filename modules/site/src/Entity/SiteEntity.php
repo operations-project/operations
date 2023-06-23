@@ -474,7 +474,7 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
   public function revisionIds(SiteEntityInterface $site = null)
   {
     if (empty($site)) {
-      $site = self::loadSelf();
+      $site = $this;
     }
 
     return \Drupal::database()->query(

@@ -30,10 +30,11 @@ class SiteStatusController extends ControllerBase {
    * @return void
    */
   public function siteStatusHistoryWidget() {
-    $site_entity = SiteEntity::loadSelf();
+    $site_entity = \Drupal::routeMatch()->getParameter('site');
     if (!$site_entity) {
-      return [];
+      $site_entity = SiteEntity::loadSelf();
     }
+
     $revisions = $site_entity->revisionIds();
     arsort($revisions);
     // @TODO: Implement a pager.

@@ -120,3 +120,17 @@ entity.site.revision:
         type: entity:site
       site_revision:
         type: entity_revision:site
+
+entity.site.version-history:
+  path:  '/admin/reports/site/{site}/revisions'
+  defaults:
+    _title: 'Site History'
+    _controller: '\Drupal\site\Controller\SiteStatusController::siteStatusHistoryWidget'
+    type: 'default'
+  options:
+    parameters:
+      site:
+        type: entity:site
+
+  requirements:
+    _permission: 'site.view site history'
