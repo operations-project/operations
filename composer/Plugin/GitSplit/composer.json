@@ -1,18 +1,14 @@
 {
-  "name": "devshop/git-split",
+  "name": "drupal-operations/git-split",
   "type": "composer-plugin",
-  "description": "DevShop GitSplit Component",
+  "description": "Adds composer git:split composer command for easy splitting of a git repository into many others.",
   "keywords": [],
-  "homepage": "https://getdevshop.com",
+  "homepage": "https://drupal.org/project/operations",
   "license": "MIT",
   "authors": [
     {
       "name": "Jon Pugh",
       "email": "jon@thinkdrop.net"
-    },
-    {
-      "name": "DevShop Community",
-      "homepage": "https://github.com/opendevshop/devshop/graphs/contributors"
     }
   ],
   "require": {
@@ -26,11 +22,11 @@
     "branch-alias": {
       "dev-master": "1.x-dev"
     },
-    "class": "DevShop\\Component\\GitSplit\\Composer\\Plugin"
+    "class": "Operations\\Composer\\Plugin\\GitSplit\\Composer\\Plugin"
   },
   "autoload": {
     "psr-4": {
-      "DevShop\\Component\\GitSplit\\": ""
+      "Operations\\Composer\\Plugin\\GitSplit\\": ""
     }
   },
   "bin": [
