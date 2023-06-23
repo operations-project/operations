@@ -7,6 +7,8 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityListBuilder;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Link;
+use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -67,14 +69,12 @@ class SiteListBuilder extends EntityListBuilder {
    * {@inheritdoc}
    */
   public function buildHeader() {
-    $header['state'] = $this->t('State');
     $header['site_title'] = $this->t('Site Title');
     $header['id'] = $this->t('ID');
     $header['site_uri'] = $this->t('Site URI');
-    $header['status'] = $this->t('Status');
-    $header['uid'] = $this->t('Author');
-    $header['created'] = $this->t('Created');
-    $header['changed'] = $this->t('Updated');
+    $header['date'] = $this->t('Last Report');
+    $header['state'] = $this->t('State');
+    $header['reason'] = $this->t('');
     return $header + parent::buildHeader();
   }
 
@@ -89,20 +89,38 @@ class SiteListBuilder extends EntityListBuilder {
     $row['state'] = \Drupal::service('renderer')->render($state);
     $row['site_title'] = $entity->toLink();
     $row['id'] = $entity->site_uuid->value;
-    $row['site_uri'] = $entity->site_uri->value;
-    $row['status'] = $entity->get('status')->value ? $this->t('Enabled') : $this->t('Disabled');
-    $row['uid']['data'] = [
-      '#theme' => 'username',
-      '#account' => $entity->getOwner(),
-    ];
-    $row['created'] = $this->dateFormatter->format($entity->get('created')->value);
-    $row['changed'] = $this->dateFormatter->format($entity->getChangedTime());
+    $row['site_uri'] = Link::fromTextAndUrl($entity->site_uri->value, Url::fromUri($entity->site_uri->value), [
+      'attributes' => ['target' => '_blank'],
+    ]);
+    $date = $entity->revision_timestamp->view([
+      'label' => 'hidden',
+      'type' => 'timestamp_ago'
+    ]);
+    $row['date'] = \Drupal::service('renderer')->render($date);
+
+    if ($entity->reason->value) {
+      $reason = $entity->reason->view([
+        'label' => 'hidden',
+        'type'=> 'text',
+      ]);
+      $reason[0]['#format'] = 'basic_html';
+      $reason[0]['#prefix'] = '<blockquote>';
+      $reason[0]['#suffix'] = '</blockquote>';
+      $reason['#type'] = 'details';
+      $reason['#title'] = t('Reason');
+
+    }
+    else {
+      $reason = [];
+    }
+    $row['reason'] = \Drupal::service('renderer')->render($reason);
+
     return [
-      'data' => $row,
+      'data' => $row + parent::buildRow($entity),
       'class' => [
         "color-" . $entity->getStateClass()
-      ],
-    ] + parent::buildRow($entity);
+      ]
+    ];
   }
 
 }
