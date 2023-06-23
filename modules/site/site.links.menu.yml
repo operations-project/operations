@@ -30,6 +30,14 @@ site.advanced:
   parent: system.admin_config_system
   position: left
 
+# /admin/reports/site/history
+site.advanced:
+  title: 'Site History'
+  description: 'View historical reports.'
+  route_name: site.history
+  parent: system.admin_reports_system
+  position: left
+
 #entity.site_environment.settings:
 #  title: 'Site Environment'
 #  description: 'Configure a Site Environment entity type.'

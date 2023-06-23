@@ -24,6 +24,11 @@ site.status:
   route_name: site.status
   base_route: site.status
 
+site.history:
+  title: 'History'
+  route_name: site.history
+  base_route: site.status
+
 site.advanced:
   title: 'Settings'
   route_name: site.advanced
@@ -48,6 +53,7 @@ site.form:
   title: 'Manage form'
   route_name: site.form
   base_route: site.status
+
 
 #entity.site_environment.settings:
 #  title: 'Settings'
