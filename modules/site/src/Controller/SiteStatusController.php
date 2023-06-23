@@ -98,6 +98,9 @@ class SiteStatusController extends ControllerBase {
         $row = [];
         $row[] = \Drupal::service('renderer')->render($state);
         $row[] = Link::fromTextAndUrl($site_revision->site_title->value, $site_revision->toUrl('revision'));
+        $row[] = Link::fromTextAndUrl($site_revision->site_uri->value, Url::fromUri($site_revision->site_uri->value), [
+          'attributes' => ['target' => '_blank'],
+        ]);
         $row[] = \Drupal::service('renderer')->render($date);
         $row[] = \Drupal::service('renderer')->render($reason);
         $row[] = $site_revision->get('revision_log')->value;
@@ -117,6 +120,7 @@ class SiteStatusController extends ControllerBase {
         '#header' => [
           'State',
           'Title',
+          'URL',
           'Date',
           'State Reason',
           'Log',
