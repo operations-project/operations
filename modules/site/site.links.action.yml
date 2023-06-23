@@ -29,3 +29,11 @@ site.field_add:
     site_type: default
   appears_on:
     - site.fields
+
+site.save:
+  title: 'Save report'
+  route_name: site.site_definition_entity_save
+  appears_on:
+    - site.status
+    - site.history
+    - site.settings
