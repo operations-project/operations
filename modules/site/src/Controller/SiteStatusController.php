@@ -55,7 +55,8 @@ class SiteStatusController extends ControllerBase {
     }
     $revisions = $site_entity->revisionIds();
     arsort($revisions);
-    $revisions = array_slice($revisions, 0, 5);
+    // @TODO: Implement a pager.
+    // $revisions = array_slice($revisions, 0, 5);
     $build = [];
     $storage = $this->entityTypeManager()->getStorage('site');
 

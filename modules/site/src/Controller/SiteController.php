@@ -15,6 +15,7 @@ use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Url;
 use Drupal\node\NodeInterface;
 use Drupal\node\NodeStorageInterface;
+use Drupal\site\Entity\SiteDefinition;
 use Drupal\site\Entity\SiteEntity;
 use Drupal\site\SiteEntityInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -75,5 +76,10 @@ class SiteController extends ControllerBase {
     $page = $site_view_controller->view($site_revision);
 //    unset($page['sites'][$site_revision->id()]['#cache']);
     return $page;
+  }
+
+  public function saveReport() {
+    $site = SiteDefinition::load('self')->saveEntity();
+    return $this->redirect('site.history');
   }
 }

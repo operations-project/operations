@@ -102,8 +102,8 @@ site.status:
 site.site_definition_entity_save:
   path: '/admin/reports/site/save'
   defaults:
-    _title: 'Save Site information'
-    _form: 'Drupal\site\Form\SiteDefinitionEntitySaveForm'
+    _title: 'Save Site Report'
+    _controller: '\Drupal\site\Controller\SiteController::saveReport'
   requirements:
     _permission: 'save site definition'
 
