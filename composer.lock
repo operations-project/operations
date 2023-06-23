@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0c91fdd9df66f20a51456f4e0d6f9bd4",
+    "content-hash": "a0a1f904e974b75e0ed605556167602b",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -1471,7 +1471,7 @@
         },
         {
             "name": "drupal-operations/git-split",
-            "version": "1.0.x-dev",
+            "version": "dev-main",
             "dist": {
                 "type": "path",
                 "url": "composer/Plugin/GitSplit",
@@ -2013,59 +2013,6 @@
             "support": {
                 "source": "https://git.drupalcode.org/project/key_auth",
                 "issues": "https://www.drupal.org/project/issues/key_auth"
-            }
-        },
-        {
-            "name": "drupal/operations",
-            "version": "dev-1.0.x",
-            "source": {
-                "type": "git",
-                "url": "https://git.drupalcode.org/project/operations.git",
-                "reference": "e7e8fd34b158e664892f341a10f43e94dfbe3332"
-            },
-            "require": {
-                "drupal/core": "^9 || ^10",
-                "drupal/key_auth": "^2.1"
-            },
-            "require-dev": {
-                "drupal/key_auth": "*",
-                "drupal/rest-rest": "*",
-                "drupal/serialization-serialization": "*",
-                "drupal/site": "*"
-            },
-            "type": "drupal-module",
-            "extra": {
-                "branch-alias": {
-                    "dev-1.0.x": "1.0.x-dev"
-                },
-                "drupal": {
-                    "version": "1.0.x-dev",
-                    "datestamp": "1687479539",
-                    "security-coverage": {
-                        "status": "not-covered",
-                        "message": "Project has not opted into security advisory coverage!"
-                    }
-                }
-            },
-            "notification-url": "https://packages.drupal.org/8/downloads",
-            "license": [
-                "GPL-2.0-or-later"
-            ],
-            "authors": [
-                {
-                    "name": "Jon Pugh",
-                    "homepage": "https://www.drupal.org/user/17028",
-                    "email": "jon@thinkdrop.net"
-                },
-                {
-                    "name": "matthand",
-                    "homepage": "https://www.drupal.org/user/171527"
-                }
-            ],
-            "description": "Tools for operating Drupal sites.",
-            "homepage": "https://www.drupal.org/project/operations",
-            "support": {
-                "source": "https://git.drupalcode.org/project/operations"
             }
         },
         {
@@ -11319,16 +11266,15 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "drupal/operations": 20,
+        "drupal-operations/git-split": 20,
         "drupal/site_audit": 20,
-        "drupal/site_audit_server": 20,
-        "drupal-operations/git-split": 20
+        "drupal/site_audit_server": 20
     },
-    "prefer-stable": true,
+    "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
         "php": ">=8.1"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.2.0"
 }

@@ -25,15 +25,14 @@
         "php": ">=8.1",
         "composer/installers": "^2.1",
         "cweagans/composer-patches": "^1.7",
+        "drupal-operations/git-split": "self.version",
         "drupal/admin_toolbar": "^3.4",
         "drupal/core-composer-scaffold": "^10.0.0",
         "drupal/core-recommended": "^10.0.0",
         "drupal/devel": "^5.1",
-        "drupal/operations": "1.0.x-dev",
         "drupal/restui": "^1.21",
         "drupal/site_audit": "4.x-dev",
         "drupal/site_audit_server": "^4.0@dev",
-        "drupal-operations/git-split": "self.version",
         "drush/drush": "^11.4.0",
         "vlucas/phpdotenv": "^5.1",
         "webflo/drupal-finder": "^1.2"
@@ -45,7 +44,7 @@
         "drupal/drupal": "*"
     },
     "minimum-stability": "dev",
-    "prefer-stable": true,
+    "prefer-stable": false,
     "config": {
         "bin-dir": "bin",
         "discard-changes": true,
@@ -105,7 +104,10 @@
         "composer-exit-on-patch-failure": true,
         "git-split": {
           "repos": {
-            "composer/Plugin/GitSplit": "git@github.com:drupal-operations/git-split.git"
+            "composer/Plugin/GitSplit": "git@github.com:drupal-operations/git-split.git",
+            "web/modules/contrib/operations": "git@git.drupal.org:project/operations.git",
+            "web/modules/contrib/operations/modules/site": "git@git.drupal.org:project/site.git",
+            "web/modules/contrib/operations/modules/site_manager": "git@git.drupal.org:project/site_manager.git"
           }
         },
         "patchLevel": {

@@ -1,16 +1,100 @@
 # Site Module
 
-The Site Module provides a way to track your Drupal sites.
+The **Site.module** gives you extra information about your Drupal site by providing a SiteEntity that stores site state and other information over time.
 
-The Site Entity has properties such as Site State, Git Remote and URI, and can be extended to store additional information like [Site Audit Reports](https://drupal.org/project/site_audit).
+The `SiteEntity` has a "state" property, an extensible way for specifying the overall health of a Drupal site. Support for Drupal's Status report and Site Audit is built in.
 
-The Site Entity data can then be sent to a remote server for tracking in a central location, or it can be saved locally
-on a recurring basis to track changes over time.
+The `SiteEntity` is Fieldable, can store Config API data, State API data, or arbitrary data with revisions, providing a historical record of whatever data points are desired.
 
-The Site Entity can send arbitrary config to any REST endpoint. The endpoint can respond with `config_overrides`, 
-allowing users to control config remotely.
+The `SiteEntity` can then be sent to another Drupal site running Site Manager, or to any REST endpoint.
 
-## Side Definition Entity
+When used with the Site Manager module, multiple Site Entities can be stored, giving Drupal the ability to act as a site monitoring and control dashboard.
+
+## Usage
+
+1. Enable "Site" module via "Admin > Extend" or with `drush en site`.
+2. Visit **Admin > Reports > Site Status**.
+3. In this section:
+  - **Status:** This page displays the current state of your site using the `SiteDefinition` config entity.
+    - *Current Status*: Displays Site State, the Reason for the state, metadata, and current Config API and State API data.
+    - *Save Site Report:* This form is used to save a snapshot of the `SiteDefinition` into a `SiteEntity`.
+    - *Status History* displays a list of Site reports. Each entry has it's own page. Click the "Site Title" links to view.
+  - **Settings:** Edit the `SiteDefinition` config entity here. 
+    - *State:* Choose which factors to use when calculating the State of the site.
+    - *Site Reporting*: Configure how Site data is handled. Set interval for saving and sending site data. Configure Destinations for sending Site data  via REST. 
+    - *Site config:* The `SiteDefinition` entity can load additional data from Config API and States API into the `SiteDefinition::data` property. Use **Configuration items to load.** and **State Items to Load** to define what data is included in the `SiteDefinition` (and saved to `SiteEntity::data`).
+    - *Site Overrides:* Provides a mechanism to allow Config and States to be overridden by data in the `SiteEntity`. Enter the names of the Config API and State API items that are allowed to be overridden.
+      When saving the `SiteEntity`, the data in `SiteEntity::config_overrides` and `SiteEntity::state_overrides` will be set automatically, if allowed.
+  - **Edit Info:** This is the Edit page for this site's `SiteEntity` (a revisionable content entity). Store metadata like "Description", or add your own fields.
+  - **Manage fields**, **Manage display**, **Manage Form**: If Field UI module is enabled, you will see the standard Field Management pages here. Add your own fields and control how `SiteEntity` is displayed.
+
+## Config Entity `SiteDefinition`
+
+Each site get's a default `SiteDefinition` config entity called `self`.
+
+The `SiteDefinition` Config Entity represents the current state of the site. It contains some editable properties and some are generated from site data.
+
+See `site.site_definition.self` config entity defaults here: [./config/install/site.site_definition.self.yml](./config/install/site.site_definition.self.yml).
+
+```yaml
+id: self
+
+# Editable Properties
+canonical_url: ""
+git_remote: ""
+description: "A site definition representing this site."
+
+# List of config items to load into a Site Entity.
+configs_load:
+  - core.extension
+  - system.site
+
+# List of config items to allow loading from remote site entity.
+configs_allow_override: []
+
+# List of state items to load into a Site Entity.
+states_load:
+  - install_time
+  - system.cron_last
+  - system.maintenance_mode
+
+# List of state items to allow loading from remote site entity.
+states_allow_override: []
+
+# List of factors that affect state
+state_factors:
+  - system
+
+# Arbitrary data
+data: {}
+settings: {}
+```
+
+To load the `SiteDefinition` entity for the current site, load the entity with id "self":
+
+```php
+$site = \Drupal\site\Entity\SiteDefinition::load('self');
+
+if ($site->state == \Drupal\site\Entity\SiteDefinition::SITE_ERROR) {
+  \Drupal::messenger()->addError($site->reason);
+}
+```
+
+### Saving `SiteEntity` from `SiteDefinition`
+
+The `SiteDefinition` class has a simple method for converting itself into a `SiteEntity` content entity:
+
+```php
+# Get a `SiteEntity` object, alter and save it.
+$site_content_entity = SiteDefinition::load('self')->toEntity();
+
+$site_content_entity->revision_log = "Programmaticly created Site Entity";
+$site_content_entity->setNewRevision(TRUE);
+$site_content_entity->save();
+
+# Save SiteEntity, automatically saving a new revision.
+SiteDefinition::load('self')->saveEntity();
+```
 
 ### Dynamic Properties
 
