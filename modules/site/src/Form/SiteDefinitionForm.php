@@ -232,6 +232,8 @@ class SiteDefinitionForm extends EntityForm {
   public function save(array $form, FormStateInterface $form_state) {
 
     $result = parent::save($form, $form_state);
+    SiteDefinition::load('self')->saveEntity();
+
     $message_args = ['%label' => $this->entity->label()];
 
     $message = $result == SAVED_NEW
@@ -240,7 +242,7 @@ class SiteDefinitionForm extends EntityForm {
 
     $this->messenger()->addStatus($message);
 
-    $form_state->setRedirectUrl(Url::fromRoute('site.advanced'));
+    $form_state->setRedirectUrl(Url::fromRoute('site.history'));
     return $result;
   }
 
