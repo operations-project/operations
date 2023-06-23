@@ -103,6 +103,11 @@
             "drush/Commands/contrib/{$name}": ["type:drupal-drush"]
         },
         "composer-exit-on-patch-failure": true,
+        "git-split": {
+          "repos": {
+            "composer/Plugin/GitSplit": "git@github.com:drupal-operations/git-split.git"
+          }
+        },
         "patchLevel": {
             "drupal/core": "-p2"
         },
