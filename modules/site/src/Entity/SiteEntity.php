@@ -105,7 +105,7 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
   {
     /** @var MapItem $settings */
     $settings = SiteDefinition::load('self')->get('settings');
-    if ($settings['send_on_save'] && !$this->no_send) {
+    if (!empty($settings['send_on_save']) && !$this->no_send) {
       // send() triggers this function again with "no_send", so we don't need to call saveConfig().
       $this->send();
     }
