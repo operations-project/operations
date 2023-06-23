@@ -553,8 +553,7 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
         $site_entity->no_send = true;
         $site_entity->save();
 
-        // @TODO: Save locally.
-        return true;
+        return $site_entity;
 
       } catch (GuzzleException $e) {
         if ($e->hasResponse()) {

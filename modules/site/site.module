@@ -8,7 +8,7 @@
 use Drupal\Core\Render\Element;
 use Drupal\site\Entity\Site;
 use Drupal\user\UserInterface;
-
+use Drupal\site\Entity\SiteDefinition;
 /**
  * Implements hook_theme().
  */
@@ -128,4 +128,37 @@ function site_preprocess_status_report_general_info(&$vars) {
   $vars['drupal']['description'] = $site_definition->view();
 
   $vars['drupal']['description']['#prefix'] = '<h5>' . t('Site Information') . '</h5>';
+}
+
+
+/**
+ * @return void
+ * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+ * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+ */
+function site_cron() {
+  $now = \Drupal::time()->getRequestTime();
+  $config = SiteDefinition::load('self');
+  $settings = $config->get('settings');
+
+  foreach (['save', 'send'] as $action) {
+    $state_name = "site.cron_last_{$action}";
+    $interval = $settings["{$action}_interval"];
+
+    // If enabled, and its the first time OR due for an update...
+    $last_cron = \Drupal::state()->get($state_name, 0);
+    $first_time = $last_cron == 0;
+    $time_since_last_cron = $first_time? 0: $now - $last_cron;
+    if ($interval > 0 && ($first_time || $time_since_last_cron > $interval)) {
+
+      if ($action == 'save') {
+        SiteDefinition::load('self')->saveEntity(t('Site report saved on cron.'), true);
+      }
+      else {
+        SiteDefinition::load('self')->sendEntity(t('Site report sent on cron.'), true);
+      }
+
+      \Drupal::state()->set($state_name, $now);
+    }
+  }
 }
