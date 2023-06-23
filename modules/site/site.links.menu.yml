@@ -31,7 +31,7 @@ site.advanced:
   position: left
 
 # /admin/reports/site/history
-site.advanced:
+site.history:
   title: 'Site History'
   description: 'View historical reports.'
   route_name: site.history
