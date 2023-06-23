@@ -1,7 +1,0 @@
-site_manager.settings_form:
-  path: '/admin/config/system/site-manager'
-  defaults:
-    _title: 'Site Manager settings'
-    _form: 'Drupal\site_manager\Form\SettingsForm'
-  requirements:
-    _permission: 'administer site_manager configuration'

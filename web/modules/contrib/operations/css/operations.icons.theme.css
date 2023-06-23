@@ -1,8 +1,0 @@
-
-.toolbar-icon-operations-admin:before {
-    background-image: url(../../../../core/misc/icons/787878/cog.svg);
-}
-.toolbar-icon-operations-admin:active:before,
-.toolbar-icon-operations-admin.is-active:before {
-    background-image: url(../../../../core/misc/icons/787878/cog.svg);
-}
