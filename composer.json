@@ -15,6 +15,10 @@
         {
             "type": "composer",
             "url": "https://packages.drupal.org/8"
+        },
+        {
+            "type": "path",
+            "url": "composer/Plugin/GitSplit"
         }
     ],
     "require": {
@@ -29,6 +33,7 @@
         "drupal/restui": "^1.21",
         "drupal/site_audit": "4.x-dev",
         "drupal/site_audit_server": "^4.0@dev",
+        "drupal-operations/git-split": "self.version",
         "drush/drush": "^11.4.0",
         "vlucas/phpdotenv": "^5.1",
         "webflo/drupal-finder": "^1.2"
@@ -57,7 +62,10 @@
         "classmap": [
             "scripts/composer/ScriptHandler.php"
         ],
-        "files": ["load.environment.php"]
+        "files": ["load.environment.php"],
+        "psr-4": {
+            "Operations\\Composer\\": "composer"
+        }
     },
     "scripts": {
         "drush": "drush",
