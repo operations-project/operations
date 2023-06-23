@@ -14,6 +14,7 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\RevisionableContentEntityBase;
 use Drupal\Core\Entity\RevisionableEntityBundleInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Field\Plugin\Field\FieldType\MapItem;
 use Drupal\Core\Serialization\Yaml;
 use Drupal\Core\Url;
 use Drupal\site\SiteEntityTrait;
@@ -102,9 +103,19 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
    */
   public function save()
   {
-    parent::save();
-    $this->saveConfig();
-    $this->saveState();
+    /** @var MapItem $settings */
+    $settings = $this->get('settings')->first()->getValue();
+    if ($settings['send_on_save'] && !$this->no_send) {
+      // send() triggers this function again with "no_send", so we don't need to call saveConfig().
+      $this->send();
+    }
+    else {
+
+      // SaveConfig and state, THEN save entity so it stores the new values.
+      $this->saveConfig();
+      $this->saveState();
+      parent::save();
+    }
   }
 
   /**
@@ -514,7 +525,7 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
         \Drupal::moduleHandler()->alter('site_audit_remote_payload', $payload);
         $payload['sent_from'] = $_SERVER['HTTP_HOST'];
 
-        $response = $client->post($url->toString(), [
+        $response = $client->post($url, [
           'headers' => [
             'Accept' => 'application/json',
           ],
@@ -524,15 +535,21 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
         \Drupal::messenger()->addStatus('Site report was sent successfully.');
 
         $response_entity_data = Json::decode($response->getBody()->getContents());
-        $uuid = $response_entity_data['site_uuid'][0]['value'];
+        $uuid = $response_entity_data['site_uuid'];
         $site_entity = SiteEntity::load($uuid);
         $site_entity->setNewRevision();
-        $site_entity->revision_log = t('Set from remote response');
 
         foreach ($response_entity_data as $field => $value) {
-          $site_entity->set($field, $value);
+          if ($site_entity->hasField($field)) {
+            $site_entity->set($field, $value);
+          }
         }
 
+        // Save, but block sending again.
+        $site_entity->revision_log = t('Created from response from :url', [
+          ':url' => $url,
+        ]);
+        $site_entity->no_send = true;
         $site_entity->save();
 
         // @TODO: Save locally.

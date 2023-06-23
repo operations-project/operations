@@ -155,7 +155,13 @@ class SiteDefinitionForm extends EntityForm {
         '#options' => $options,
         '#parents' => ['settings', 'send_interval']
     ];
-
+    $form['reporting']['send_on_save'] = [
+        '#type' => 'checkbox',
+        '#title' => t('Send on save'),
+        '#description' => t('If checked, the site data will be sent to the configured destination every time it is saved.'),
+        '#default_value' => $settings['send_on_save']  ?? TRUE,
+        '#parents' => ['settings', 'send_on_save']
+    ];
     $form['reporting']['send_destinations'] = [
       '#title' => $this->t('Site Data Destinations'),
       '#description' => $this->t('Enter the URLs to POST site data to, one per line. To connect to a Site Manager instance, use the path "https://site_manager_url/api/site/data?api-key=xyz".'),
