@@ -1,0 +1,43 @@
+# /admin/operations/sites
+operations.admin_operations_sites:
+  title: Sites
+  route_name: operations.admin_operations_sites
+  parent: operations.admin
+  description: 'Configure sites.'
+
+# /admin/operations/sites/list
+#entity.site.collection:
+#  title: 'Sites'
+#  description: 'List all site entities.'
+#  route_name: entity.site.collection
+#  parent: operations.admin_operations_sites
+#  position: left
+
+# /admin/reports/site
+site.status:
+  title: 'Site Status'
+  description: 'Review the status of this site.'
+  route_name: site.status
+  parent: system.admin_reports
+  position: left
+  weight: -100
+
+# /admin/config/system/site
+site.advanced:
+  title: 'Advanced site settings'
+  description: 'Change advanced site configuration such as state factors, git information, and remote connections.'
+  route_name: site.advanced
+  parent: system.admin_config_system
+  position: left
+
+#entity.site_environment.settings:
+#  title: 'Site Environment'
+#  description: 'Configure a Site Environment entity type.'
+#  route_name:  entity.site_environment.settings
+#  parent: system.admin_config_system
+
+#entity.site_environment.collection:
+#  title: 'Site Environment'
+#  description: "Information about this site's environments."
+#  route_name: entity.site_environment.collection
+#  parent: system.admin_content

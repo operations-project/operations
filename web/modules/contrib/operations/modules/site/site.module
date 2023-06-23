@@ -1,0 +1,131 @@
+<?php
+
+/**
+ * @file
+ * Primary module hooks for Site module.
+ */
+
+use Drupal\Core\Render\Element;
+use Drupal\site\Entity\Site;
+use Drupal\user\UserInterface;
+
+/**
+ * Implements hook_theme().
+ */
+function site_theme() {
+  return [
+    'site' => [
+      'render element' => 'elements',
+    ],
+    'site_environment' => [
+        'render element' => 'elements',
+    ],
+  ];
+}
+
+/**
+ * Prepares variables for site templates.
+ *
+ * Default template: site.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - elements: An associative array containing the site information and any
+ *     fields attached to the entity.
+ *   - attributes: HTML attributes for the containing element.
+ */
+function template_preprocess_site(array &$variables) {
+  $variables['view_mode'] = $variables['elements']['#view_mode'];
+  foreach (Element::children($variables['elements']) as $key) {
+    $variables['content'][$key] = $variables['elements'][$key];
+  }
+}
+
+/**
+ * Implements hook_user_cancel().
+ */
+function site_user_cancel($edit, UserInterface $account, $method) {
+  switch ($method) {
+    case 'user_cancel_block_unpublish':
+      // Unpublish siteentities.
+      $storage = \Drupal::entityTypeManager()->getStorage('site');
+      $site_ids = $storage->getQuery()
+        ->condition('uid', $account->id())
+        ->condition('status', 1)
+        ->execute();
+      foreach ($storage->loadMultiple($site_ids) as $site) {
+        $site->set('status', FALSE);
+        $site->save();
+      }
+
+      // Unpublish site environments.
+      $storage = \Drupal::entityTypeManager()->getStorage('site_environment');
+      $site_environment_ids = $storage->getQuery()
+          ->condition('uid', $account->id())
+          ->condition('status', 1)
+          ->execute();
+      foreach ($storage->loadMultiple($site_environment_ids) as $site_environment) {
+        $site_environment->set('status', FALSE);
+        $site_environment->save();
+      }
+      break;
+
+    case 'user_cancel_reassign':
+      // Anonymize siteentities.
+      $storage = \Drupal::entityTypeManager()->getStorage('site');
+      $site_ids = $storage->getQuery()
+        ->condition('uid', $account->id())
+        ->execute();
+      foreach ($storage->loadMultiple($site_ids) as $site) {
+        $site->setOwnerId(0);
+        $site->save();
+      }
+      break;
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_predelete() for user entities.
+ */
+function site_user_predelete(UserInterface $account) {
+
+  return;
+
+  // @TODO We don't want to delete any of these when users are deleted.
+  //   This should be updated to change the author instead.
+  // Delete siteentities.
+  $storage = \Drupal::entityTypeManager()->getStorage('site');
+  $site_ids = $storage->getQuery()
+    ->condition('uid', $account->id())
+    ->execute();
+  $sites = $storage->loadMultiple($site_ids);
+  $storage->delete($sites);
+
+  // Delete site environments.
+  $storage = \Drupal::entityTypeManager()->getStorage('site_environment');
+  $site_environment_ids = $storage->getQuery()
+      ->condition('uid', $account->id())
+      ->execute();
+  $site_environments = $storage->loadMultiple($site_environment_ids);
+  $storage->delete($site_environments);
+  // Delete old revisions.
+  $site_environment_ids = $storage->getQuery()
+      ->allRevisions()
+      ->condition('uid', $account->id())
+      ->execute();
+  foreach (array_keys($site_environment_ids) as $revision_id) {
+    $storage->deleteRevision($revision_id);
+  }
+}
+
+/**
+ * Implements hook_preprocess for status_report_general_info page.
+ * @param $vars
+ * @return void
+ */
+function site_preprocess_status_report_general_info(&$vars) {
+  $site_definition = \Drupal\site\Entity\SiteDefinition::load('self');
+  $vars['drupal']['description'] = $site_definition->view();
+
+  $vars['drupal']['description']['#prefix'] = '<h5>' . t('Site Information') . '</h5>';
+}

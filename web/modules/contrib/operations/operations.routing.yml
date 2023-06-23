@@ -1,0 +1,9 @@
+
+operations.admin:
+  path: '/admin/operations'
+  defaults:
+    _controller: '\Drupal\system\Controller\SystemController::overview'
+    link_id: 'operations.admin'
+    _title: 'Operations'
+  requirements:
+    _permission: 'access operations pages'

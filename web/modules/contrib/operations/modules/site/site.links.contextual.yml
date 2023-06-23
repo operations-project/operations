@@ -1,0 +1,21 @@
+entity.site.edit_form:
+  route_name: entity.site.edit_form
+  group: site
+  title: Edit
+
+#entity.site.delete_form:
+#  route_name: entity.site.delete_form
+#  group: site
+#  title: Delete
+#  weight: 10
+
+#entity.site_environment.edit_form:
+#  route_name: entity.site_environment.edit_form
+#  group: site_environment
+#  title: Edit
+#
+#entity.site_environment.delete_form:
+#  route_name: entity.site_environment.delete_form
+#  group: site_environment
+#  title: Delete
+#  weight: 10

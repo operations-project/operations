@@ -1,0 +1,9 @@
+
+operations.admin:
+  title: 'Operations'
+  description: 'Manage sites, servers & tasks.'
+  route_name: operations.admin
+  weight: 8
+  parent: system.admin
+
+

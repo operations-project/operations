@@ -1,0 +1,73 @@
+entity.site.view:
+  title: 'View'
+  route_name: entity.site.canonical
+  base_route: entity.site.canonical
+
+entity.site.edit_form:
+  title: 'Edit'
+  route_name: entity.site.edit_form
+  base_route: entity.site.canonical
+#
+#entity.site.delete_form:
+#  title: 'Delete'
+#  route_name: entity.site.delete_form
+#  base_route: entity.site.canonical
+#  weight: 10
+
+#entity.site.collection:
+#  title: 'Sites'
+#  route_name: entity.site.collection
+#  base_route: operations.admin_operations_sites
+
+site.status:
+  title: 'Status'
+  route_name: site.status
+  base_route: site.status
+
+site.advanced:
+  title: 'Settings'
+  route_name: site.advanced
+  base_route: site.status
+
+site.edit:
+  title: 'Edit Info'
+  route_name: site.edit
+  base_route: site.status
+
+site.fields:
+  title: 'Manage fields'
+  route_name: site.fields
+  base_route: site.status
+
+site.display:
+  title: 'Manage display'
+  route_name: site.display
+  base_route: site.status
+
+site.form:
+  title: 'Manage form'
+  route_name: site.form
+  base_route: site.status
+
+#entity.site_environment.settings:
+#  title: 'Settings'
+#  route_name: entity.site_environment.settings
+#  base_route: entity.site_environment.settings
+#entity.site_environment.view:
+#  title: 'View'
+#  route_name: entity.site_environment.canonical
+#  base_route: entity.site_environment.canonical
+#entity.site_environment.edit_form:
+#  title: 'Edit'
+#  route_name: entity.site_environment.edit_form
+#  base_route: entity.site_environment.canonical
+#entity.site_environment.delete_form:
+#  title: 'Delete'
+#  route_name: entity.site_environment.delete_form
+#  base_route: entity.site_environment.canonical
+#  weight: 10
+#entity.site_environment.collection:
+#  title: 'Site Environments'
+#  route_name: entity.site_environment.collection
+#  base_route: system.admin_content
+#  weight: 10
