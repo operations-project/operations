@@ -24,6 +24,7 @@ use Symfony\Component\Routing\RouteCollection;
  *   label = @Translation("Site API"),
  *   uri_paths = {
  *     "canonical" = "/api/site/data",
+ *     "create" = "/api/site/data"
  *   }
  * )
  *
