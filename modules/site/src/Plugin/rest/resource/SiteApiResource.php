@@ -75,11 +75,29 @@ class SiteApiResource extends ResourceBase {
    *   The HTTP response object.
    */
   public function post(array $data) {
-    $this->logger->notice('Saving site entity...');
+    $data['data']['received_data'] = $data;
+    $data['data']['received_by'] = \Drupal::request()->getClientIP();
 
-    // Return the newly created record in the response body.
-    $data['received_by'] = \Drupal::request()->getClientIP();
-    return new ModifiedResourceResponse($data, 201);
+    $site_entity = SiteEntity::load($data['site_uuid']);
+    if ($site_entity) {
+      $site_entity->setNewRevision();
+      $site_entity->revision_log = t('Received via API from :from'. [
+        ':from' => \Drupal::request()->getClientIP(),
+      ]);
+      $site_entity->revision_timestamp = \Drupal::time()->getRequestTime();
+      foreach ($data as $property => $value) {
+        if ($site_entity->hasField($property)) {
+          $site_entity->set($property, $value);
+        }
+      }
+    }
+    else {
+      $site_entity = SiteEntity::create($data);
+    }
+
+    $site_entity->no_send = true;
+    $site_entity->save();
+    return new ModifiedResourceResponse($site_entity->toArray(), 201);
   }
 
   /**
