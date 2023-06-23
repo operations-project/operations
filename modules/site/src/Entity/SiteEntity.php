@@ -104,7 +104,7 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
   public function save()
   {
     /** @var MapItem $settings */
-    $settings = $this->get('settings')->first()->getValue();
+    $settings = SiteDefinition::load('self')->get('settings');
     if ($settings['send_on_save'] && !$this->no_send) {
       // send() triggers this function again with "no_send", so we don't need to call saveConfig().
       $this->send();
@@ -488,11 +488,12 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
    * @return void
    */
   public function send() {
-    if (empty($this->toArray()['settings'][0]['send_destinations'])) {
+    $settings = SiteDefinition::load('self')->get('settings');
+
+    if (empty($settings['send_destinations'])) {
       \Drupal::messenger()->addError('There are no send destinations configured. Unable to send Site data.');
       return;
     }
-    $settings = $this->toArray()['settings'][0];
 
     // Validate URLs
     $urls = explode("\n", $settings['send_destinations']);
