@@ -7,6 +7,12 @@ entity.site.edit_form:
   title: 'Edit'
   route_name: entity.site.edit_form
   base_route: entity.site.canonical
+
+entity.site.version-history:
+  title: 'History'
+  route_name: entity.site.version-history
+  base_route: entity.site.canonical
+
 #
 #entity.site.delete_form:
 #  title: 'Delete'
