@@ -67,6 +67,8 @@ class SiteListBuilder extends EntityListBuilder {
    * {@inheritdoc}
    */
   public function buildHeader() {
+    $header['state'] = $this->t('State');
+    $header['site_title'] = $this->t('Site Title');
     $header['id'] = $this->t('ID');
     $header['site_uri'] = $this->t('Site URI');
     $header['status'] = $this->t('Status');
@@ -81,7 +83,12 @@ class SiteListBuilder extends EntityListBuilder {
    */
   public function buildRow(EntityInterface $entity) {
     /** @var \Drupal\site\SiteEntityInterface $entity */
-    $row['id'] = $entity->id();
+    $state =  $entity->state->view([
+      'label' => 'hidden',
+    ]);
+    $row['state'] = \Drupal::service('renderer')->render($state);
+    $row['site_title'] = $entity->toLink();
+    $row['id'] = $entity->site_uuid->value;
     $row['site_uri'] = $entity->site_uri->value;
     $row['status'] = $entity->get('status')->value ? $this->t('Enabled') : $this->t('Disabled');
     $row['uid']['data'] = [
@@ -90,7 +97,12 @@ class SiteListBuilder extends EntityListBuilder {
     ];
     $row['created'] = $this->dateFormatter->format($entity->get('created')->value);
     $row['changed'] = $this->dateFormatter->format($entity->getChangedTime());
-    return $row + parent::buildRow($entity);
+    return [
+      'data' => $row,
+      'class' => [
+        "color-" . $entity->getStateClass()
+      ],
+    ] + parent::buildRow($entity);
   }
 
 }
