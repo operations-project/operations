@@ -58,7 +58,7 @@ class SiteDefinitionForm extends EntityForm {
       '#markup' => $this->entity->stateName(),
       '#description' => $this->t('The current state of the site.'),
     ];
-    $form['site_title'] = [
+    $form['info']['site_title'] = [
       '#type' => 'item',
       '#title' => $this->t('Site Title'),
       '#markup' => $this->entity->get('site_title'),
@@ -68,13 +68,13 @@ class SiteDefinitionForm extends EntityForm {
               ->toString(),
       ]),
     ];
-    $form['site_uuid'] = [
+    $form['info']['site_uuid'] = [
       '#type' => 'item',
       '#title' => $this->t('Site UUID'),
       '#markup' => $this->entity->get('site_uuid'),
       '#description' => $this->t('The UUID of this site.'),
     ];
-    $form['site_uri'] = [
+    $form['info']['site_uri'] = [
       '#type' => 'item',
       '#title' => $this->t('Site URI'),
       '#markup' => $this->entity->get('site_uri'),
