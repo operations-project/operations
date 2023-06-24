@@ -517,7 +517,8 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
             $field_key = $first->getDataDefinition()->getMainPropertyName();
 
             // If field is in remote fields, don't send it so we don't alter it.
-            if (in_array($field_key, $site_definition->get('fields_allow_override'))) {
+            $remote_fields = $site_definition->get('fields_allow_override');
+            if (in_array($field_id, $remote_fields)) {
               continue;
             }
 
