@@ -5,6 +5,9 @@ canonical_url: ""
 git_remote: ""
 description: "A site definition representing this site."
 
+# List of fields that should be set from remote Site Mananger entity.
+fields_allow_override: []
+
 # List of config items to load into a Site Entity.
 configs_load:
   - core.extension

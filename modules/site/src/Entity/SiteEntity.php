@@ -488,7 +488,9 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
    * @return void
    */
   public function send() {
-    $settings = SiteDefinition::load('self')->get('settings');
+
+    $site_definition = SiteDefinition::load('self');
+    $settings = $site_definition->get('settings');
 
     if (empty($settings['send_destinations'])) {
       \Drupal::messenger()->addError('There are no send destinations configured. Unable to send Site data.');
@@ -513,6 +515,12 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
           if ($first) {
             $field_data = $first->getValue();
             $field_key = $first->getDataDefinition()->getMainPropertyName();
+
+            // If field is in remote fields, don't send it so we don't alter it.
+            if (in_array($field_key, $site_definition->get('fields_allow_override'))) {
+              continue;
+            }
+
             // If there is no main property name, pass the entire thing.
             // ie. for the data field.
             if (empty($field_key)) {

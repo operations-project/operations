@@ -98,6 +98,12 @@ class SiteDefinitionForm extends EntityForm {
       '#description' => $this->t('A description of this site. This will not be shown to visitors.'),
     ];
 
+    $form['config']['fields_allow_override'] = [
+      '#type' => 'textarea',
+      '#title' => $this->t('Remote Fields'),
+      '#default_value' => implode(PHP_EOL, $this->entity->get('fields_allow_override') ?? []),  // I think the [] is only needed because i didn't reinstall the module.
+      '#description' => $this->t('A list of fields to load from a remote Site Manager.'),
+    ];
     $form['config']['configs_load'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Configuration items to load.'),
@@ -179,7 +185,15 @@ class SiteDefinitionForm extends EntityForm {
 
   public function buildEntity(array $form, FormStateInterface $form_state) {
 
-    foreach (['configs_load' , 'configs_allow_override', 'states_load', 'states_allow_override'] as $name) {
+    $array_fields = [
+      'fields_allow_override' ,
+      'configs_load' ,
+      'configs_allow_override',
+      'states_load',
+      'states_allow_override'
+    ];
+
+    foreach ($array_fields as $name) {
       $config_load = $form_state->getValue($name);
       if (is_string($config_load)) {
         $config_load = explode(PHP_EOL, $config_load);

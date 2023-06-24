@@ -50,6 +50,15 @@ trait SiteEntityTrait {
   protected string $git_reference;
 
   /**
+   * A list of fields to set from remote site entity.
+   *
+   * These fields are not sent
+   *
+   * @var array
+   */
+  protected array $fields_allow_override = [];
+
+  /**
    * A list of config objects to load into the Entity.
    *
    * @var array

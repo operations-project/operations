@@ -49,6 +49,7 @@ use Drupal\site\SiteEntityTrait;
  *     "canonical_url",
  *     "git_remote",
  *     "description",
+ *     "fields_allow_override",
  *     "configs_load",
  *     "configs_allow_override",
  *     "states_load",
