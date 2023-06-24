@@ -191,11 +191,9 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
     $site_entity = $this;
     $site_config = SiteDefinition::load('self');
     $allowed_states = $site_config->get('states_allow_override');
-    $state_overrides = $site_entity->state_overrides->getValue();
+    $state_overrides = $site_entity->state_overrides->first()->value;
     $revision_url = $this->toUrl('canonical', ['absolute'=>true])->toString() . '/revisions/' . $site_entity->vid->value . '/view';
-
-    if (!empty($state_overrides[0])) {
-      $state_overrides = $state_overrides[0];
+    if (!empty($state_overrides)) {
       foreach ($allowed_states as $state_name) {
 
         // If config override was found...
