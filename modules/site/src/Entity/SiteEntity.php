@@ -536,24 +536,24 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
         \Drupal::messenger()->addStatus('Site report was sent successfully.');
 
         $response_entity_data = Json::decode($response->getBody()->getContents());
-        $uuid = $response_entity_data['site_uuid'];
-        $site_entity = SiteEntity::load($uuid);
-        $site_entity->setNewRevision();
 
         foreach ($response_entity_data as $field => $value) {
-          if ($site_entity->hasField($field)) {
-            $site_entity->set($field, $value);
+          if ($this->hasField($field)) {
+            $this->set($field, $value);
           }
         }
 
         // Save, but block sending again.
-        $site_entity->revision_log = t('Created from response from :url', [
+        $this->setNewRevision();
+        $this->vid = null;
+
+        $this->revision_log = t('Created from response from :url', [
           ':url' => $url,
         ]);
-        $site_entity->no_send = true;
-        $site_entity->save();
+        $this->no_send = true;
+        $this->save();
 
-        return $site_entity;
+        return $this;
 
       } catch (GuzzleException $e) {
         if ($e->hasResponse()) {
