@@ -30,6 +30,12 @@ class SettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
+    $form['allowed_remote_fields'] = [
+      '#type' => 'textarea',
+      '#title' => $this->t('List of fields that client site POSTs are allowed to overwrite in this site.'),
+      '#description' => $this->t("When client sites post records here, allow these fields to be set in the site entity here."),
+      '#default_value' => $this->config('site_manager.settings')->get('allowed_remote_fields'),
+    ];
     $form['global_config_overrides'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Global Site Config Overrides'),
@@ -51,7 +57,7 @@ class SettingsForm extends ConfigFormBase {
   public function validateForm(array &$form, FormStateInterface $form_state) {
     $global_config_items = [
       'config_overrides',
-      'state_overrides'
+      'state_overrides',
     ];
     foreach ($global_config_items as $config_name) {
       try {
@@ -75,6 +81,7 @@ class SettingsForm extends ConfigFormBase {
     $this->config('site_manager.settings')
       ->set('global_config_overrides', $form_state->getValue('global_config_overrides'))
       ->set('global_state_overrides', $form_state->getValue('global_state_overrides'))
+      ->set('allowed_remote_fields', $form_state->getValue('allowed_remote_fields'))
       ->save();
     parent::submitForm($form, $form_state);
   }
