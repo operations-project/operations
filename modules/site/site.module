@@ -17,9 +17,6 @@ function site_theme() {
     'site' => [
       'render element' => 'elements',
     ],
-    'site_environment' => [
-        'render element' => 'elements',
-    ],
   ];
 }
 
@@ -58,16 +55,6 @@ function site_user_cancel($edit, UserInterface $account, $method) {
         $site->save();
       }
 
-      // Unpublish site environments.
-      $storage = \Drupal::entityTypeManager()->getStorage('site_environment');
-      $site_environment_ids = $storage->getQuery()
-          ->condition('uid', $account->id())
-          ->condition('status', 1)
-          ->execute();
-      foreach ($storage->loadMultiple($site_environment_ids) as $site_environment) {
-        $site_environment->set('status', FALSE);
-        $site_environment->save();
-      }
       break;
 
     case 'user_cancel_reassign':
@@ -101,21 +88,6 @@ function site_user_predelete(UserInterface $account) {
   $sites = $storage->loadMultiple($site_ids);
   $storage->delete($sites);
 
-  // Delete site environments.
-  $storage = \Drupal::entityTypeManager()->getStorage('site_environment');
-  $site_environment_ids = $storage->getQuery()
-      ->condition('uid', $account->id())
-      ->execute();
-  $site_environments = $storage->loadMultiple($site_environment_ids);
-  $storage->delete($site_environments);
-  // Delete old revisions.
-  $site_environment_ids = $storage->getQuery()
-      ->allRevisions()
-      ->condition('uid', $account->id())
-      ->execute();
-  foreach (array_keys($site_environment_ids) as $revision_id) {
-    $storage->deleteRevision($revision_id);
-  }
 }
 
 /**
