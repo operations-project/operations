@@ -26,6 +26,13 @@ class SiteProperty extends Plugin {
   public $name;
 
   /**
+   * If true, hide the property on view pages.
+   *
+   * @var bool
+   */
+  public $hidden;
+
+  /**
    * The default value to use if no value found.
    *
    * @var string

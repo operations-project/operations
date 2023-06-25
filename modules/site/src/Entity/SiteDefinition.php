@@ -191,13 +191,15 @@ class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface
       '#title' => t('Site Properties'),
     ];
     foreach ($this->property_plugins as $id => $plugin) {
-      $build['properties'][$id] = [
-        '#type' => 'item',
-        '#title' => $plugin->label(),
-        '#description' => $plugin->description(),
-        '#description_display' => 'after',
-        '#markup' => $plugin->value(),
-      ];
+      if (!$plugin->hidden()) {
+        $build['properties'][$id] = [
+          '#type' => 'item',
+          '#title' => $plugin->label(),
+          '#description' => $plugin->description(),
+          '#description_display' => 'after',
+          '#markup' => $plugin->value(),
+        ];
+      }
     }
 
     $site_entity = SiteEntity::loadSelf();

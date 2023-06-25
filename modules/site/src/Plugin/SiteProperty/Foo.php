@@ -10,6 +10,7 @@ use Drupal\site\SitePropertyPluginBase;
  * @SiteProperty(
  *   id = "foo",
  *   name = "foo",
+ *   hidden = "true",
  *   default_value = "bar",
  *   label = @Translation("Foo"),
  *   description = @Translation("What Foo.")

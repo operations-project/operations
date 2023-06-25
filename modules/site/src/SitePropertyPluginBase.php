@@ -25,6 +25,11 @@ abstract class SitePropertyPluginBase extends PluginBase implements SiteProperty
   protected $description;
 
   /**
+   * @var bool Hide the property on view pages.
+   */
+  protected $hidden;
+
+  /**
    * {@inheritdoc}
    */
   public function label() {
@@ -37,6 +42,13 @@ abstract class SitePropertyPluginBase extends PluginBase implements SiteProperty
    */
   public function name() {
     return $this->pluginDefinition['name'];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function hidden() {
+    return $this->pluginDefinition['hidden'] ?? false;
   }
 
   /**
