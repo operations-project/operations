@@ -79,6 +79,11 @@ class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface
   protected array $config;
 
   /**
+   * @var array List of property plugins.
+   */
+  protected array $property_plugins;
+
+  /**
    * @var array An arbitrary array of settings. Modules can alter the form and save more data.
    */
   protected array $settings;
@@ -92,6 +97,20 @@ class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface
     $this->setDynamicProperties();
     $this->getConfig();
     $this->getDrupalStates();
+  }
+
+  static public function load($id) {
+    $site_definition = parent::load($id);
+
+    // See https://www.drupal.org/docs/drupal-apis/plugin-api/creating-your-own-plugin-manager
+    $type = \Drupal::service('plugin.manager.site_property');
+    $plugin_definitions = $type->getDefinitions();
+    foreach ($plugin_definitions as $name => $plugin_definition) {
+      $plugin = $type->createInstance($plugin_definition['id']);
+      $site_definition->property_plugins[$name] = $plugin;
+      $site_definition->{$plugin->name()} = $plugin->value();
+    }
+    return $site_definition;
   }
 
   public function setDynamicProperties() {
@@ -208,7 +227,18 @@ class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface
       }
     }
 
-
+    // @TODO: Implement SiteProperty::view();
+    $build['properties'] = [
+      '#type' => 'details',
+      '#title' => t('Site Properties'),
+    ];
+    foreach ($this->property_plugins as $id => $plugin) {
+      $build['properties'][$id] = [
+        '#type' => 'item',
+        '#title' => $plugin->label(),
+        '#markup' => $plugin->value(),
+      ];
+    }
     return $build;
   }
 
@@ -297,4 +327,6 @@ class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface
     $site_entity->save();
     return $site_entity;
   }
+
+
 }

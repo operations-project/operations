@@ -3,3 +3,7 @@ services:
     class: Drupal\site\EventSubscriber\SiteStateSubscriber
     tags:
       - { name: event_subscriber }
+
+  plugin.manager.site_property:
+    class: Drupal\site\SitePropertyPluginManager
+    parent: default_plugin_manager
