@@ -87,6 +87,20 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
   use EntityChangedTrait;
   use EntityOwnerTrait;
 
+  public static function create(array $values = []) {
+
+    // Load plugin data.
+    // See https://www.drupal.org/docs/drupal-apis/plugin-api/creating-your-own-plugin-manager
+    $type = \Drupal::service('plugin.manager.site_property');
+    $plugin_definitions = $type->getDefinitions();
+    foreach ($plugin_definitions as $name => $plugin_definition) {
+      $plugin = $type->createInstance($plugin_definition['id']);
+      $values[$plugin->name()] = $plugin->value();
+    }
+
+    return parent::create($values);
+  }
+
   /**
    * Return the view array of the site entity.
    * @return array

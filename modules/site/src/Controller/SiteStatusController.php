@@ -94,6 +94,10 @@ class SiteStatusController extends ControllerBase {
           'label' => 'hidden',
         ]);
 
+        $php_version = $site_revision->php_version->view([
+          'label' => 'hidden',
+        ]);
+
         $title = $site_revision->site_title->view([
           'label' => 'hidden',
         ]);
@@ -105,6 +109,7 @@ class SiteStatusController extends ControllerBase {
           'attributes' => ['target' => '_blank'],
         ]);
         $row[] = \Drupal::service('renderer')->render($drupal_version);
+        $row[] = \Drupal::service('renderer')->render($php_version);
         $row[] = \Drupal::service('renderer')->render($date);
         $row[] = \Drupal::service('renderer')->render($reason);
         $row[] = $site_revision->get('revision_log')->value;
@@ -125,7 +130,8 @@ class SiteStatusController extends ControllerBase {
           'State',
           'Title',
           'URL',
-          'Drupal Version',
+          'Drupal',
+          'PHP',
           'Date',
           'State Reason',
           'Log',

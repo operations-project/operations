@@ -283,17 +283,7 @@ class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface
   }
 
   public function toEntity() {
-    /** @var SiteEntityInterface $site */
-    $site = SiteEntity::create($this->toEntityData());
-
-    # Save all property plugins data.
-    foreach ($this->property_plugins as $id => $plugin) {
-      if (!$plugin->hidden() && $site->hasField($plugin->name())) {
-        $data[$plugin->name()] = $plugin->value();
-      }
-    }
-
-    return $site;
+    return SiteEntity::create($this->toEntityData());
   }
 
   /**
@@ -329,17 +319,23 @@ class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface
   public function saveEntity($revision_log = '', $no_send = false) {
     $site_entity = SiteEntity::load($this->site_uuid);
     if ($site_entity) {
-      $site_entity->setNewRevision();
-      $site_entity->revision_log = $revision_log;
-      $site_entity->revision_timestamp = \Drupal::time()->getRequestTime();
-      $site_entity_properties = $this->toEntityData();
-      foreach ($site_entity_properties as $property => $value) {
-        $site_entity->set($property, $value);
+      /** @var SiteEntityInterface $new_site_entity */
+      $new_site_entity = $this->toEntity();
+
+      foreach ($new_site_entity->getFields() as $property => $field) {
+        $site_entity->set($property, $this->get($property));
       }
+
     }
     else {
       $site_entity = $this->toEntity();
     }
+
+    // Not sure why type is not set here.
+    $site_entity->set('type', 'default');
+    $site_entity->setNewRevision();
+    $site_entity->revision_log = $revision_log;
+    $site_entity->revision_timestamp = \Drupal::time()->getRequestTime();
 
     $site_entity->no_send = $no_send;
     $site_entity->save();
