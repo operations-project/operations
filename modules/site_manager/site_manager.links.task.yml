@@ -2,15 +2,22 @@
 entity.site.collection:
   title: 'Sites'
   route_name: entity.site.collection
-  base_route: system.admin_content
+  base_route: entity.site.collection
   weight: 10
+
+entity.site_type.collection:
+  title: 'Site Types'
+  route_name: entity.site_type.collection
+  base_route: entity.site.collection
+  weight: 20
+
+site_manager.settings_form:
+  title: 'Site Manager Settings'
+  route_name: site_manager.settings_form
+  base_route: entity.site.collection
+  weight: 30
 
 entity.site_type.edit_form:
   title: 'Edit'
   route_name: entity.site_type.edit_form
   base_route: entity.site_type.edit_form
-
-entity.site_type.collection:
-  title: 'List'
-  route_name: entity.site_type.collection
-  base_route: entity.site_type.collection
