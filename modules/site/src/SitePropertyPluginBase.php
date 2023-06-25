@@ -20,6 +20,11 @@ abstract class SitePropertyPluginBase extends PluginBase implements SiteProperty
   protected $value;
 
   /**
+   * @var mixed A description of the property.
+   */
+  protected $description;
+
+  /**
    * {@inheritdoc}
    */
   public function label() {
@@ -39,6 +44,13 @@ abstract class SitePropertyPluginBase extends PluginBase implements SiteProperty
    */
   public function value() {
     return $this->value ?? $this->pluginDefinition['default_value'];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function description() {
+    return $this->description ?? $this->pluginDefinition['description'];
   }
 
 }
