@@ -45,20 +45,30 @@ site.edit:
   route_name: site.edit
   base_route: site.status
 
+
 site.fields:
-  title: 'Manage fields'
+  title: 'Fields'
   route_name: site.fields
   base_route: site.status
 
-site.display:
-  title: 'Manage display'
-  route_name: site.display
+site.fields_manage:
+  title: 'Manage fields'
+  route_name: site.fields
   base_route: site.status
+  parent_id: site.fields
 
 site.form:
   title: 'Manage form'
   route_name: site.form
   base_route: site.status
+  parent_id: site.fields
+
+site.display:
+  title: 'Manage display'
+  route_name: site.display
+  base_route: site.status
+  parent_id: site.fields
+
 
 
 #entity.site_environment.settings:

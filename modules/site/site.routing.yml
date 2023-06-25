@@ -1,115 +1,22 @@
 
-operations.admin_operations_sites:
-  path: '/admin/operations/sites'
-  defaults:
-    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
-    _title: 'Sites'
-  requirements:
-    _permission: 'administer operations'
-
-site.history:
-  path: '/admin/reports/site/history'
-  defaults:
-    _title: 'Site History'
-    _controller: '\Drupal\site\Controller\SiteStatusController::siteStatusHistoryWidget'
-    type: 'default'
-
-  requirements:
-    _permission: 'site.view site history'
-
-site.edit:
-  path: '/admin/config/system/edit'
-  defaults:
-    _entity_form: 'site.edit'
-    _title: 'Edit Site Information'
-    type: 'default'
-  requirements:
-    _permission: 'administer site_definition'
-
-site.fields:
-  path: '/admin/config/system/fields'
-  defaults:
-    _controller: \Drupal\field_ui\Controller\FieldConfigListController::listing
-    _title: 'Manage Fields'
-    entity_type_id: 'site'
-    bundle: 'default'
-  requirements:
-    _permission: 'administer site_definition'
-
-site.display:
-  path: '/admin/config/system/display'
-  defaults:
-    _entity_form: "entity_view_display.edit"
-    _title: "Manage Display"
-    view_mode_name: "default"
-    entity_type_id: "site"
-    bundle: "default"
-  requirements:
-    _permission: 'administer site_definition'
-
-site.form:
-  path: '/admin/config/system/form'
-  defaults:
-    _entity_form: "entity_form_display.edit"
-    _title: "Manage Form"
-    form_mode_name: "default"
-    entity_type_id: "site"
-    bundle: "default"
-  requirements:
-    _permission: 'administer site_definition'
-
-site.advanced:
-  path: '/admin/config/system/settings'
-  defaults:
-    _entity_form: 'site_definition.edit'
-    _title: 'Advanced site settings'
-  requirements:
-    _permission: 'administer site_definition'
-
-
-entity.site_definition.edit_form:
-  path: '/admin/config/system/settings/{site_definition}'
-  defaults:
-    _entity_form: 'site_definition.edit'
-    _title: 'Site Settings'
-  requirements:
-    _permission: 'administer site_definition'
-
-entity.site_definition.canonical:
-  path: '/admin/reports/site/{site_definition}'
-  defaults:
-    _entity_form: 'site_definition.edit'
-    _title: 'Edit site information'
-  requirements:
-    _permission: 'administer site_definition'
-#
-#entity.site_definition.delete_form:
-#  path: '/admin/structure/site-definition/{site_definition}/delete'
-#  defaults:
-#    _entity_form: 'site_definition.delete'
-#    _title: 'Delete a site definition'
-#  requirements:
-#    _permission: 'administer site_definition'
-
 site.status:
-  path: '/admin/reports/site'
+  path: '/admin/help/site'
   defaults:
-    _title: 'Site Status'
+    _title: 'About this site'
     _controller: '\Drupal\site\Controller\SiteStatusController::build'
   requirements:
-    _permission: 'access site status'
+    _permission: 'access about site page'
 
 site.site_definition_entity_save:
-  path: '/admin/reports/site/save'
+  path: '/admin/help/site/save'
   defaults:
     _title: 'Save Site Report'
     _controller: '\Drupal\site\Controller\SiteController::saveReport'
   requirements:
-    _permission: 'save site definition'
-
+    _permission: 'save site report'
 
 entity.site.revision:
-  path:  '/admin/reports/site/{site}/revisions/{site_revision}/view'
+  path:  '/admin/help/site/{site}/history/{site_revision}'
   defaults:
     _controller: '\Drupal\site\Controller\SiteController::revisionShow'
   requirements:
@@ -122,7 +29,7 @@ entity.site.revision:
         type: entity_revision:site
 
 entity.site.version-history:
-  path:  '/admin/reports/site/{site}/revisions'
+  path:  '/admin/help/site/{site}/history'
   defaults:
     _title: 'Site History'
     _controller: '\Drupal\site\Controller\SiteStatusController::siteStatusHistoryWidget'
@@ -134,3 +41,87 @@ entity.site.version-history:
 
   requirements:
     _permission: 'site.view site history'
+
+site.history:
+  path: '/admin/help/site/history'
+  defaults:
+    _title: 'Site History'
+    _controller: '\Drupal\site\Controller\SiteStatusController::siteStatusHistoryWidget'
+    type: 'default'
+
+  requirements:
+    _permission: 'site.view site history'
+
+site.edit:
+  path: '/admin/help/site/edit'
+  defaults:
+    _entity_form: 'site.edit'
+    _title: 'Edit Site Information'
+    type: 'default'
+  requirements:
+    _permission: 'administer site_definition'
+
+site.fields:
+  path: '/admin/help/site/fields'
+  defaults:
+    _controller: \Drupal\field_ui\Controller\FieldConfigListController::listing
+    _title: 'Manage Site Fields'
+    entity_type_id: 'site'
+    bundle: 'default'
+  requirements:
+    _permission: 'administer site_definition'
+
+site.display:
+  path: '/admin/help/site/display'
+  defaults:
+    _entity_form: "entity_view_display.edit"
+    _title: "Manage Site Report Display"
+    view_mode_name: "default"
+    entity_type_id: "site"
+    bundle: "default"
+  requirements:
+    _permission: 'administer site_definition'
+
+site.form:
+  path: '/admin/help/site/form'
+  defaults:
+    _entity_form: "entity_form_display.edit"
+    _title: "Manage Site Form"
+    form_mode_name: "default"
+    entity_type_id: "site"
+    bundle: "default"
+  requirements:
+    _permission: 'administer site_definition'
+
+site.advanced:
+  path: '/admin/help/site/settings'
+  defaults:
+    _entity_form: 'site_definition.edit'
+    _title: 'Advanced site settings'
+  requirements:
+    _permission: 'administer site_definition'
+
+entity.site_definition.edit_form:
+  path: '/admin/help/site/settings/{site_definition}'
+  defaults:
+    _entity_form: 'site_definition.edit'
+    _title: 'Advanced site settings'
+  requirements:
+    _permission: 'administer site_definition'
+
+# Don't need until we need multiple definitions.
+#entity.site_definition.canonical:
+#  path: '/admin/about/site/definition/{site_definition}'
+#  defaults:
+#    _entity_form: 'site_definition.edit'
+#    _title: 'Edit site information'
+#  requirements:
+#    _permission: 'administer site_definition'
+
+#entity.site_definition.delete_form:
+#  path: '/admin/structure/site-definition/{site_definition}/delete'
+#  defaults:
+#    _entity_form: 'site_definition.delete'
+#    _title: 'Delete a site definition'
+#  requirements:
+#    _permission: 'administer site_definition'
