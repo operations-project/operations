@@ -6,32 +6,52 @@ site.status:
   route_name: site.status
   parent: help.main
   position: left
-  weight: -100
+  weight: 10
 
 # /admin/reports/site
 site.status_state:
-  title: 'Site Status'
+  title: 'Status'
   description: 'Review state and other information about the site.'
   route_name: site.status
   parent: site.status
   position: left
-  weight: -100
-
-# /admin/config/system/site
-site.advanced:
-  title: 'Advanced site settings'
-  description: 'Change advanced site configuration such as state factors, git information, and remote connections.'
-  route_name: site.advanced
-  parent: site.status
-  position: left
+  weight: 10
 
 # /admin/reports/site/history
 site.history:
-  title: 'Site History'
+  title: 'History'
   description: 'View historical reports.'
   route_name: site.history
   parent: site.status
   position: left
+  weight: 20
+
+# /admin/config/system/site
+site.advanced:
+  title: 'Settings'
+  description: 'Change advanced site configuration such as state factors, git information, and remote connections.'
+  route_name: site.advanced
+  parent: site.status
+  position: left
+  weight: 30
+
+# /admin/config/system/site
+site.edit:
+  title: 'Edit site information'
+  description: 'Edit information about the site.'
+  route_name: site.edit
+  parent: site.status
+  position: left
+  weight: 40
+
+# /admin/config/system/site
+site.fields:
+  title: 'Manage fields'
+  description: 'Manage the fields and display of site information.'
+  route_name: site.fields
+  parent: site.status
+  position: left
+  weight: 50
 
 #entity.site_environment.settings:
 #  title: 'Site Environment'
