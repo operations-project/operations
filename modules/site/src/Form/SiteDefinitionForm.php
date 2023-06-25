@@ -166,7 +166,7 @@ class SiteDefinitionForm extends EntityForm {
         '#type' => 'checkbox',
         '#title' => t('Send on save'),
         '#description' => t('If checked, the site data will be sent to the configured destination every time it is saved.'),
-        '#default_value' => $settings['send_on_save']  ?? TRUE,
+        '#default_value' => $settings['send_on_save']  ?? FALSE,
         '#parents' => ['settings', 'send_on_save']
     ];
     $form['reporting']['send_destinations'] = [
