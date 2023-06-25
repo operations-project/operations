@@ -69,6 +69,10 @@ class SiteListBuilder extends EntityListBuilder {
    * {@inheritdoc}
    */
   public function buildHeader() {
+    $header['state'] = $this->t('Site State');
+    $header['site_title'] = $this->t('Site Title');
+    $header['drupal_version'] = $this->t('Drupal');
+    $header['php_version'] = $this->t('PHP');
     $header['site_title'] = $this->t('Site Title');
     $header['id'] = $this->t('ID');
     $header['site_uri'] = $this->t('Site URI');
@@ -86,8 +90,16 @@ class SiteListBuilder extends EntityListBuilder {
     $state =  $entity->state->view([
       'label' => 'hidden',
     ]);
+    $drupal_version =  $entity->drupal_version->view([
+      'label' => 'hidden',
+    ]);
+    $php_version =  $entity->php_version->view([
+      'label' => 'hidden',
+    ]);
     $row['state'] = \Drupal::service('renderer')->render($state);
     $row['site_title'] = $entity->toLink();
+    $row['drupal_version'] =  \Drupal::service('renderer')->render($drupal_version);
+    $row['php_version'] =  \Drupal::service('renderer')->render($php_version);
     $row['id'] = $entity->site_uuid->value;
     $row['site_uri'] = Link::fromTextAndUrl($entity->site_uri->value, Url::fromUri($entity->site_uri->value), [
       'attributes' => ['target' => '_blank'],
