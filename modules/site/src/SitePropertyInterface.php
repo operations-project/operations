@@ -2,6 +2,8 @@
 
 namespace Drupal\site;
 
+use Drupal\Core\Entity\EntityTypeInterface;
+
 /**
  * Interface for site_property plugins.
  */
@@ -21,5 +23,7 @@ interface SitePropertyInterface {
    * @return mixed
    */
   public function value();
+
+
 
 }

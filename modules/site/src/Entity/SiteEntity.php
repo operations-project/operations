@@ -429,6 +429,15 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
       ->setDescription(t('A Yaml map of Drupal states to apply to this site. See https://www.drupal.org/docs/8/api/state-api/overview'))
       ->setRequired(FALSE)
     ;
+
+    // See https://www.drupal.org/docs/drupal-apis/plugin-api/creating-your-own-plugin-manager
+    $type = \Drupal::service('plugin.manager.site_property');
+    $plugin_definitions = $type->getDefinitions();
+    foreach ($plugin_definitions as $name => $plugin_definition) {
+      $plugin = $type->createInstance($plugin_definition['id']);
+      $plugin->baseFieldDefinitions($entity_type, $fields);
+    }
+
     return $fields;
   }
 

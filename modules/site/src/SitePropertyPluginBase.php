@@ -3,6 +3,8 @@
 namespace Drupal\site;
 
 use Drupal\Component\Plugin\PluginBase;
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Field\BaseFieldDefinition;
 
 /**
  * Base class for site_property plugins.
@@ -65,4 +67,22 @@ abstract class SitePropertyPluginBase extends PluginBase implements SiteProperty
     return $this->description ?? $this->pluginDefinition['description'];
   }
 
+  /**
+   * Define a
+   *
+   * @return static
+   *   A new field definition object.
+   */
+  public function baseFieldDefinitions(EntityTypeInterface $entity_type, &$fields) {
+    // Add additional fields, just like in SiteEntity::baseFieldDefinitions()
+//    $fields['drupal_version'] = BaseFieldDefinition::create('string')
+//      ->setLabel(t('Drupal Version'))
+//      ->setRevisionable(TRUE)
+//      ->setDisplayOptions('view', [
+//        'type' => 'string',
+//        'label' => 'inline',
+//        'weight' => 10,
+//      ])
+//      ->setDisplayConfigurable('view', TRUE);
+  }
 }

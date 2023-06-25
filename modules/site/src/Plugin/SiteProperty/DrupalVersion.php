@@ -2,6 +2,8 @@
 
 namespace Drupal\site\Plugin\SiteProperty;
 
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\site\SitePropertyPluginBase;
 
 /**
@@ -20,4 +22,21 @@ class DrupalVersion extends SitePropertyPluginBase {
     return \Drupal::VERSION;
   }
 
+  /**
+   * Define a
+   *
+   * @return static
+   *   A new field definition object.
+   */
+  public function baseFieldDefinitions(EntityTypeInterface $entity_type, &$fields) {
+    $fields['drupal_version'] = BaseFieldDefinition::create('string')
+      ->setLabel(t('Drupal Version'))
+      ->setRevisionable(TRUE)
+      ->setDisplayOptions('view', [
+        'type' => 'string',
+        'label' => 'inline',
+        'weight' => 10,
+      ])
+      ->setDisplayConfigurable('view', TRUE);
+  }
 }
