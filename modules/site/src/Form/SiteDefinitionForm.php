@@ -27,7 +27,21 @@ class SiteDefinitionForm extends EntityForm {
       $this->setEntity(SiteDefinition::load('self'));
     }
     $form = parent::form($form, $form_state);
-
+    $form['information'] = array(
+      '#type' => 'vertical_tabs',
+      '#default_tab' => 'edit-info',
+      '#weight' => 10,
+    );
+    $form['info'] = array(
+      '#type' => 'details',
+      '#title' => $this->t('Information'),
+      '#group' => 'information',
+    );
+    $form['state'] = array(
+      '#type' => 'details',
+      '#title' => $this->t('State'),
+      '#group' => 'information',
+    );
 
     $form['reporting'] = array(
       '#type' => 'details',
