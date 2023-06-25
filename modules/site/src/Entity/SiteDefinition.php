@@ -185,6 +185,20 @@ class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface
     $build['state']['0']['reason'][0]['#format'] = 'basic_html';
     $build['state']['0']['reason']['#access'] = !empty($entity_object->reason->value);
 
+    $build['properties'] = [
+      '#type' => 'details',
+      '#open' => true,
+      '#title' => t('Site Properties'),
+    ];
+    foreach ($this->property_plugins as $id => $plugin) {
+      $build['properties'][$id] = [
+        '#type' => 'item',
+        '#title' => $plugin->label(),
+        '#markup' => $plugin->value(),
+      ];
+    }
+
+
     $site_entity = SiteEntity::loadSelf();
     $build['info'] = [
       '#title' => t('Site Information'),
@@ -227,18 +241,6 @@ class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface
       }
     }
 
-    // @TODO: Implement SiteProperty::view();
-    $build['properties'] = [
-      '#type' => 'details',
-      '#title' => t('Site Properties'),
-    ];
-    foreach ($this->property_plugins as $id => $plugin) {
-      $build['properties'][$id] = [
-        '#type' => 'item',
-        '#title' => $plugin->label(),
-        '#markup' => $plugin->value(),
-      ];
-    }
     return $build;
   }
 
