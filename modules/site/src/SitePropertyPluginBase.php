@@ -68,12 +68,14 @@ abstract class SitePropertyPluginBase extends PluginBase implements SiteProperty
   }
 
   /**
-   * Define a
+   * Define a field on Siteentity
    *
    * @return static
    *   A new field definition object.
+   *
+   * The SiteDefinition::saveEntity class checks for the existi
    */
-  public function baseFieldDefinitions(EntityTypeInterface $entity_type, &$fields) {
+//  public function baseFieldDefinitions(EntityTypeInterface $entity_type, &$fields) {
     // Add additional fields, just like in SiteEntity::baseFieldDefinitions()
 //    $fields['drupal_version'] = BaseFieldDefinition::create('string')
 //      ->setLabel(t('Drupal Version'))
@@ -84,5 +86,5 @@ abstract class SitePropertyPluginBase extends PluginBase implements SiteProperty
 //        'weight' => 10,
 //      ])
 //      ->setDisplayConfigurable('view', TRUE);
-  }
+//  }
 }

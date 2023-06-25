@@ -90,12 +90,21 @@ class SiteStatusController extends ControllerBase {
           'label' => 'hidden',
         ]);
 
+        $drupal_version = $site_revision->drupal_version->view([
+          'label' => 'hidden',
+        ]);
+
+        $title = $site_revision->site_title->view([
+          'label' => 'hidden',
+        ]);
+
         $row = [];
         $row[] = \Drupal::service('renderer')->render($state);
         $row[] = Link::fromTextAndUrl($site_revision->site_title->value, $site_revision->toUrl('revision'));
         $row[] = Link::fromTextAndUrl($site_revision->site_uri->value, Url::fromUri($site_revision->site_uri->value), [
           'attributes' => ['target' => '_blank'],
         ]);
+        $row[] = \Drupal::service('renderer')->render($drupal_version);
         $row[] = \Drupal::service('renderer')->render($date);
         $row[] = \Drupal::service('renderer')->render($reason);
         $row[] = $site_revision->get('revision_log')->value;
@@ -116,6 +125,7 @@ class SiteStatusController extends ControllerBase {
           'State',
           'Title',
           'URL',
+          'Drupal Version',
           'Date',
           'State Reason',
           'Log',

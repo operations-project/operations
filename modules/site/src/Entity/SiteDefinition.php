@@ -9,6 +9,7 @@ use Drupal\Core\Serialization\Yaml;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\site\SiteDefinitionInterface;
 use Drupal\site\Event\SiteGetState;
+use Drupal\site\SiteEntityInterface;
 use Drupal\site\SiteEntityTrait;
 
 /**
@@ -282,7 +283,16 @@ class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface
   }
 
   public function toEntity() {
+    /** @var SiteEntityInterface $site */
     $site = SiteEntity::create($this->toEntityData());
+
+    # Save all property plugins data.
+    foreach ($this->property_plugins as $id => $plugin) {
+      if (!$plugin->hidden() && $site->hasField($plugin->name())) {
+        $data[$plugin->name()] = $plugin->value();
+      }
+    }
+
     return $site;
   }
 
@@ -297,9 +307,12 @@ class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface
       $site_entity->setNewRevision();
       $site_entity->revision_log = $revision_log;
       $site_entity->revision_timestamp = \Drupal::time()->getRequestTime();
-      $site_entity_properties = $this->toEntityData();
-      foreach ($site_entity_properties as $property => $value) {
-        $site_entity->set($property, $value);
+
+      /** @var SiteEntityInterface $new_site_entity */
+      $new_site_entity = $this->toEntity();
+
+      foreach ($new_site_entity->getFields() as $field => $field) {
+        $site_entity->set($field, $new_site_entity->get($field));
       }
     }
     else {

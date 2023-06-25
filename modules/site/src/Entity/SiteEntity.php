@@ -201,7 +201,7 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
     $site_entity = $this;
     $site_config = SiteDefinition::load('self');
     $allowed_states = $site_config->get('states_allow_override');
-    $state_overrides = $site_entity->state_overrides->first()->value;
+    $state_overrides = $site_entity->state_overrides->first()->value ?? [];
     $revision_url = $this->toUrl('canonical', ['absolute'=>true])->toString() . '/revisions/' . $site_entity->vid->value . '/view';
     if (!empty($state_overrides)) {
       foreach ($allowed_states as $state_name) {
@@ -435,7 +435,10 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
     $plugin_definitions = $type->getDefinitions();
     foreach ($plugin_definitions as $name => $plugin_definition) {
       $plugin = $type->createInstance($plugin_definition['id']);
-      $plugin->baseFieldDefinitions($entity_type, $fields);
+
+      if (method_exists(get_class($plugin), 'baseFieldDefinitions')) {
+        $plugin->baseFieldDefinitions($entity_type, $fields);
+      }
     }
 
     return $fields;
