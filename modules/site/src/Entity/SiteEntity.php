@@ -88,6 +88,16 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
   use EntityOwnerTrait;
 
   /**
+   * Return the view array of the site entity.
+   * @return array
+   */
+  public function view() {
+    $view_builder = \Drupal::entityTypeManager()->getViewBuilder('site');
+    $build = $view_builder->view($this);
+    return $build;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function preSave(EntityStorageInterface $storage) {

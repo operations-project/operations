@@ -166,10 +166,18 @@ class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface
     $build['state']['0']['reason'][0]['#format'] = 'basic_html';
     $build['state']['0']['reason']['#access'] = !empty($entity_object->reason->value);
 
-    $build['site_title'] = $entity_object->site_title->view($label_inline);
-    $build['site_uri'] = $entity_object->site_uri->view($label_inline);
-    $build['site_uuid'] = $entity_object->site_uuid->view($label_inline);
-//    $build['data'] = $entity_object->data->view($label_inline);
+    $site_entity = SiteEntity::loadSelf();
+    $build['info'] = [
+      '#title' => t('Site Information'),
+      '#type' => 'details',
+      '#open' => true,
+      'view' =>$site_entity->view()
+    ];
+//
+//    $build['site_title'] = $entity_object->site_title->view($label_inline);
+//    $build['site_uri'] = $entity_object->site_uri->view($label_inline);
+//    $build['site_uuid'] = $entity_object->site_uuid->view($label_inline);
+////    $build['data'] = $entity_object->data->view($label_inline);
 
     if (!empty($this->data['config'])) {
       $build['config'] = [

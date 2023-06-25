@@ -21,7 +21,20 @@ class SiteStatusController extends ControllerBase {
   public function build() {
 
     $site_definition = SiteDefinition::load('self');
-    $build['status'] = $site_definition->view();
+    $build['view'] = $site_definition->view();
+
+    $site_entity = SiteEntity::loadSelf();
+//    $build['status']['site'] = [
+//      '#title' => t('Site Information'),
+//      '#type' => 'details',
+//      '#open' => true,
+//      '#weight' => 'information',
+//      'site' => $site_entity->view(),
+////    ];
+//    $build['status']['config']['#weight'] = 10;
+//    $build['status']['states']['#weight'] = 20;
+
+//    dsm($build);
     return $build;
   }
 
