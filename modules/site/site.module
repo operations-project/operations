@@ -159,8 +159,9 @@ function site_site_view(array &$build, \Drupal\Core\Entity\EntityInterface $enti
         'color-' . SiteDefinition::getStateClass($state_field),
       ]
     ],
-    'reasons' => $entity->reason->getValue(),
   ];
 
-
+  if (!empty($entity->reason->getValue())) {
+    $build['reasons'] = $entity->reason->getValue();
+  }
 }
