@@ -188,10 +188,10 @@ class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface
     $build['state']['#type'] = 'fieldset';
     $build['state']['#attributes']['class'][] = 'color-' . $entity_object->getStateClass();
     $build['state']['0']['reason'] = $this->reason;
+
     $build['state']['0']['reason']['#prefix'] = '<blockquote>';
     $build['state']['0']['reason']['#suffix'] = '</blockquote>';
-//    $build['state']['0']['reason'][0]['#format'] = 'full_html';
-//    $build['state']['0']['reason']['#access'] = !empty($entity_object->reason->value);
+    $build['state']['0']['reason']['#access'] = !empty($this->reason);
 
     $build['properties'] = [
       '#type' => 'details',
