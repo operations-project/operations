@@ -23,6 +23,10 @@ class GitReference extends SitePropertyPluginBase {
    * @return array|false|mixed|string|string[]|void
    */
   public function value() {
+    if (getenv('DRUPAL_SITE_GIT_REFERENCE')) {
+      return getenv('DRUPAL_SITE_GIT_REFERENCE');
+    }
+
     $git_file = \Drupal::root() . '/../.git/HEAD';
     if (file_exists($git_file)) {
       $git_head = file_get_contents($git_file);

@@ -59,3 +59,34 @@ A list of configuration items that a site will allow to be updated from a remote
 If posting Site data to a Site Manager site, the reponse can contain configurations that will be automatically set.
 
 
+## Environment Variables
+
+Some properties can be set by setting environment variables because they cannot be reliably derived.
+
+Set the following env vars to set properties that can be saved:
+
+### `DRUPAL_SITE_HOST_PROVIDER`
+
+String indicating what host this site is on.
+
+### `DRUPAL_SITE_GIT_REFERENCE`
+
+The current git reference for this site.
+
+### `DRUPAL_SITE_GIT_REMOTE` 
+
+The current git reference for this site.
+
+Example: 
+
+```php
+
+/**
+ * Tell site.module we are hosted on Acquia 
+ */
+if ((bool) getenv('AH_ENVIRONMENT')) {
+  putenv('DRUPAL_SITE_HOSTING_ENVIRONMENT=acquia');
+}
+
+```
+
