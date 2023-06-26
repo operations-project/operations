@@ -148,12 +148,19 @@ function site_site_view(array &$build, \Drupal\Core\Entity\EntityInterface $enti
   // Only do the extra work if the component is configured to be displayed.
   // This assumes a 'mymodule_addition' extra field has been defined for the
   // entity bundle in hook_entity_extra_field_info().
-  $state_field = $entity->state->view;
+  $state_field = $entity->state->value;
   $build['reason'] = [
     '#type' => 'details',
     '#title' => t('State: :state', [
-      ':state' => \Drupal::service('renderer')->render($state_field),
+      ':state' => SiteDefinition::getStateName($state_field),
     ]),
+    '#attributes' => [
+      'class' => [
+        'color-' . SiteDefinition::getStateClass($state_field),
+      ]
+    ],
     'reasons' => $entity->reason->getValue(),
   ];
+
+
 }
