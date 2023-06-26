@@ -270,21 +270,6 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
       ])
       ->setDisplayConfigurable('view', TRUE);
 
-    $fields['git_remote'] = BaseFieldDefinition::create('string')
-        ->setLabel(t('Git Remote URL'))
-        ->setRevisionable(TRUE)
-        ->setDisplayOptions('form', [
-            'type' => 'string_textfield',
-            'weight' => 10,
-        ])
-        ->setDisplayConfigurable('form', TRUE)
-        ->setDisplayOptions('view', [
-            'type' => 'string',
-            'label' => 'inline',
-            'weight' => 10,
-        ])
-        ->setDisplayConfigurable('view', TRUE);
-
     $fields['site_uri'] = BaseFieldDefinition::create('uri')
       ->setRevisionable(TRUE)
       ->setLabel(t('Site URI'))

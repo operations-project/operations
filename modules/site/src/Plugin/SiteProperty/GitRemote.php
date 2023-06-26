@@ -39,7 +39,7 @@ class GitRemote extends SitePropertyPluginBase {
    *   A new field definition object.
    */
   public function baseFieldDefinitions(EntityTypeInterface $entity_type, &$fields) {
-    $fields['git_reference'] = BaseFieldDefinition::create('string')
+    $fields['git_remote'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Git Reference'))
       ->setRevisionable(TRUE)
       ->setDisplayOptions('view', [

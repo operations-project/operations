@@ -36,20 +36,6 @@ trait SiteEntityTrait {
   protected string $canonical_uri;
 
   /**
-   * The git remote URL of the site.
-   *
-   * @var string
-   */
-  protected string $git_remote;
-
-  /**
-   * The current git reference for the site.
-   *
-   * @var string
-   */
-  protected string $git_reference;
-
-  /**
    * A list of fields to set from remote site entity.
    *
    * These fields are not sent

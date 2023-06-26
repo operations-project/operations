@@ -2,7 +2,6 @@ id: self
 
 # Editable Properties
 canonical_url: ""
-git_remote: ""
 description: "A site definition representing this site."
 
 # List of fields that should be set from remote Site Mananger entity.
@@ -37,6 +36,7 @@ settings: {}
 #site_title: "This site's title."
 #site_uuid: ""
 #git_reference: ""
+#git_remote: ""
 #
 #state: 0
 #reason: A string explaining why a site is in a certain state.

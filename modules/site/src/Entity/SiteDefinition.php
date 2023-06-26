@@ -42,7 +42,6 @@ use Drupal\site\SiteEntityTrait;
  *   entity_keys = {
  *     "id" = "id",
  *     "canonical_url" = "canonical_url",
- *     "git_remote" = "git_remote",
  *     "description" = "description",
  *   },
  *   config_export = {
