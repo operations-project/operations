@@ -224,8 +224,8 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
         if (!empty($state_overrides[$state_name])) {
           \Drupal::state()->set($state_name, $state_overrides[$state_name]);
           \Drupal::logger('site')->info('Site state (:state) set from Site entity: :url', [
+            ':state' => "{$state_name}",
             ':url' => $revision_url,
-            ':state' => "{$state_name}: " . Yaml::encode($state_overrides[$state_name]),
           ]);
         }
       }
