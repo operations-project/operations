@@ -94,7 +94,6 @@ class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface
    */
   public function __construct(array $values, $entity_type) {
     parent::__construct($values, $entity_type);
-    $this->setDynamicProperties();
     $this->getConfig();
     $this->getDrupalStates();
   }
@@ -109,19 +108,21 @@ class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface
       $plugin = $type->createInstance($plugin_definition['id']);
       $site_definition->property_plugins[$name] = $plugin;
       $site_definition->{$plugin->name()} = $plugin->value() ?: '';
+
+      if (method_exists($plugin, 'state')){
+        $plugin->state($site_definition);
+      }
     }
+
+    if ($site_definition->isSelf()) {
+      $site_definition->site_title = \Drupal::config('system.site')->get('name');
+      $site_definition->site_uuid = \Drupal::config('system.site')->get('uuid');
+      $site_definition->site_uri = \Drupal::request()->getSchemeAndHttpHost();
+    }
+
     return $site_definition;
   }
 
-  public function setDynamicProperties() {
-    if ($this->isSelf()) {
-      $this->site_title = \Drupal::config('system.site')->get('name');
-      $this->site_uuid = \Drupal::config('system.site')->get('uuid');
-      $this->site_uri = \Drupal::request()->getSchemeAndHttpHost();
-
-      $this->determineState();
-    }
-  }
   /**
    * Parse states_load and load the state values into the SiteDefinition entity "data: state" property.
    * @return void
@@ -182,7 +183,7 @@ class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface
     $build['state']['0']['reason'] = $entity_object->reason->view($label_hidden);
     $build['state']['0']['reason']['#prefix'] = '<blockquote>';
     $build['state']['0']['reason']['#suffix'] = '</blockquote>';
-    $build['state']['0']['reason'][0]['#format'] = 'basic_html';
+    $build['state']['0']['reason'][0]['#format'] = 'full_html';
     $build['state']['0']['reason']['#access'] = !empty($entity_object->reason->value);
 
     $build['properties'] = [

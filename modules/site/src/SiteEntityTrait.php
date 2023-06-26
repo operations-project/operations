@@ -2,6 +2,8 @@
 
 namespace Drupal\site;
 
+use Drupal\site\Entity\SiteDefinition;
+
 /**
  * A trait for sharing Site Entity metadata across entities.
  */
@@ -88,7 +90,7 @@ trait SiteEntityTrait {
    *
    * @var int
    */
-  protected int $state;
+  protected int $state = SiteDefinition::SITE_OK;
 
   /**
    * The factors that can affect this site's state.
@@ -102,7 +104,7 @@ trait SiteEntityTrait {
    *
    * @var string
    */
-  protected string $reason;
+  protected string $reason = '';
 
   /**
    * A description of the site.
