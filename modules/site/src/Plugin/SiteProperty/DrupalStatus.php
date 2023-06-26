@@ -53,10 +53,8 @@ class DrupalStatus extends SitePropertyPluginBase {
       $score_each = 100 / count($requirements_with_severity);
 
       $worst_severity = REQUIREMENT_INFO;
-      $reasons[] = [
-        '#markup' => $site->get('reason')
-      ];
-      foreach ($requirements as $requirement) {
+      $reasons = [];
+      foreach ($requirements as $requirement_id => $requirement) {
         if (isset($requirement['severity'])) {
           if ($requirement['severity'] == REQUIREMENT_WARNING) {
             $type = t('a warning');
@@ -68,14 +66,6 @@ class DrupalStatus extends SitePropertyPluginBase {
             // @TODO: Add option to add INFO status entries?
             continue;
           }
-
-          $reason = t('Status report "@title" returned :thing: See @link:', [
-            ':thing' => $type,
-            '@title' => $requirement['title'],
-            '@link' => Url::fromRoute('system.status')
-              ->setAbsolute(TRUE)
-              ->toString(),
-          ])->render();
 
           $reason_build = [
             '#type' => 'item',
@@ -103,8 +93,7 @@ class DrupalStatus extends SitePropertyPluginBase {
           }
         }
       }
-
-      $site->set('reason', \Drupal::service('renderer')->renderRoot($reasons));
+      $site->addReason($reasons);
       return $worst_severity;
     }
   }

@@ -187,11 +187,11 @@ class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface
     $build['state'] = $entity_object->state->view($label_hidden);
     $build['state']['#type'] = 'fieldset';
     $build['state']['#attributes']['class'][] = 'color-' . $entity_object->getStateClass();
-    $build['state']['0']['reason'] = $entity_object->reason->view($label_hidden);
+    $build['state']['0']['reason'] = $this->reason;
     $build['state']['0']['reason']['#prefix'] = '<blockquote>';
     $build['state']['0']['reason']['#suffix'] = '</blockquote>';
-    $build['state']['0']['reason'][0]['#format'] = 'full_html';
-    $build['state']['0']['reason']['#access'] = !empty($entity_object->reason->value);
+//    $build['state']['0']['reason'][0]['#format'] = 'full_html';
+//    $build['state']['0']['reason']['#access'] = !empty($entity_object->reason->value);
 
     $build['properties'] = [
       '#type' => 'details',
@@ -349,5 +349,9 @@ class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface
     return $site_entity;
   }
 
-
+  public function addReason(array $build) {
+    $reason = $this->get('reason');
+    $reason[] = $build;
+    $this->set('reason', $reason);
+  }
 }

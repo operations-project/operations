@@ -100,11 +100,11 @@ trait SiteEntityTrait {
   protected array $state_factors;
 
   /**
-   * A string to describe the reason a site is in a certain state.
+   * A renderable array with information about the site.
    *
    * @var string
    */
-  protected string $reason = '';
+  protected array $reason = [];
 
   /**
    * A description of the site.
