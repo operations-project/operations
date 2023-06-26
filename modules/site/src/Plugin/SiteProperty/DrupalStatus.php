@@ -53,8 +53,9 @@ class DrupalStatus extends SitePropertyPluginBase {
       $score_each = 100 / count($requirements_with_severity);
 
       $worst_severity = REQUIREMENT_INFO;
-      $reasons [] = $site->get('reason');
-
+      $reasons[] = [
+        '#markup' => $site->get('reason')
+      ];
       foreach ($requirements as $requirement) {
         if (isset($requirement['severity'])) {
           if ($requirement['severity'] == REQUIREMENT_WARNING) {
@@ -76,15 +77,26 @@ class DrupalStatus extends SitePropertyPluginBase {
               ->toString(),
           ])->render();
 
+          $reason_build = [
+            '#type' => 'item',
+            '#title' => t('Status report "@title" returned :thing: See @link:', [
+              ':thing' => $type,
+              '@title' => $requirement['title'],
+              '@link' => Url::fromRoute('system.status')
+                ->setAbsolute(TRUE)
+                ->toString(),
+            ]),
+          ];
+
           if (!empty($requirement['description'])) {
             $string = is_array($requirement['description'])?
               \Drupal::service('renderer')->renderRoot($requirement['description']):
               $requirement['description']
             ;
-            $reason .= "<blockquote>$string</blockquote>";
+            $reason_build['#markup'] = "<blockquote>$string</blockquote>";
           }
 
-          $reasons[] = "<p>$reason</p>";
+          $reasons[] = $reason_build;
 
           if ($requirement['severity'] > $worst_severity) {
             $worst_severity = $requirement['severity'];
@@ -92,8 +104,8 @@ class DrupalStatus extends SitePropertyPluginBase {
         }
       }
 
-      $site->set('state', $worst_severity);
-      $site->set('reason', implode(" \n ", $reasons));
+      $site->set('reason', \Drupal::service('renderer')->render($reasons));
+      return $worst_severity;
     }
   }
 }

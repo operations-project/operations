@@ -104,15 +104,22 @@ class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface
     // See https://www.drupal.org/docs/drupal-apis/plugin-api/creating-your-own-plugin-manager
     $type = \Drupal::service('plugin.manager.site_property');
     $plugin_definitions = $type->getDefinitions();
+    $worst_plugin_state = self::SITE_OK;
     foreach ($plugin_definitions as $name => $plugin_definition) {
       $plugin = $type->createInstance($plugin_definition['id']);
       $site_definition->property_plugins[$name] = $plugin;
       $site_definition->{$plugin->name()} = $plugin->value() ?: '';
 
       if (method_exists($plugin, 'state')){
-        $plugin->state($site_definition);
+        $plugin_state = $plugin->state($site_definition);
+        if ($plugin_state > $worst_plugin_state) {
+          $worst_plugin_state = $plugin_state;
+        }
       }
+
     }
+
+    $site_definition->state = $worst_plugin_state;
 
     if ($site_definition->isSelf()) {
       $site_definition->site_title = \Drupal::config('system.site')->get('name');
