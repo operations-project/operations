@@ -109,7 +109,7 @@ class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface
     foreach ($plugin_definitions as $name => $plugin_definition) {
       $plugin = $type->createInstance($plugin_definition['id']);
       $site_definition->property_plugins[$name] = $plugin;
-      $site_definition->{$plugin->name()} = $plugin->value();
+      $site_definition->{$plugin->name()} = $plugin->value() ?: '';
     }
     return $site_definition;
   }
