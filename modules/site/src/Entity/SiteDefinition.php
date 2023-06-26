@@ -215,7 +215,7 @@ class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface
       '#title' => t('Site Information'),
       '#type' => 'details',
       '#open' => true,
-      'view' =>$site_entity->view()
+      'view' => $site_entity->view()
     ];
 //
 //    $build['site_title'] = $entity_object->site_title->view($label_inline);

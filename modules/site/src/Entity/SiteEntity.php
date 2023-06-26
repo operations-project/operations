@@ -315,7 +315,7 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
       ])
     ;
 
-    $fields['reason'] = BaseFieldDefinition::create('text_long')
+     $fields['reason'] = BaseFieldDefinition::create('map')
         ->setLabel(t('State Reason'))
         ->setRevisionable(TRUE)
         ->setDisplayOptions('view', [
