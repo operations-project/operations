@@ -69,7 +69,7 @@ class DrupalStatus extends SitePropertyPluginBase {
 
           $reason_build = [
             '#type' => 'item',
-            '#title' => t('Status report "@title" returned :thing: See @link:', [
+            '#title' => t('Status report "@title" returned :thing.', [
               ':thing' => $type,
               '@title' => $requirement['title'],
               '@link' => Url::fromRoute('system.status')
@@ -79,11 +79,14 @@ class DrupalStatus extends SitePropertyPluginBase {
           ];
 
           if (!empty($requirement['description'])) {
-            $string = is_array($requirement['description'])?
-              \Drupal::service('renderer')->renderRoot($requirement['description']):
-              $requirement['description']
-            ;
-            $reason_build['#markup'] = "<blockquote>$string</blockquote>";
+            if (is_array($requirement['description'])) {
+              $reason_build['description'] = $requirement['description'];
+            }
+            else {
+              $reason_build['description'] = [
+                '#markup' => $requirement['description'],
+              ];
+            }
           }
 
           $reasons[] = $reason_build;
