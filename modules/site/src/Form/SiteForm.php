@@ -57,7 +57,14 @@ class SiteForm extends ContentEntityForm {
         break;
     }
 
-    $form_state->setRedirect('site.history');
+    if (\Drupal::routeMatch()->getRouteName() == 'site.settings') {
+      $form_state->setRedirect('site.history');
+    }
+    else {
+      $form_state->setRedirect('entity.site.collection', [
+        'site' => $this->entity->id(),
+      ]);
+    }
 
     return $result;
   }
