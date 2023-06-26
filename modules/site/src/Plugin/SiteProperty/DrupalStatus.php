@@ -104,7 +104,7 @@ class DrupalStatus extends SitePropertyPluginBase {
         }
       }
 
-      $site->set('reason', \Drupal::service('renderer')->render($reasons));
+      $site->set('reason', \Drupal::service('renderer')->renderRoot($reasons));
       return $worst_severity;
     }
   }
