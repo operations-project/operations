@@ -9,7 +9,12 @@
  * Implements hook_install().
  */
 function site_install() {
-  \Drupal\site\Entity\SiteDefinition::load('self')->saveEntity(t('Initial site entity created on installation of site.module.'));
+
+  $site = \Drupal\site\Entity\SiteDefinition::load('self');
+  if ($site) {
+    $site->saveEntity(t('Initial site entity created on installation of site.module.'));
+  }
+
 }
 
 /**
