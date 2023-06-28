@@ -561,9 +561,16 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
           'json' => $payload
         ]);
 
-        \Drupal::messenger()->addStatus('Site report was sent successfully.');
 
         $response_entity_data = Json::decode($response->getBody()->getContents());
+
+        if (!is_array($response_entity_data)) {
+          \Drupal::messenger()->addError('Site response was empty.');
+          return false;
+        }
+        else {
+          \Drupal::messenger()->addStatus('Site report was sent successfully.');
+        }
 
         foreach ($response_entity_data as $field => $value) {
           if ($this->hasField($field)) {
