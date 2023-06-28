@@ -59,6 +59,7 @@ class SiteListBuilder extends EntityListBuilder {
       ->getQuery()
       ->accessCheck(FALSE)
       ->count()
+      ->sort('changed', 'DESC')
       ->execute();
 
     $build['summary']['#markup'] = $this->t('Total sites: @total', ['@total' => $total]);
