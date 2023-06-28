@@ -105,11 +105,6 @@ class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface
       return;
     }
 
-    $site_entity = SiteEntity::loadSelf();
-    if (empty($site_entity)) {
-      $site_entity = $site_definition->saveEntity('Automatically created site on admin/help/site, because there wasnt one.');
-    }
-
     // See https://www.drupal.org/docs/drupal-apis/plugin-api/creating-your-own-plugin-manager
     $type = \Drupal::service('plugin.manager.site_property');
     $plugin_definitions = $type->getDefinitions();

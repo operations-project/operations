@@ -165,3 +165,7 @@ function site_site_view(array &$build, \Drupal\Core\Entity\EntityInterface $enti
     $build['reasons'] = $entity->reason->getValue();
   }
 }
+
+function site_cache_flush() {
+  SiteDefinition::load('self')->saveEntity();
+}
