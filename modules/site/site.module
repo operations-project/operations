@@ -167,5 +167,5 @@ function site_site_view(array &$build, \Drupal\Core\Entity\EntityInterface $enti
 }
 
 function site_cache_flush() {
-  SiteDefinition::load('self')->saveEntity();
+  SiteDefinition::load('self')->saveEntity(t('Saved site report on cache clear.'));
 }
