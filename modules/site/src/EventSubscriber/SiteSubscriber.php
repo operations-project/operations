@@ -33,8 +33,10 @@ class SiteSubscriber implements EventSubscriberInterface {
   public function onConfigSave(ConfigCrudEvent $event) {
     $site = SiteDefinition::load('self');
     if ($site->get('settings')['save_on_config']) {
-      $site->saveEntity(t('Saved on config update for: :config', [
+      $site->saveEntity(t('Config ":config" saved by ":user" at :url.', [
         ':config' => $event->getConfig()->getName(),
+        ':user' => \Drupal::currentUser()->getDisplayName(),
+        ':url' => \Drupal::request()->getUri(),
       ]));
     }
   }
