@@ -31,6 +31,7 @@ class ApiKey extends SitePropertyPluginBase {
   public function baseFieldDefinitions(EntityTypeInterface $entity_type, &$fields) {
     $fields['api_key'] = BaseFieldDefinition::create('string')
       ->setLabel(t('API Key'))
+      ->setDescription(t('An API Key from the site. If entered, site data from here will post back to the client site when saving this form.'))
       ->setRevisionable(TRUE)
       ->setDisplayOptions('form', [
         'type' => 'string_field',
