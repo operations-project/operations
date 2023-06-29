@@ -484,7 +484,11 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
    * Load the site entity with the same UUID as this site.
    */
   public static function loadSelf() {
-    return parent::load(static::getSiteUuid());
+    $self = parent::load(static::getSiteUuid());
+    if (!$self) {
+      $self = SiteDefinition::load('self')->saveEntity('Creating first site entity.');
+    }
+    return $self;
   }
 
   /**
