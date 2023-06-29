@@ -146,6 +146,13 @@ class SiteDefinitionForm extends EntityForm {
     $options = [0 => t('Never')] + $period;
     $settings = $this->getEntity()->get('settings');
 
+    $form['reporting']['save_on_config'] = [
+      '#type' => 'checkbox',
+      '#title' => t('Save on config changes'),
+      '#description' => t('If checked, the site data saved when config items are saved.'),
+      '#default_value' => $settings['save_on_config']  ?? FALSE,
+      '#parents' => ['settings', 'save_on_config']
+    ];
     $form['reporting']['save_interval'] = [
         '#type' => 'select',
         '#title' => t('Save site data every'),

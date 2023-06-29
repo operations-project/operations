@@ -61,3 +61,7 @@ function site_manager_entity_type_build(array &$entity_types) {
   $entity_types['site_type']->setLinkTemplate('collection', '/admin/operations/site_types');
 
 }
+
+function site_manager_form_site_default_edit_form_alter(array $form, $form_state) {
+  dsm($form);
+}

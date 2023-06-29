@@ -586,9 +586,9 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
         $this->setNewRevision();
         $this->vid = null;
 
-        $this->revision_log = t('Created from response from :url', [
-          ':url' => $url,
-        ]);
+//        $this->revision_log = t('Created from response from :url', [
+//          ':url' => $url,
+//        ]);
         $this->no_send = true;
         $this->save();
 

@@ -2,3 +2,8 @@ services:
   plugin.manager.site_property:
     class: Drupal\site\SitePropertyPluginManager
     parent: default_plugin_manager
+
+  site.event_subscriber:
+    class: Drupal\site\EventSubscriber\SiteSubscriber
+    tags:
+      - { name: event_subscriber }
