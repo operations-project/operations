@@ -43,12 +43,18 @@ class SiteSubscriber implements EventSubscriberInterface {
         'url' => \Drupal::request()->getUri(),
       ];
       $site->set('data', $data);
-      $site->saveEntity(t('Config ":config" updated at :url by ":user" (:ip)', [
+      $entity = $site->saveEntity(t('Config ":config" updated at :url by ":user" (:ip)', [
         ':config' => $event->getConfig()->getName(),
         ':user' => \Drupal::currentUser()->getDisplayName(),
         ':url' => \Drupal::request()->getUri(),
         ':ip' => \Drupal::request()->getClientIp(),
       ]));
+
+      \Drupal::messenger()->addStatus(t('Site report saved: @link', [
+        '@link' => $entity->toLink()->toString(),
+      ]));
+
+
     }
   }
 }
