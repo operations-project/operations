@@ -33,7 +33,7 @@ class SiteSubscriber implements EventSubscriberInterface {
   public function onConfigSave(ConfigCrudEvent $event) {
 
     $site = SiteDefinition::load('self');
-    if ($site && !empty($site->get('settings')['save_on_config'])) {
+    if ($site && !\Drupal::state()->get('site_config_events_disable')  && !empty($site->get('settings')['save_on_config'])) {
       $data = $site->get('data');
       $data['config_changes'] = [
         'original' => $event->getConfig()->getOriginal(),
