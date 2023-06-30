@@ -127,6 +127,7 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
    */
   public function save()
   {
+    // @TODO: Only send when site is self, or site_manager can POST back (if we have API key).
     /** @var MapItem $settings */
     $settings = SiteDefinition::load('self')->get('settings');
     if (!empty($settings['send_on_save']) && !$this->no_send) {
@@ -138,6 +139,9 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
       // SaveConfig and state, THEN save entity so it stores the new values.
       $this->saveConfig();
       $this->saveState();
+
+      // @TODO: Reload and save again so new config and states are included in the report.
+
       parent::save();
     }
   }
@@ -158,6 +162,8 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
     $config_factory = \Drupal::configFactory();
     if (!empty($config_overrides[0])) {
       $config_overrides = $config_overrides[0];
+
+      \Drupal::state()->set('site_config_events_disable', TRUE);
       foreach ($allowed_configs as $config_slug) {
         $slugs = explode(':', $config_slug);
         $config_name = $slugs[0];
@@ -167,8 +173,10 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
         if (!empty($config_overrides[$config_name])) {
 
           // If allowed config contains a key...
-          if ($config_key = $slugs[1]) {
-            if ($config_value = $config_overrides[$config_name][$config_key]) {
+          $config_key = $slugs[1];
+          if ($config_key && isset($config_overrides[$config_name][$config_key])) {
+            $config_value = $config_overrides[$config_name][$config_key];
+            if ($config_value) {
               $config
                 ->set($config_key, $config_value)
                 ->save()
@@ -197,6 +205,7 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
           }
         }
       }
+      \Drupal::state()->delete('site_config_events_disable');
       // @TODO: If the site title changed, update the entity.
     }
 
