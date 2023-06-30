@@ -26,10 +26,7 @@ class SiteForm extends ContentEntityForm {
     $form['revision']['#type'] = 'value';
     $form['revision']['#value'] = TRUE;
 
-    $form['status']['widget']['value']['#type'] = 'value';
-    $form['status']['widget']['value']['#value'] = TRUE;
-
-    // Allow plugins to alter the form.
+    // @TODO: Allow plugins to alter the form.
 
     return $form;
   }
