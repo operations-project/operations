@@ -511,7 +511,6 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
    * @return void
    */
   public function send() {
-    \Drupal::logger('site')->debug('send');
 
     $site_definition = SiteDefinition::load('self');
     $site_entity = SiteEntity::loadSelf();
@@ -559,7 +558,6 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
 
         \Drupal::moduleHandler()->alter('site_audit_remote_payload', $payload);
         $payload['sent_from'] = $_SERVER['HTTP_HOST'];
-        \Drupal::logger('site')->debug('post');
 
         $response = $client->post($url, [
           'headers' => [
