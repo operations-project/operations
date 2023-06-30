@@ -511,8 +511,10 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
    * @return void
    */
   public function send() {
+    \Drupal::logger('site')->debug('send');
 
     $site_definition = SiteDefinition::load('self');
+    $site_entity = SiteEntity::loadSelf();
     $settings = $site_definition->get('settings');
 
     if (empty($settings['send_destinations'])) {
@@ -557,6 +559,7 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
 
         \Drupal::moduleHandler()->alter('site_audit_remote_payload', $payload);
         $payload['sent_from'] = $_SERVER['HTTP_HOST'];
+        \Drupal::logger('site')->debug('post');
 
         $response = $client->post($url, [
           'headers' => [
@@ -567,17 +570,21 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
 
 
         $response_entity_data = Json::decode($response->getBody()->getContents());
-
         if (!is_array($response_entity_data)) {
-          \Drupal::messenger()->addError('Site response was empty.');
-          return false;
+          throw new \Exception(t('Response from server was empty'));
+        }
+        elseif ($response_entity_data['site_uuid'][0]['value'] != $site_entity->id()) {
+          throw new \Exception(t('Received site UUID does not match this site. Received: :response_uuid. Expected: :self_uuid', [
+            ':response_uuid' => $response_entity_data['site_uuid'][0]['value'],
+            ':self_uuid' => $site_entity->id(),
+          ]));
         }
         else {
           \Drupal::messenger()->addStatus('Site report was sent successfully.');
         }
 
         foreach ($response_entity_data as $field => $value) {
-          if ($this->hasField($field)) {
+          if ($this->hasField($field) && $field != 'site_uuid') {
             $this->set($field, $value);
           }
         }
@@ -602,9 +609,14 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
 
           return $e->getResponse();
         } else {
-          \Drupal::messenger()->addError(t('Could not connect to server.'));
+          \Drupal::messenger()->addError(t('Could not connect to server: :message', [
+            ':message' => $e->getMessage(),
+          ]));
           return null;
         }
+      } catch (\Exception $e) {
+          \Drupal::messenger()->addError($e->getMessage());
+          return null;
       }
     }
   }
