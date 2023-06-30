@@ -1,6 +1,14 @@
 
+system.admin_config_development:
+  path: '/admin/config/development'
+  defaults:
+    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: 'Development'
+  requirements:
+    _permission: 'access administration pages'
+
 site.status:
-  path: '/admin/help/site'
+  path: '/admin/about/site'
   defaults:
     _title: 'About this site'
     _controller: '\Drupal\site\Controller\SiteStatusController::build'
@@ -8,7 +16,7 @@ site.status:
     _permission: 'access about site page'
 
 site.site_definition_entity_save:
-  path: '/admin/help/site/save'
+  path: '/admin/about/site/save'
   defaults:
     _title: 'Save Site Report'
     _controller: '\Drupal\site\Controller\SiteController::saveReport'
@@ -16,7 +24,7 @@ site.site_definition_entity_save:
     _permission: 'save site report'
 
 entity.site.revision:
-  path:  '/admin/help/site/{site}/history/{site_revision}'
+  path:  '/admin/about/site/{site}/history/{site_revision}'
   defaults:
     _controller: '\Drupal\site\Controller\SiteController::revisionShow'
   requirements:
@@ -29,7 +37,7 @@ entity.site.revision:
         type: entity_revision:site
 
 entity.site.version-history:
-  path:  '/admin/help/site/{site}/history'
+  path:  '/admin/about/site/{site}/history'
   defaults:
     _title: 'Site History'
     _controller: '\Drupal\site\Controller\SiteStatusController::siteStatusHistoryWidget'
@@ -43,7 +51,7 @@ entity.site.version-history:
     _permission: 'site.view site history'
 
 site.history:
-  path: '/admin/help/site/history'
+  path: '/admin/about/site/history'
   defaults:
     _title: 'Site History'
     _controller: '\Drupal\site\Controller\SiteStatusController::siteStatusHistoryWidget'
@@ -53,7 +61,7 @@ site.history:
     _permission: 'site.view site history'
 
 site.edit:
-  path: '/admin/help/site/edit'
+  path: '/admin/about/site/edit'
   defaults:
     _entity_form: 'site.edit'
     _title: 'Edit Site Information'
@@ -62,7 +70,7 @@ site.edit:
     _permission: 'administer site_definition'
 
 site.fields:
-  path: '/admin/help/site/fields'
+  path: '/admin/about/site/fields'
   defaults:
     _controller: \Drupal\field_ui\Controller\FieldConfigListController::listing
     _title: 'Manage Site Fields'
@@ -72,7 +80,7 @@ site.fields:
     _permission: 'administer site_definition'
 
 site.display:
-  path: '/admin/help/site/display'
+  path: '/admin/about/site/display'
   defaults:
     _entity_form: "entity_view_display.edit"
     _title: "Manage Site Report Display"
@@ -83,7 +91,7 @@ site.display:
     _permission: 'administer site_definition'
 
 site.form:
-  path: '/admin/help/site/form'
+  path: '/admin/about/site/form'
   defaults:
     _entity_form: "entity_form_display.edit"
     _title: "Manage Site Form"
@@ -94,7 +102,7 @@ site.form:
     _permission: 'administer site_definition'
 
 site.advanced:
-  path: '/admin/help/site/settings'
+  path: '/admin/about/site/settings'
   defaults:
     _entity_form: 'site_definition.edit'
     _title: 'Advanced site settings'
@@ -102,7 +110,7 @@ site.advanced:
     _permission: 'administer site_definition'
 
 entity.site_definition.edit_form:
-  path: '/admin/help/site/settings/{site_definition}'
+  path: '/admin/about/site/settings/{site_definition}'
   defaults:
     _entity_form: 'site_definition.edit'
     _title: 'Advanced site settings'

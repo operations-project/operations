@@ -25,6 +25,11 @@ entity.site.version-history:
 #  route_name: entity.site.collection
 #  base_route: operations.admin_operations_sites
 
+#site.about:
+#  title: 'About this site'
+#  route_name: site.status
+#  base_route: system.admin_index
+
 site.status:
   title: 'Status'
   route_name: site.status

@@ -1,14 +1,12 @@
 
-# /admin/reports/site
 site.status:
   title: 'About this site'
   description: 'Review state and other information about the site.'
   route_name: site.status
-  parent: help.main
-  position: left
-  weight: 10
+  weight: -100
+  parent: admin_toolbar_tools.help
+  menu_name: admin
 
-# /admin/reports/site
 site.status_state:
   title: 'Status'
   description: 'Review state and other information about the site.'
