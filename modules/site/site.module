@@ -8,6 +8,7 @@
 use Drupal\Core\Render\Element;
 use Drupal\Core\Serialization\Yaml;
 use Drupal\site\Entity\Site;
+use Drupal\site\Entity\SiteEntity;
 use Drupal\user\UserInterface;
 use Drupal\site\Entity\SiteDefinition;
 use Jfcherng\Diff\DiffHelper;
@@ -21,6 +22,51 @@ function site_theme() {
       'render element' => 'elements',
     ],
   ];
+}
+
+/**
+ * Implements hook_toolbar().
+ */
+function site_toolbar() {
+  $user = \Drupal::currentUser();
+
+  $items = [];
+  $items['site'] = [
+    '#cache' => [
+      'contexts' => [
+        'user.permissions',
+      ],
+    ],
+  ];
+
+  if ($user->hasPermission('access site status')) {
+
+    $site = SiteDefinition::load('self');
+    $items['site'] += [
+      '#type' => 'toolbar_item',
+      '#wrapper_attributes' => [
+        'class' => ['edit-site-toolbar'],
+      ],
+      'tab' => [
+        '#type' => 'link',
+        '#title' => t('Site :state', [
+          ':state' => $site->stateName(),
+        ]),
+        '#url' => \Drupal\Core\Url::fromRoute('site.status'),
+        '#attributes' => [
+          'title' => t('Site Status'),
+          'class' => ['toolbar-icon', 'toolbar-icon-site', $site->stateClass(), 'edit-site-toolbar'],
+        ],
+      ],
+      '#weight' => 10000,
+      '#attached' => [
+        'library' => [
+          'site/site',
+        ],
+      ],
+    ];
+  }
+  return $items;
 }
 
 /**

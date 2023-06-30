@@ -139,4 +139,12 @@ trait SiteEntityTrait {
   {
     return self::getStateName($this->state);
   }
+  /**
+   * Return the current state name.
+   * @return string
+   */
+  public function stateClass(): string
+  {
+    return self::getStateClass($this->state);
+  }
 }
