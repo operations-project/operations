@@ -12,7 +12,7 @@ use Drupal\site\SitePropertyPluginBase;
  * @SiteProperty(
  *   id = "host_provider",
  *   name = "host_provider",
- *   default = "unknown"
+ *   default = "unknown",
  *   label = @Translation("Host Provider"),
  *   description = @Translation("A string with information about the host provider.")
  * )
