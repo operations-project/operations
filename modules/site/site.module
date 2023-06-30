@@ -6,9 +6,12 @@
  */
 
 use Drupal\Core\Render\Element;
+use Drupal\Core\Serialization\Yaml;
 use Drupal\site\Entity\Site;
 use Drupal\user\UserInterface;
 use Drupal\site\Entity\SiteDefinition;
+use Jfcherng\Diff\DiffHelper;
+
 /**
  * Implements hook_theme().
  */
@@ -131,6 +134,76 @@ function site_cron() {
  * @return void
  */
 function site_site_view(array &$build, \Drupal\Core\Entity\EntityInterface $entity, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display, $view_mode) {
+
+  // Show config changes.
+  $data = $entity->get('data')->first()->getValue();
+  if (!empty($data['config_changes'])) {
+    $config_changes = $data['config_changes'];
+
+    $build['config_changes'] = [
+      '#title' => t('Config Changes'),
+      '#type' => 'details',
+    ];
+
+    $original = Yaml::encode($config_changes['original'], 2, 4);
+    $original_lines = explode(PHP_EOL, $original);
+
+    $new = Yaml::encode($config_changes['new'], 2, 4);
+    $new_lines = explode(PHP_EOL, $new);
+
+    $formatter = \Drupal::service('diff.formatter');
+    $formatter->leading_context_lines = 0;
+    $formatter->trailing_context_lines = 0;
+    $diff = new \Drupal\Component\Diff\Diff($original_lines, $new_lines);
+    $account = user_load_by_name($config_changes['user']);
+    $view = $entity->revision_timestamp->view([
+      'label' => 'hidden'
+    ]);
+    $date = \Drupal::service('renderer')->render($view[0]);
+    $caption = t('The following configuration changes were made by @user (:ip) at @url on @date.', [
+      '@user' => $account->toLink()->toString(),
+      ':ip' => $config_changes['ip'],
+      '@url' => \Drupal\Core\Link::fromTextAndUrl($config_changes['url'], \Drupal\Core\Url::fromUri($config_changes['url']))->toString(),
+      '@date' => $date
+    ]);
+
+    $build['config_changes']['table'] = [
+      '#attached' => [
+        'library' => ['system/diff']
+      ],
+      '#type' => 'table',
+      '#attributes' => [
+        'class' => [
+          'diff',
+        ],
+      ],
+      '#header' => [
+        [
+          'data' => t('Before'),
+          'colspan' => '2',
+        ],
+        [
+          'data' => t('After'),
+          'colspan' => '2',
+        ],
+      ],
+      '#rows' => $formatter
+        ->format($diff),
+      '#caption' => $caption,
+      '#empty' => t('No changes'),
+    ];
+  }
+
+  $build['data'] = [
+    '#type' => 'details',
+    '#title' => t('Site Data'),
+  ];
+
+  $build['data']['data'] = [
+    '#value' => \Drupal\Component\Serialization\Yaml::encode($entity->get('data')->getValue(), 2,4),
+    '#type' => 'html_tag',
+    '#tag' => 'pre',
+  ];
 
   // Only do the extra work if the component is configured to be displayed.
   // This assumes a 'mymodule_addition' extra field has been defined for the
