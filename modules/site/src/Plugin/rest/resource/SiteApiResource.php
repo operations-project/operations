@@ -78,6 +78,8 @@ class SiteApiResource extends ResourceBase {
     $data['data']['received_data'] = $data;
     $data['data']['received_by'] = \Drupal::request()->getClientIP();
 
+    \Drupal::logger('site')->debug('post data: ' . print_r($data, 1));
+
     $site_entity = SiteEntity::load($data['site_uuid']);
     if ($site_entity) {
       $site_entity->setNewRevision();
@@ -110,26 +112,6 @@ class SiteApiResource extends ResourceBase {
    *   The response containing the record.
    */
   public function get() {
-    $site_definition = SiteDefinition::load('self');
-    $new_site_entity = $site_definition->saveEntity($this->t("Saving site entity via Site API GET request from :ip", [
-        ':ip' => \Drupal::request()->getClientIp()
-    ]));
-
-    $new_site_entity->data->remote_report_received_from = \Drupal::request()->getClientIp();
-    $new_site_entity->data->remote_report_received_query = \Drupal::request()->query->all();
-    $new_site_entity->data->remote_site_entity_url = $new_site_entity->toUrl('canonical', [
-      'absolute' => true,
-    ])->toString();
-
-    foreach (\Drupal::request()->query->all() as $field => $value) {
-      if ($field != 'vid' && $new_site_entity->getFieldDefinition($field)) {
-        $new_site_entity->set($field, $value);
-      }
-    }
-
-    if (empty($new_site_entity)) {
-      throw new BadRequestHttpException();
-    }
-    return new JsonResponse($new_site_entity->toArray());
+    return new JsonResponse(SiteDefinition::load('self')->toArray());
   }
 }
