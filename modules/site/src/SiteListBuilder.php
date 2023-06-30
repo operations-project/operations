@@ -70,7 +70,7 @@ class SiteListBuilder extends EntityListBuilder {
    * {@inheritdoc}
    */
   public function buildHeader() {
-    $header['state'] = $this->t('Site State');
+    $header['state'] = $this->t('State');
     $header['site_title'] = $this->t('Site Title');
     $header['drupal_version'] = $this->t('Drupal');
     $header['php_version'] = $this->t('PHP');
@@ -78,8 +78,6 @@ class SiteListBuilder extends EntityListBuilder {
     $header['id'] = $this->t('ID');
     $header['site_uri'] = $this->t('Site URI');
     $header['date'] = $this->t('Last Report');
-    $header['state'] = $this->t('State');
-    $header['reason'] = $this->t('');
     return $header + parent::buildHeader();
   }
 
@@ -97,6 +95,9 @@ class SiteListBuilder extends EntityListBuilder {
     $php_version =  $entity->php_version->view([
       'label' => 'hidden',
     ]);
+    $revision_log =  $entity->revision_log->view([
+      'label' => 'hidden',
+    ]);
     $row['state'] = \Drupal::service('renderer')->render($state);
     $row['site_title'] = $entity->toLink();
     $row['drupal_version'] =  \Drupal::service('renderer')->render($drupal_version);
@@ -109,7 +110,6 @@ class SiteListBuilder extends EntityListBuilder {
       'label' => 'hidden',
       'type' => 'timestamp_ago'
     ]);
-    $row['date'] = \Drupal::service('renderer')->render($date);
 
     if ($entity->reason->value) {
       $reason = $entity->reason->view([
@@ -126,7 +126,21 @@ class SiteListBuilder extends EntityListBuilder {
     else {
       $reason = [];
     }
-    $row['reason'] = \Drupal::service('renderer')->render($reason);
+    $log_column['log'] = [
+      '#prefix' => '<blockquote><small>',
+      '#suffix' => '</small></blockquote>',
+      '#access' => !empty($entity->revision_log->getValue()),
+      'log' => $revision_log,
+    ];
+    $log_column['date'] = [
+      'date' => $date,
+      '#prefix' => '<em>',
+      '#suffix' => '</em>',
+    ];
+
+    $row['log'] = \Drupal::service('renderer')->render($log_column) ;
+
+
 
     return [
       'data' => $row + parent::buildRow($entity),
