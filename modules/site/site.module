@@ -161,7 +161,7 @@ function site_site_view(array &$build, \Drupal\Core\Entity\EntityInterface $enti
     ]);
     $date = \Drupal::service('renderer')->render($view[0]);
     $caption = t('The following configuration changes were made by @user (:ip) at @url on @date.', [
-      '@user' => $account->toLink()->toString(),
+      '@user' => $account ? $account->toLink()->toString() : 'unknown',
       ':ip' => $config_changes['ip'],
       '@url' => \Drupal\Core\Link::fromTextAndUrl($config_changes['url'], \Drupal\Core\Url::fromUri($config_changes['url']))->toString(),
       '@date' => $date
