@@ -79,7 +79,9 @@ class SiteController extends ControllerBase {
   }
 
   public function saveReport() {
-    $site = SiteDefinition::load('self')->saveEntity();
+    $site = SiteDefinition::load('self')->saveEntity(t('Saved by :user via the Save Report button.', [
+      ':user' => \Drupal::currentUser()->getAccount()->getAccountName(),
+    ]));
     return $this->redirect('site.history');
   }
 }

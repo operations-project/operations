@@ -96,8 +96,13 @@ class SiteApiResource extends ResourceBase {
     }
 
     $site_entity->no_send = true;
+
+    // EXAMPLE: Set things here to change the entity that is sent back.
+    // $site_entity->set('state', SiteDefinition::SITE_ERROR);
+    // $site_entity->set('reason', ['#markup' => "Site validation failed: because."]);
+
     $site_entity->save();
-    return new ModifiedResourceResponse($site_entity->toArray(), 201);
+    return new ModifiedResourceResponse($site_entity, 201);
   }
 
   /**

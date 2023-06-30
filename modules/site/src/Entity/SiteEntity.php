@@ -566,10 +566,9 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
           'json' => $payload
         ]);
 
-
         $response_entity_data = Json::decode($response->getBody()->getContents());
-        if (!is_array($response_entity_data)) {
-          throw new \Exception(t('Response from server was empty'));
+        if (!is_array($response_entity_data) || empty($response_entity_data['site_uuid'][0]['value'])) {
+          throw new \Exception(t('Response from server was empty: ' . print_r($response_entity_data, 1)));
         }
         elseif ($response_entity_data['site_uuid'][0]['value'] != $site_entity->id()) {
           throw new \Exception(t('Site report is unable to be saved because the received site UUID does not match this site. Received: :response_uuid. Expected: :self_uuid. To allow saving reports locally, disable "Send on Save" or fix the problem with the server.', [
@@ -590,8 +589,8 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
         // Save, but block sending again.
         $this->setNewRevision();
         $this->vid = null;
-
-        $this->revision_log = t('Site data received from :url', [
+        $this->revision_timestamp = \Drupal::time()->getCurrentTime();
+        $this->revision_log = $this->revision_log->value . ' - ' . t('Site data returned from :url', [
           ':url' => $url,
         ]);
         $this->no_send = true;
