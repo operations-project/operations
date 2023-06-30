@@ -75,10 +75,8 @@ class SiteApiResource extends ResourceBase {
    *   The HTTP response object.
    */
   public function post(array $data) {
-    $data['data']['received_data'] = $data;
-    $data['data']['received_by'] = \Drupal::request()->getClientIP();
-
-    \Drupal::logger('site')->debug('post data: ' . print_r($data, 1));
+    $data['data']['site_manager_response']['received_data'] = $data;
+    $data['data']['site_manager_response']['received_from'] = \Drupal::request()->getClientIP();
 
     $site_entity = SiteEntity::load($data['site_uuid']);
     if ($site_entity) {
