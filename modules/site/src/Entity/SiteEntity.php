@@ -574,7 +574,7 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
           throw new \Exception(t('Response from server was empty'));
         }
         elseif ($response_entity_data['site_uuid'][0]['value'] != $site_entity->id()) {
-          throw new \Exception(t('Received site UUID does not match this site. Received: :response_uuid. Expected: :self_uuid', [
+          throw new \Exception(t('Site report is unable to be saved because the received site UUID does not match this site. Received: :response_uuid. Expected: :self_uuid. To allow saving reports locally, disable "Send on Save" or fix the problem with the server.', [
             ':response_uuid' => $response_entity_data['site_uuid'][0]['value'],
             ':self_uuid' => $site_entity->id(),
           ]));
