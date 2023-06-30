@@ -50,7 +50,6 @@ class DrupalStatus extends SitePropertyPluginBase {
           $requirements_with_severity[$key] = $value;
         }
       }
-      $score_each = 100 / count($requirements_with_severity);
 
       $worst_severity = REQUIREMENT_INFO;
       $reasons = [];
