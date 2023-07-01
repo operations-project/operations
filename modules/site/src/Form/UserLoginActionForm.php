@@ -4,6 +4,7 @@ namespace Drupal\site\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Link;
 use Drupal\lazy_route_provider_install_test\PluginManager;
 use Drupal\user\Entity\User;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -48,7 +49,9 @@ class UserLoginActionForm extends FormBase {
     $password = trim($form_state->getValue('password'));
     $uid = \Drupal::service('user.auth')->authenticate(\Drupal::currentUser()->getAccountName(), $password);
     if (empty($uid)) {
-      $form_state->setErrorByName('password', $this->t('Unable to authenticate.'));
+      $form_state->setErrorByName('password', $this->t('Incorrect password. You can receive a link via email on the :link page.', [
+        ':link' => Link::createFromRoute($this->t('Reset Password'), 'user.pass')->toString()
+      ]));
     }
     else {
       $type = \Drupal::service('plugin.manager.site_property');
