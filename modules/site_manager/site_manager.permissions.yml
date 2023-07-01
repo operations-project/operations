@@ -7,3 +7,8 @@ administer site types:
   title: 'Administer site types'
   description: 'Maintain the types of site entity.'
   restrict access: true
+
+request login link:
+  title: 'Request one-time login links'
+  description: 'Returns a link for use to sign in without a password.'
+  restrict access: true

@@ -68,6 +68,20 @@ abstract class SitePropertyPluginBase extends PluginBase implements SiteProperty
   }
 
   /**
+   * Return a build array on site definition view pages.
+   * @return array
+   */
+  public function view() {
+    return [
+      '#type' => 'item',
+      '#title' => $this->label(),
+      '#description' => $this->description(),
+      '#description_display' => 'after',
+      '#markup' => $this->value(),
+    ];
+  }
+
+  /**
    * Define a field on Siteentity
    *
    * @return static

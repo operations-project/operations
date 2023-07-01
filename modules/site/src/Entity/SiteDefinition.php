@@ -204,13 +204,7 @@ class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface
     ];
     foreach ($this->property_plugins as $id => $plugin) {
       if (!$plugin->hidden()) {
-        $build['properties'][$id] = [
-          '#type' => 'item',
-          '#title' => $plugin->label(),
-          '#description' => $plugin->description(),
-          '#description_display' => 'after',
-          '#markup' => $plugin->value(),
-        ];
+        $build['properties'][$id] = $plugin->view();
       }
     }
 
