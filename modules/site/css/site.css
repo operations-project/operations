@@ -23,7 +23,16 @@
     background-image: url(../../../../../../core/misc/icons/e29700/warning.svg);
 }
 
-.toolbar-oriented .toolbar-bar .toolbar-tab.edit-site-toolbar,
-.toolbar-oriented .toolbar-tray-horizontal li {
+.toolbar-oriented .toolbar-bar .toolbar-tab.edit-site-toolbar
+{
     float: right; /* LTR */
+}
+
+.toolbar-icon-site-main {
+    text-indent: -9999px;
+}
+
+
+.toolbar-icon-site-main:before {
+    background-image: url(../../../../../../core/misc/icons/73b355/globe.svg);
 }

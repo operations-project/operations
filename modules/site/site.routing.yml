@@ -15,7 +15,7 @@ site.status:
   requirements:
     _permission: 'access about site page'
 
-site.site_definition_entity_save:
+site.save:
   path: '/admin/about/site/save'
   defaults:
     _title: 'Save Site Report'

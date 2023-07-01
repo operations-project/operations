@@ -32,7 +32,7 @@ site.field_add:
 
 site.save:
   title: 'Save report'
-  route_name: site.site_definition_entity_save
+  route_name: site.save
   appears_on:
     - site.status
     - site.history

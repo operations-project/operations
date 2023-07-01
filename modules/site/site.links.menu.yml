@@ -1,23 +1,10 @@
-site.section:
-  title: 'Site'
-  route_name: site.status
-  menu_name: admin
-  parent: system.admin
-  weight: -100
-
-system.run_cron:
-  title: 'Run cron'
-  route_name: admin_toolbar.run.cron
-  menu_name: admin
-  parent: admin_toolbar_tools.help
-  weight: -8
 
 site.status:
   title: 'About this site'
   description: 'Review state and other information about the site.'
   route_name: site.status
   weight: -100
-  parent: site.admin_toolbar_tools.help
+  parent: admin_toolbar_tools.help
   menu_name: admin
 
 site.status_state:
@@ -63,6 +50,14 @@ site.fields:
   parent: site.status
   position: left
   weight: 50
+
+site.save:
+  title: 'Save Report'
+  description: 'Save a snapshot of site data.'
+  route_name: site.save
+  parent: site.status
+  position: left
+  weight: 30
 
 #entity.site_environment.settings:
 #  title: 'Site Environment'
