@@ -39,8 +39,9 @@ class UserLogin extends SitePropertyPluginBase {
 
   /**
    * @return mixed
+   * @TODO: This might get saved in the config! How can we make sure it doesn't?
    */
-  public function getLink() {
+  public function value() {
 
     $content = \Drupal::request()->getContent();
     $name = \Drupal::request()->getContent(); // form param
