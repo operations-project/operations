@@ -99,7 +99,9 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
       $plugin_definitions = $type->getDefinitions();
       foreach ($plugin_definitions as $name => $plugin_definition) {
         $plugin = $type->createInstance($plugin_definition['id']);
-        $site->property_plugins[$name] = $plugin->value();
+        $data = $site->get('data')->getValue();
+        $data['plugins'][$name] = $plugin->value();
+        $site->set('data', $data);
       }
     }
     return $site;
@@ -113,7 +115,7 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
     $plugin_definitions = $type->getDefinitions();
     foreach ($plugin_definitions as $name => $plugin_definition) {
       $plugin = $type->createInstance($plugin_definition['id']);
-      $values[$plugin->name()] = $plugin->value();
+      $values['data']['properties'][$plugin->name()] = $plugin->value();
     }
 
     return parent::create($values);

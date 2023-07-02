@@ -79,15 +79,12 @@ class SiteApiResource extends ResourceBase {
     // Check for action requests
     \Drupal::logger('site_api')->warning('POST received:' . print_r($data,1));
     if ($data['action']) {
-      $site_entity = SiteEntity::loadSelf();
-      $site_entity->setNewRevision();
-      $site_entity->revision_log = t('Action requested (:action) via API from :from'. [
+      $site = SiteDefinition::load('self');
+      $site_entity = $site->saveEntity(t('Action requested (:action) via API from :from', [
           ':from' => \Drupal::request()->getClientIP(),
           ':action' => $data['action'],
-      ]);
-      $site_entity->no_send = true;
-      $site_entity->save();
-      return new ModifiedResourceResponse($site_entity, 201);
+        ]), false);
+      return new ModifiedResourceResponse($site, 201);
     }
 
     $data['data']['site_manager_response']['received_data'] = $data;

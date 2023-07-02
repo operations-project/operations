@@ -55,13 +55,15 @@ class UserLogin extends SitePropertyPluginBase {
    * @return mixed
    * @TODO: This might get saved in the config! How can we make sure it doesn't?
    */
-  public function value() {
-
+  public function value($show_login = false) {
+    $show_login = true;
+    $return = false;
     $content = \Drupal::request()->getContent();
     $name = \Drupal::request()->getContent(); // form param
-
+    $hide_login = false;
     // If request is POST, action is user-login, and user is authenticated, return a login link.
-    if (\Drupal::request()->getMethod() == 'POST'
+    if ($show_login
+      && \Drupal::request()->getMethod() == 'POST'
 //      && \Drupal::request()->get('action') == 'user-login'
       && \Drupal::currentUser()->isAuthenticated()
       && \Drupal::currentUser()->hasPermission('request login link')
@@ -85,8 +87,8 @@ class UserLogin extends SitePropertyPluginBase {
           'language' => \Drupal::languageManager()->getLanguage($account->getPreferredLangcode()),
         ]
       );
-      return $link->toString();
+      $return = $link->toString();
     }
-    return '';
+    return $return;
   }
 }

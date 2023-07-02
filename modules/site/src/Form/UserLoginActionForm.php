@@ -98,7 +98,8 @@ class UserLoginActionForm extends FormBase {
       if ($site->isSelf()) {
         $type = \Drupal::service('plugin.manager.site_property');
         $plugin = $type->createInstance('user_login');
-        $link = $plugin->value();
+
+        $link = $plugin->value(true);
         if ($link) {
           $form_state->setValue('login_link', $link);
         } else {
@@ -108,8 +109,10 @@ class UserLoginActionForm extends FormBase {
       else {
         $return = $this->requestLogin($site);
         if ($return) {
-          dsm($return, 'REmote Entity Received');
-
+          if (!empty($return['data']['plugins']['user_login'])) {
+            $this->messenger()->addStatus('Your one-time login link has been generated. It will not be shown again, and can only be used once.');
+            $this->messenger()->addStatus($return['data']['plugins']['user_login']);
+          }
         }
       }
 
