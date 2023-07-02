@@ -92,13 +92,15 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
   static public function load($id) {
     $site = parent::load($id);
 
-    // Load plugin data.
-    // See https://www.drupal.org/docs/drupal-apis/plugin-api/creating-your-own-plugin-manager
-    $type = \Drupal::service('plugin.manager.site_property');
-    $plugin_definitions = $type->getDefinitions();
-    foreach ($plugin_definitions as $name => $plugin_definition) {
-      $plugin = $type->createInstance($plugin_definition['id']);
-      $site->property_plugins[$name] = $plugin->value();
+    if ($site) {
+      // Load plugin data.
+      // See https://www.drupal.org/docs/drupal-apis/plugin-api/creating-your-own-plugin-manager
+      $type = \Drupal::service('plugin.manager.site_property');
+      $plugin_definitions = $type->getDefinitions();
+      foreach ($plugin_definitions as $name => $plugin_definition) {
+        $plugin = $type->createInstance($plugin_definition['id']);
+        $site->property_plugins[$name] = $plugin->value();
+      }
     }
     return $site;
   }
@@ -646,5 +648,25 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
 
   public function getStateClass() {
     return SiteDefinition::getStateClass($this->state->value);
+  }
+
+  /**
+   * Return the API URL field, if empty, the Site URI field
+   * @return Url|void
+   */
+  public function getSiteApiLink() {
+
+    if (!empty($this->api_key)) {
+      $uri = $this->api_uri->value ?: $this->site_uri->value;
+
+      // @TODO: Find out how to get the SiteAPIResource URI.
+      $url = Url::fromUri($uri . '/api/site/data')
+        ->setOption('query', [
+          'api-key' => $this->api_key->value,
+        ])
+        ->setOption('absolute', true)
+      ;
+      return $url;
+    }
   }
 }

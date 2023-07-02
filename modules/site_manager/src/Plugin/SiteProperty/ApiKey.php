@@ -34,14 +34,8 @@ class ApiKey extends SitePropertyPluginBase {
       ->setDescription(t('An API Key from the site. If entered, site data from here will post back to the client site when saving this form.'))
       ->setRevisionable(TRUE)
       ->setDisplayOptions('form', [
-        'type' => 'string_field',
+        'type' => 'string_textfield',
       ])
-      ->setDisplayConfigurable('form', TRUE)
-      ->setDisplayOptions('view', [
-        'type' => 'basic_string',
-        'label' => 'above',
-      ])
-      ->setDisplayConfigurable('view', TRUE)
       ->setDisplayConfigurable('form', TRUE)
     ;
   }

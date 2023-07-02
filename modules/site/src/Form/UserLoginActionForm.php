@@ -2,6 +2,7 @@
 
 namespace Drupal\site\Form;
 
+use Drupal\Component\Serialization\Json;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
@@ -10,6 +11,7 @@ use Drupal\lazy_route_provider_install_test\PluginManager;
 use Drupal\site\Entity\SiteDefinition;
 use Drupal\site\Entity\SiteEntity;
 use Drupal\user\Entity\User;
+use GuzzleHttp\Client;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -87,17 +89,30 @@ class UserLoginActionForm extends FormBase {
       $form_state->setErrorByName('password', $this->t('Incorrect password. You can receive a link via email on the @link page.', [
         '@link' => Link::createFromRoute($this->t('Reset Password'), 'user.pass')->toString()
       ]));
+      return;
     }
     else {
-      $type = \Drupal::service('plugin.manager.site_property');
-      $plugin = $type->createInstance('user_login');
-      $link = $plugin->value();
-      if ($link) {
-        $form_state->setValue('login_link', $link);
+
+      // If not requesting from self, POST to get a link remotely
+      $site = SiteEntity::load($form_state->getValue('site_uuid'));
+      if ($site->isSelf()) {
+        $type = \Drupal::service('plugin.manager.site_property');
+        $plugin = $type->createInstance('user_login');
+        $link = $plugin->value();
+        if ($link) {
+          $form_state->setValue('login_link', $link);
+        } else {
+          $form_state->setErrorByName('submit', $this->t('Something went wrong. The login link was not generated.'));
+        }
       }
       else {
-        $form_state->setErrorByName('submit', $this->t('Something went wrong. The login link was not generated.'));
+        $return = $this->requestLogin($site);
+        if ($return) {
+          dsm($return, 'REmote Entity Received');
+
+        }
       }
+
     }
   }
 
@@ -113,10 +128,35 @@ class UserLoginActionForm extends FormBase {
       $this->messenger()->addStatus('Your one-time login link has been generated. It will not be shown again, and can only be used once.');
       $this->messenger()->addStatus($link);
     }
+  }
 
-    // Requested password was not to self. Request via API.
-    else {
-      $this->messenger()->addStatus("@TODO: Attempt to get a link via the site's API.");
+  protected function requestLogin(SiteEntity $site) {
+
+    // Get Site's API URL from site_uri and api_key.
+    $url = $site->getSiteApiLink()->toString();
+
+    // POST to site, retrieve site entity with user_login property.
+    // Set 'action=user-login'
+    $client = new Client([
+      'base_url' => $url,
+      'allow_redirects' => TRUE,
+    ]);
+
+    $payload['action'] = 'user-login';
+
+    try {
+      $response = $client->post($url, [
+        'headers' => [
+          'Accept' => 'application/json',
+          'Action' => 'user-login'
+        ],
+        'json' => $payload
+      ]);
+      $site_remote = Json::decode($response->getBody()->getContents());
+      return $site_remote;
+    } catch (\Exception $e) {
+      $this->messenger()->addError(t("Site API request failed. Check Site Entity API URL fields."));
+      return false;
     }
   }
 }
