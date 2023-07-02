@@ -67,10 +67,11 @@ class UserLoginActionForm extends FormBase {
           Url::fromUri(SiteEntity::getDefaultUri())
         )->toString(),
         '@target_site' => $site->toLink()->toString(),
+        '@target_url' => $site->get('site_uri')->value,
       ];
 
       $form['actions']['submit']['#value'] = t('Request login link from @target_site', $t);
-      $form['password']['#description'] = t('Enter your current password for this site (@site) to retrieve a one-time login link from remote site @target_site.', $t);
+      $form['password']['#description'] = t('Enter your current password for this site (@site) to retrieve a one-time login link from remote site @target_site (@target_url).', $t);
     }
 
     return $form;
