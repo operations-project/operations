@@ -49,12 +49,12 @@ function site_toolbar() {
       ],
       'tab' => [
         '#type' => 'link',
-        '#title' => t('Site :state', [
-          ':state' => $site->stateName(),
-        ]),
+        '#title' => $site->stateName(),
         '#url' => \Drupal\Core\Url::fromRoute('site.status'),
         '#attributes' => [
-          'title' => t('Site Status'),
+          'title' => t(':state', [
+            ':state' => $site->stateName(),
+          ]),
           'class' => ['toolbar-icon', 'toolbar-icon-site', $site->stateClass(), 'edit-site-toolbar'],
         ],
       ],
