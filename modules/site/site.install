@@ -12,7 +12,7 @@ function site_install() {
 
   $site = \Drupal\site\Entity\SiteDefinition::load('self');
   if ($site) {
-    $site->saveEntity(t('Initial site entity created on installation of site.module.'));
+    $site->saveEntity(t('Initial site entity created on installation of site.module.'), true);
   }
 
 }
