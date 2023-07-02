@@ -5,7 +5,9 @@ namespace Drupal\site\Plugin\SiteProperty;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Url;
+use Drupal\site\Entity\SiteEntity;
 use Drupal\site\Form\UserLoginActionForm;
+use Drupal\site\SiteInterface;
 use Drupal\site\SitePropertyPluginBase;
 use Drupal\user\Entity\User;
 use Drush\Commands\core\LoginCommands;
@@ -26,14 +28,26 @@ class UserLogin extends SitePropertyPluginBase {
   /**
    * @return array
    */
-  public function view() {
-    $build = [
-      '#type' => 'item',
-      '#title' => $this->label(),
-      '#description' => t('Press this button to get a one-time login link.'),
-      '#description_display' => 'after',
-      'request' => \Drupal::formBuilder()->getForm(UserLoginActionForm::class),
+  public function view(SiteEntity $site = null) {
+    $build['login'] = [
+      '#title' => t('Get Login Link'),
+      '#type' => 'details'
     ];
+    $build['login']['form'] = \Drupal::formBuilder()->getForm(UserLoginActionForm::class, $site);
+
+    return $build;
+  }
+
+
+  /**
+   * @return array
+   */
+  public function entityView(SiteEntity $site) {
+
+    // There's no reason to show this on an entity view.
+    // All interaction with self would be done on the main Site status page.
+    // This is only used with Site Manager
+    $build = $this->view($site);
     return $build;
   }
 
@@ -55,7 +69,7 @@ class UserLogin extends SitePropertyPluginBase {
       $timestamp = \Drupal::time()->getRequestTime();
       $account = User::load(\Drupal::currentUser()->id());
       $link = Url::fromRoute(
-        'user.reset.login',
+        'user.reset',
         [
           'uid' => $account->id(),
           'timestamp' => $timestamp,

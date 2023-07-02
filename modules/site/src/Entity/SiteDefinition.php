@@ -5,8 +5,10 @@ namespace Drupal\site\Entity;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Link;
 use Drupal\Core\Serialization\Yaml;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\Url;
 use Drupal\site\SiteDefinitionInterface;
 use Drupal\site\Event\SiteGetState;
 use Drupal\site\SiteEntityInterface;
@@ -204,7 +206,7 @@ class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface
     ];
     foreach ($this->property_plugins as $id => $plugin) {
       if (!$plugin->hidden()) {
-        $build['properties'][$id] = $plugin->view();
+        $build['properties'][$id] = $plugin->view($entity_object);
       }
     }
 

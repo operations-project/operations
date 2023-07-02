@@ -81,9 +81,19 @@ function site_toolbar() {
  *   - attributes: HTML attributes for the containing element.
  */
 function template_preprocess_site(array &$variables) {
+  $site = $variables['elements']['#site'];
   $variables['view_mode'] = $variables['elements']['#view_mode'];
   foreach (Element::children($variables['elements']) as $key) {
     $variables['content'][$key] = $variables['elements'][$key];
+
+    // Load plugin data.
+    // See https://www.drupal.org/docs/drupal-apis/plugin-api/creating-your-own-plugin-manager
+    $type = \Drupal::service('plugin.manager.site_property');
+    $plugin_definitions = $type->getDefinitions();
+    foreach ($plugin_definitions as $name => $plugin_definition) {
+      $plugin = $type->createInstance($plugin_definition['id']);
+      $variables['content']['plugins'][$name] = $plugin->entityView($site);
+    }
   }
 }
 

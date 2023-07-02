@@ -4,6 +4,7 @@ namespace Drupal\site\Entity;
 
 use _PHPStan_978789531\Nette\PhpGenerator\Parameter;
 use _PHPStan_978789531\Symfony\Contracts\Service\Attribute\Required;
+use Drupal\backup_migrate\Core\Plugin\PluginCallerTrait;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\ContentEntityInterface;
@@ -86,6 +87,21 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
 
   use EntityChangedTrait;
   use EntityOwnerTrait;
+
+  protected array $property_plugins;
+  static public function load($id) {
+    $site = parent::load($id);
+
+    // Load plugin data.
+    // See https://www.drupal.org/docs/drupal-apis/plugin-api/creating-your-own-plugin-manager
+    $type = \Drupal::service('plugin.manager.site_property');
+    $plugin_definitions = $type->getDefinitions();
+    foreach ($plugin_definitions as $name => $plugin_definition) {
+      $plugin = $type->createInstance($plugin_definition['id']);
+      $site->property_plugins[$name] = $plugin->value();
+    }
+    return $site;
+  }
 
   public static function create(array $values = []) {
 

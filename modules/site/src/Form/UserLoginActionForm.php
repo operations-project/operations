@@ -5,7 +5,10 @@ namespace Drupal\site\Form;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
+use Drupal\Core\Url;
 use Drupal\lazy_route_provider_install_test\PluginManager;
+use Drupal\site\Entity\SiteDefinition;
+use Drupal\site\Entity\SiteEntity;
 use Drupal\user\Entity\User;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -24,11 +27,17 @@ class UserLoginActionForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state, $site = null) {
 
     $form['password'] = [
       '#type' => 'password',
-      '#title' => t('Enter password'),
+      '#title' => t('Confirm Password'),
+      '#description' => t('Enter your current password for site @site to retrieve a one-time login link.', [
+        '@site' => Link::fromTextAndUrl(
+          SiteEntity::getDefaultSiteTitle(),
+          Url::fromUri(SiteEntity::getDefaultUri())
+        )->toString(),
+      ]),
     ];
 
     $form['actions'] = [
@@ -38,6 +47,31 @@ class UserLoginActionForm extends FormBase {
       '#type' => 'submit',
       '#value' => $this->t('Request Login Link'),
     ];
+
+    $form['site_uuid'] = [
+      '#type' => 'value',
+      '#value' => $site->id(),
+    ];
+
+    // Site Manager: Alter form to post remotely.
+    if (
+      $site &&
+      \Drupal::moduleHandler()->moduleExists('site_manager') &&
+      !$site->isSelf() &&
+      $site->isLatestRevision()
+    ) {
+
+      $t = [
+        '@site' => Link::fromTextAndUrl(
+          SiteEntity::getDefaultSiteTitle(),
+          Url::fromUri(SiteEntity::getDefaultUri())
+        )->toString(),
+        '@target_site' => $site->toLink()->toString(),
+      ];
+
+      $form['actions']['submit']['#value'] = t('Request login link from @target_site', $t);
+      $form['password']['#description'] = t('Enter your current password for this site (@site) to retrieve a one-time login link from remote site @target_site.', $t);
+    }
 
     return $form;
   }
@@ -70,8 +104,18 @@ class UserLoginActionForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $link = $form_state->getValue('login_link');
-    $this->messenger()->addStatus('Your one-time login link has been generated. It will not be shown again, and can only be used once.');
-    $this->messenger()->addStatus($link);
+
+    // If not requesting from self, POST to get a link remotely
+    $site = SiteEntity::load($form_state->getValue('site_uuid'));
+    if ($site->isSelf()) {
+      $link = $form_state->getValue('login_link');
+      $this->messenger()->addStatus('Your one-time login link has been generated. It will not be shown again, and can only be used once.');
+      $this->messenger()->addStatus($link);
+    }
+
+    // Requested password was not to self. Request via API.
+    else {
+      $this->messenger()->addStatus("@TODO: Attempt to get a link via the site's API.");
+    }
   }
 }

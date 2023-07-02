@@ -5,6 +5,7 @@ namespace Drupal\site;
 use Drupal\Component\Plugin\PluginBase;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\site\Entity\SiteEntity;
 
 /**
  * Base class for site_property plugins.
@@ -71,7 +72,7 @@ abstract class SitePropertyPluginBase extends PluginBase implements SiteProperty
    * Return a build array on site definition view pages.
    * @return array
    */
-  public function view() {
+  public function view(SiteEntity $site) {
     return [
       '#type' => 'item',
       '#title' => $this->label(),
@@ -79,6 +80,14 @@ abstract class SitePropertyPluginBase extends PluginBase implements SiteProperty
       '#description_display' => 'after',
       '#markup' => $this->value(),
     ];
+  }
+
+  /**
+   * Return a build array to show in the Site Entity view, if neeeded.
+   * @return array
+   */
+  public function entityView(SiteEntity $site) {
+    return [];
   }
 
   /**
