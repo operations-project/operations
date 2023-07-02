@@ -49,8 +49,8 @@ class UserLoginActionForm extends FormBase {
     $password = trim($form_state->getValue('password'));
     $uid = \Drupal::service('user.auth')->authenticate(\Drupal::currentUser()->getAccountName(), $password);
     if (empty($uid)) {
-      $form_state->setErrorByName('password', $this->t('Incorrect password. You can receive a link via email on the :link page.', [
-        ':link' => Link::createFromRoute($this->t('Reset Password'), 'user.pass')->toString()
+      $form_state->setErrorByName('password', $this->t('Incorrect password. You can receive a link via email on the @link page.', [
+        '@link' => Link::createFromRoute($this->t('Reset Password'), 'user.pass')->toString()
       ]));
     }
     else {
