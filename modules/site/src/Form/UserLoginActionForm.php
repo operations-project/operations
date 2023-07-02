@@ -108,14 +108,10 @@ class UserLoginActionForm extends FormBase {
       }
       else {
         $return = $this->requestLogin($site);
-        if ($return) {
-          if (!empty($return['data']['plugins']['user_login'])) {
-            $this->messenger()->addStatus('Your one-time login link has been generated. It will not be shown again, and can only be used once.');
-            $this->messenger()->addStatus($return['data']['plugins']['user_login']);
-          }
+        if (!empty($return['data']['plugins']['user_login'])) {
+          $form_state->setValue('login_link', $return['data']['plugins']['user_login']);
         }
       }
-
     }
   }
 
@@ -124,12 +120,10 @@ class UserLoginActionForm extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
 
-    // If not requesting from self, POST to get a link remotely
-    $site = SiteEntity::load($form_state->getValue('site_uuid'));
-    if ($site->isSelf()) {
-      $link = $form_state->getValue('login_link');
+    $link = $form_state->getValue('login_link');
+    if ($link) {
       $this->messenger()->addStatus('Your one-time login link has been generated. It will not be shown again, and can only be used once.');
-      $this->messenger()->addStatus($link);
+      $this->messenger()->addStatus(Link::fromTextAndUrl($link, Url::fromUri($link)));
     }
   }
 
