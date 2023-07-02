@@ -75,22 +75,4 @@ class UserLogin extends SitePropertyPluginBase {
     }
     return '';
   }
-
-  /**
-   * Define a
-   *
-   * @return static
-   *   A new field definition object.
-   */
-  public function baseFieldDefinitions(EntityTypeInterface $entity_type, &$fields) {
-    $fields[$this->name()] = BaseFieldDefinition::create('string')
-      ->setLabel($this->label())
-      ->setRevisionable(TRUE)
-      ->setDisplayOptions('view', [
-        'type' => 'string',
-        'label' => 'inline',
-        'weight' => 10,
-      ])
-      ->setDisplayConfigurable('view', TRUE);
-  }
 }
