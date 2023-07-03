@@ -120,9 +120,9 @@
         "git-split": {
           "repos": {
             "composer/Plugin/GitSplit": "git@github.com:drupal-operations/git-split.git",
-            "web/modules/contrib/operations": "git@git.drupal.org:project/operations.git",
-            "web/modules/contrib/site": "git@git.drupal.org:project/site.git",
-            "web/modules/contrib/site_manager": "git@git.drupal.org:project/site_manager.git"
+            "src/modules/operations": "git@git.drupal.org:project/operations.git",
+            "src/modules/site": "git@git.drupal.org:project/site.git",
+            "src/modules/site_manager": "git@git.drupal.org:project/site_manager.git"
           }
         },
         "patchLevel": {
