@@ -8,18 +8,13 @@ description: "A site definition representing this site."
 fields_allow_override: []
 
 # List of config items to load into a Site Entity.
-configs_load:
-  - core.extension
-  - system.site
+configs_load: []
 
 # List of config items to allow loading from remote site entity.
 configs_allow_override: []
 
 # List of state items to load into a Site Entity.
-states_load:
-  - install_time
-  - system.cron_last
-  - system.maintenance_mode
+states_load: []
 
 # List of state items to allow loading from remote site entity.
 states_allow_override: []

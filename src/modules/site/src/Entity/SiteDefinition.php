@@ -58,7 +58,6 @@ use Drupal\site\SiteEntityTrait;
  *     "states_load",
  *     "states_allow_override",
  *     "state_factors",
- *     "data",
  *     "settings"
  *   }
  * )
@@ -97,6 +96,7 @@ class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface
    * {@inheritdoc}
    */
   public function __construct(array $values, $entity_type) {
+    $values['data'] = $values['data'] ?? [];
     parent::__construct($values, $entity_type);
     $this->getConfig();
     $this->getDrupalStates();
@@ -161,6 +161,7 @@ class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface
         $config_name = $config_items[0];
         $config_key = $config_items[1] ?? null;
         if ($config_key) {
+          \Drupal::messenger()->addStatus($config_name .'='.$config_key);
           $value = \Drupal::config($config_name)->get($config_key);
           $this->data['config'][$config_name] = [
             $config_key => $value,
