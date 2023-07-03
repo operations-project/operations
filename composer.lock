@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6d14390b219cf4f97a5d4ea6381f6396",
+    "content-hash": "1714609468b4ca8d9b05aad9c8078eb0",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -1540,7 +1540,7 @@
         },
         {
             "name": "drupal-operations/git-split",
-            "version": "1.0.x-dev",
+            "version": "1.2.x-dev",
             "dist": {
                 "type": "path",
                 "url": "composer/Plugin/GitSplit",
@@ -11278,7 +11278,6 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "drupal-operations/git-split": 20,
         "drupal/site_audit": 20,
         "drupal/site_audit_server": 20
     },
