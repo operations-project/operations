@@ -1,0 +1,4 @@
+site:
+  css:
+    theme:
+      css/site.css: {}

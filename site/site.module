@@ -1,0 +1,283 @@
+<?php
+
+/**
+ * @file
+ * Primary module hooks for Site module.
+ */
+
+use Drupal\Core\Render\Element;
+use Drupal\Core\Serialization\Yaml;
+use Drupal\site\Entity\Site;
+use Drupal\site\Entity\SiteEntity;
+use Drupal\user\UserInterface;
+use Drupal\site\Entity\SiteDefinition;
+use Jfcherng\Diff\DiffHelper;
+
+/**
+ * Implements hook_theme().
+ */
+function site_theme() {
+  return [
+    'site' => [
+      'render element' => 'elements',
+    ],
+  ];
+}
+
+/**
+ * Implements hook_toolbar().
+ */
+function site_toolbar() {
+  $user = \Drupal::currentUser();
+
+  $items = [];
+  $items['site'] = [
+    '#cache' => [
+      'contexts' => [
+        'user.permissions',
+      ],
+    ],
+  ];
+
+  if ($user->hasPermission('access site status')) {
+
+    $site = SiteDefinition::load('self');
+    $items['site'] += [
+      '#type' => 'toolbar_item',
+      '#wrapper_attributes' => [
+        'class' => ['edit-site-toolbar'],
+      ],
+      'tab' => [
+        '#type' => 'link',
+        '#title' => $site->stateName(),
+        '#url' => \Drupal\Core\Url::fromRoute('site.status'),
+        '#attributes' => [
+          'title' => t(':state', [
+            ':state' => $site->stateName(),
+          ]),
+          'class' => ['toolbar-icon', 'toolbar-icon-site', $site->stateClass(), 'edit-site-toolbar'],
+        ],
+      ],
+      '#weight' => 10000,
+      '#attached' => [
+        'library' => [
+          'site/site',
+        ],
+      ],
+    ];
+  }
+  return $items;
+}
+
+/**
+ * Prepares variables for site templates.
+ *
+ * Default template: site.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - elements: An associative array containing the site information and any
+ *     fields attached to the entity.
+ *   - attributes: HTML attributes for the containing element.
+ */
+function template_preprocess_site(array &$variables) {
+  $site = $variables['elements']['#site'];
+  $variables['view_mode'] = $variables['elements']['#view_mode'];
+  foreach (Element::children($variables['elements']) as $key) {
+    $variables['content'][$key] = $variables['elements'][$key];
+
+    // Load plugin data.
+    // See https://www.drupal.org/docs/drupal-apis/plugin-api/creating-your-own-plugin-manager
+    $type = \Drupal::service('plugin.manager.site_property');
+    $plugin_definitions = $type->getDefinitions();
+    foreach ($plugin_definitions as $name => $plugin_definition) {
+      $plugin = $type->createInstance($plugin_definition['id']);
+      $variables['content']['plugins'][$name] = $plugin->entityView($site);
+    }
+  }
+}
+
+/**
+ * Implements hook_user_cancel().
+ */
+function site_user_cancel($edit, UserInterface $account, $method) {
+  switch ($method) {
+    case 'user_cancel_block_unpublish':
+      // Unpublish siteentities.
+      $storage = \Drupal::entityTypeManager()->getStorage('site');
+      $site_ids = $storage->getQuery()
+        ->condition('uid', $account->id())
+        ->condition('status', 1)
+        ->execute();
+      foreach ($storage->loadMultiple($site_ids) as $site) {
+        $site->set('status', FALSE);
+        $site->save();
+      }
+
+      break;
+
+    case 'user_cancel_reassign':
+      // Anonymize siteentities.
+      $storage = \Drupal::entityTypeManager()->getStorage('site');
+      $site_ids = $storage->getQuery()
+        ->condition('uid', $account->id())
+        ->execute();
+      foreach ($storage->loadMultiple($site_ids) as $site) {
+        $site->setOwnerId(0);
+        $site->save();
+      }
+      break;
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_predelete() for user entities.
+ */
+function site_user_predelete(UserInterface $account) {
+
+  return;
+
+  // @TODO We don't want to delete any of these when users are deleted.
+  //   This should be updated to change the author instead.
+  // Delete siteentities.
+  $storage = \Drupal::entityTypeManager()->getStorage('site');
+  $site_ids = $storage->getQuery()
+    ->condition('uid', $account->id())
+    ->execute();
+  $sites = $storage->loadMultiple($site_ids);
+  $storage->delete($sites);
+
+}
+
+/**
+ * @return void
+ * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+ * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+ */
+function site_cron() {
+  $now = \Drupal::time()->getRequestTime();
+  $config = SiteDefinition::load('self');
+  $settings = $config->get('settings');
+
+  foreach (['save', 'send'] as $action) {
+    $state_name = "site.cron_last_{$action}";
+    $interval = $settings["{$action}_interval"];
+
+    // If enabled, and its the first time OR due for an update...
+    $last_cron = \Drupal::state()->get($state_name, 0);
+    $first_time = $last_cron == 0;
+    $time_since_last_cron = $first_time? 0: $now - $last_cron;
+    if ($interval > 0 && ($first_time || $time_since_last_cron > $interval)) {
+
+      if ($action == 'save') {
+        SiteDefinition::load('self')->saveEntity(t('Site report saved on cron.'), true);
+      }
+      else {
+        SiteDefinition::load('self')->sendEntity(t('Site report sent on cron.'), true);
+      }
+
+      \Drupal::state()->set($state_name, $now);
+    }
+  }
+}
+
+/**
+ * Implements hook_ENTITY_view()
+ * @param array $build
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ * @param \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display
+ * @param $view_mode
+ * @return void
+ */
+function site_site_view(array &$build, \Drupal\Core\Entity\EntityInterface $entity, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display, $view_mode) {
+
+  // Show config changes.
+  $data = $entity->get('data')->first()->getValue();
+  if (!empty($data['config_changes'])) {
+    $config_changes = $data['config_changes'];
+
+    $build['config_changes'] = [
+      '#title' => t('Config Changes'),
+      '#type' => 'details',
+    ];
+
+    $original = Yaml::encode($config_changes['original'], 2, 4);
+    $original_lines = explode(PHP_EOL, $original);
+
+    $new = Yaml::encode($config_changes['new'], 2, 4);
+    $new_lines = explode(PHP_EOL, $new);
+
+    $formatter = \Drupal::service('diff.formatter');
+    $formatter->leading_context_lines = 0;
+    $formatter->trailing_context_lines = 0;
+    $diff = new \Drupal\Component\Diff\Diff($original_lines, $new_lines);
+    $account = user_load_by_name($config_changes['user']);
+    $view = $entity->revision_timestamp->view([
+      'label' => 'hidden'
+    ]);
+    $date = \Drupal::service('renderer')->render($view[0]);
+    $caption = t('The following configuration changes were made by @user (:ip) at @url on @date.', [
+      '@user' => $account ? $account->toLink()->toString() : 'unknown',
+      ':ip' => $config_changes['ip'],
+      '@url' => \Drupal\Core\Link::fromTextAndUrl($config_changes['url'], \Drupal\Core\Url::fromUri($config_changes['url']))->toString(),
+      '@date' => $date
+    ]);
+
+    $build['config_changes']['table'] = [
+      '#attached' => [
+        'library' => ['system/diff']
+      ],
+      '#type' => 'table',
+      '#attributes' => [
+        'class' => [
+          'diff',
+        ],
+      ],
+      '#header' => [
+        [
+          'data' => t('Before'),
+          'colspan' => '2',
+        ],
+        [
+          'data' => t('After'),
+          'colspan' => '2',
+        ],
+      ],
+      '#rows' => $formatter
+        ->format($diff),
+      '#caption' => $caption,
+      '#empty' => t('No changes'),
+    ];
+  }
+
+  $build['data'] = [
+    '#type' => 'details',
+    '#title' => t('Site Data'),
+  ];
+
+  $build['data']['data'] = [
+    '#value' => \Drupal\Component\Serialization\Yaml::encode($entity->get('data')->getValue(), 2,4),
+    '#type' => 'html_tag',
+    '#tag' => 'pre',
+  ];
+
+  // Only do the extra work if the component is configured to be displayed.
+  // This assumes a 'mymodule_addition' extra field has been defined for the
+  // entity bundle in hook_entity_extra_field_info().
+  $state_field = $entity->state->value;
+  $build['reason'] = [
+    '#type' => 'details',
+    '#title' => t('State: :state', [
+      ':state' => SiteDefinition::getStateName($state_field),
+    ]),
+    '#attributes' => [
+      'class' => [
+        'color-' . SiteDefinition::getStateClass($state_field),
+      ]
+    ],
+  ];
+
+  if (!empty($entity->reason->getValue())) {
+    $build['reason']['reasons'] = $entity->reason->getValue();
+  }
+}

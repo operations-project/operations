@@ -1,0 +1,18 @@
+# Schema for the configuration files of the Site Manager module.
+site_manager.settings:
+  type: config_object
+  label: 'Site Manager settings'
+  mapping:
+    allowed_remote_fields:
+      type: string
+      label: 'Fields to allow posting from client sites'
+
+    global_config_overrides:
+      type: string
+      label: 'Global Site Config Overrides'
+      description: 'Config values to set on the site.'
+
+    global_state_overrides:
+      type: string
+      label: 'Global Site State Overrides'
+      description: 'State values to set on the site.'

@@ -1,0 +1,38 @@
+
+.toolbar-icon-site.error:before {
+    background-image: url(../../../../../../core/misc/icons/dc2323/error.svg);
+}
+.toolbar-icon-site.error:active:before,
+.toolbar-icon-site.error.is-active:before {
+    background-image: url(../../../../../../core/misc/icons/dc2323/error.svg);
+}
+
+.toolbar-icon-site.success:before {
+    background-image: url(../../../../../../core/misc/icons/73b355/check.svg);
+}
+.toolbar-icon-site.success:active:before,
+.toolbar-icon-site.success.is-active:before {
+    background-image: url(../../../../../../core/misc/icons/73b355/check.svg);
+}
+
+.toolbar-icon-site.warning:before {
+    background-image: url(../../../../../../core/misc/icons/e29700/warning.svg);
+}
+.toolbar-icon-site.warning:active:before,
+.toolbar-icon-site.warning.is-active:before {
+    background-image: url(../../../../../../core/misc/icons/e29700/warning.svg);
+}
+
+.toolbar-oriented .toolbar-bar .toolbar-tab.edit-site-toolbar
+{
+    float: right; /* LTR */
+}
+
+.toolbar-icon-site-main {
+    text-indent: -9999px;
+}
+
+
+.toolbar-icon-site-main:before {
+    background-image: url(../../../../../../core/misc/icons/73b355/globe.svg);
+}

@@ -1,0 +1,24 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the Site module.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function site_install() {
+
+  $site = \Drupal\site\Entity\SiteDefinition::load('self');
+  if ($site) {
+    $site->saveEntity(t('Initial site entity created on installation of site.module.'), true);
+  }
+
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function site_uninstall() {
+}

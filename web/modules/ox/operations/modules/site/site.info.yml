@@ -1,9 +1,0 @@
-name: Site
-type: module
-description: Provides an entity that represents a Drupal website.
-package: Operations
-core_version_requirement: ^9 || ^10
-configure: entity.site_definition.collection
-dependencies:
-  - serialization:serialization
-  - key_auth:key_auth

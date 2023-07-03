@@ -1,0 +1,20 @@
+{
+    "name": "drupal/site",
+     "description": "Provides a Site entity about your website. Tracks state, metadata, and configuration changes over time using revisions.",
+    "type": "drupal-module",
+    "authors": [
+        {
+            "name": "Jon Pugh",
+            "email": "jon@thinkdrop.net"
+        }
+    ],
+    "repositories": {
+        "drupal": {
+            "type": "composer",
+            "url": "https://packages.drupal.org/8"
+        }
+    },
+    "require": {
+        "drupal/admin_toolbar": "^3.4"
+    }
+}

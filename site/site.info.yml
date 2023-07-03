@@ -1,0 +1,14 @@
+name: Site
+type: module
+description: Provides an entity that represents a Drupal website.
+package: Operations
+core_version_requirement: ^9 || ^10
+configure: entity.site_definition.collection
+dependencies:
+<<<<<<<< HEAD:web/modules/ox/operations/modules/site/site.info.yml
+  - serialization:serialization
+  - key_auth:key_auth
+========
+  - serialization
+  - admin_toolbar_tools
+>>>>>>>> b0037150f65a8513160a43cd28cdeee53f65412d:site/site.info.yml
