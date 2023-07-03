@@ -1,14 +1,14 @@
-# Site Module
+# Site.Module
 
-The Site Module provides a way to track your Drupal sites.
+The **Site.Module** provides a new way to view and store data about your Drupal site. When enabled, a *Site Entity* is created that includes data on Drupal & PHP versions, Git information, and more. 
 
-The Site Entity has properties such as Site State, Git Remote and URI, and can be extended to store additional information like [Site Audit Reports](https://drupal.org/project/site_audit).
+The *Site Entity* has a "Site State" property indicating the overall health of your site using the core "Status report", [Site Audit module](https://www.drupal.org/project/site_audit) reports, or write your own SiteState plugin. The "Reason" property stores text describing why the site is in a certain state.
 
-The Site Entity data can then be sent to a remote server for tracking in a central location, or it can be saved locally
-on a recurring basis to track changes over time.
+The *Site Entity* is revisionable, Addproviding a detailed history of the state of your site, including changes to configuration with a log of who changed what, where.
 
-The Site Entity can send arbitrary config to any REST endpoint. The endpoint can respond with `config_overrides`, 
-allowing users to control config remotely.
+The *Site Entity* is fieldable, allowing you to add fields *to your website*.
+
+The *Site Entity* has a REST API, allowing you to POST or GET site entities from one site to another or to third-party systems, such as the [Site Manager module](https://www.drupal.org/project/site_audit).
 
 ## Side Definition Entity
 

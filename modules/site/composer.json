@@ -1,6 +1,6 @@
 {
     "name": "drupal/site",
-    "description": "Tools for operating Drupal sites.",
+     "description": "Provides a Site entity about your website. Tracks state, metadata, and configuration changes over time using revisions.",
     "type": "drupal-module",
     "authors": [
         {
