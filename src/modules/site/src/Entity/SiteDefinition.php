@@ -49,7 +49,6 @@ use Drupal\site\SiteEntityTrait;
  *   config_export = {
  *     "id",
  *     "canonical_url",
- *     "data",
  *     "git_remote",
  *     "description",
  *     "fields_allow_override",
