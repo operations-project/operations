@@ -1,0 +1,20 @@
+{
+    "name": "drupal/site_manager",
+    "description": "A manager for other sites. Collect Site Entities in a central location.",
+    "type": "drupal-module",
+    "authors": [
+        {
+            "name": "Jon Pugh",
+            "email": "jon@thinkdrop.net"
+        }
+    ],
+    "repositories": {
+        "drupal": {
+            "type": "composer",
+            "url": "https://packages.drupal.org/8"
+        }
+    },
+    "require": {
+        "drupal/site": "^1.2"
+    }
+}
