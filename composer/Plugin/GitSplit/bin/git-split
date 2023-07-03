@@ -2,18 +2,10 @@
 <?php
 
 /*
- * This file is part of the DevShop package.
+ * This script runs splitsh.sh script to push one repository into many.
  *
  * (c) Jon Pugh <jon@thinkdrop.net
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-/**
- * Runs the git-split command.
- *
- * @author Jon Pugh <jon@thinkdrop.net
  */
 
 use Symfony\Component\Console\Application;
