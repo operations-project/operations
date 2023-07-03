@@ -10,8 +10,6 @@ use Drupal\Core\Form\FormStateInterface;
  */
 class SiteForm extends ContentEntityForm {
 
-<<<<<<<< HEAD:web/modules/ox/operations/modules/site/src/Form/SiteForm.php
-========
   public function form(array $form, FormStateInterface $form_state)
   {
     // On the site edit page, loadSelf();
@@ -28,7 +26,6 @@ class SiteForm extends ContentEntityForm {
     return $form;
   }
 
->>>>>>>> b0037150f65a8513160a43cd28cdeee53f65412d:site/src/Form/SiteForm.php
   /**
    * {@inheritdoc}
    */

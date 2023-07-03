@@ -134,8 +134,6 @@ class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface
 
     return $site_definition;
   }
-<<<<<<<< HEAD:web/modules/ox/operations/modules/site/src/Entity/SiteDefinition.php
-========
 
   /**
    * Parse states_load and load the state values into the SiteDefinition entity "data: state" property.
@@ -148,7 +146,6 @@ class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface
       }
     }
   }
->>>>>>>> b0037150f65a8513160a43cd28cdeee53f65412d:site/src/Entity/SiteDefinition.php
 
   /**
    * Parse configs_load and load the config values into the SiteDefinition entity.
@@ -190,19 +187,6 @@ class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface
     $label_inline = ['label' => 'inline'];
     $label_hidden = ['label' => 'hidden'];
 
-<<<<<<<< HEAD:web/modules/ox/operations/modules/site/src/Entity/SiteDefinition.php
-    $build['site_title'] = $entity_object->site_title->view($label_inline);
-    $build['site_uri'] = $entity_object->site_uri->view($label_inline);
-    $build['site_uuid'] = $entity_object->site_uuid->view($label_inline);
-
-    $build['state'] = $entity_object->state->view($label_inline);
-    $build['state']['0']['reason'] = $entity_object->reason->view($label_hidden);
-    $build['state']['0']['reason']['#prefix'] = '<blockquote>';
-    $build['state']['0']['reason']['#suffix'] = '</blockquote>';
-    $build['state']['0']['reason'][0]['#format'] = 'basic_html';
-
-    if (!empty($this->config)) {
-========
     $build['state'] = $entity_object->state->view($label_hidden);
     $build['state']['#type'] = 'fieldset';
     $build['state']['#attributes']['class'][] = 'color-' . $entity_object->getStateClass();
@@ -238,7 +222,6 @@ class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface
 ////    $build['data'] = $entity_object->data->view($label_inline);
 
     if (!empty($this->data['config'])) {
->>>>>>>> b0037150f65a8513160a43cd28cdeee53f65412d:site/src/Entity/SiteDefinition.php
       $build['config'] = [
         '#type' => 'details',
         '#title' => t('Current Site Configuration'),
@@ -251,8 +234,6 @@ class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface
         ];
       }
     }
-<<<<<<<< HEAD:web/modules/ox/operations/modules/site/src/Entity/SiteDefinition.php
-========
     if (!empty($this->data['states'])) {
       $build['states'] = [
         '#type' => 'details',
@@ -268,7 +249,6 @@ class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface
       }
     }
 
->>>>>>>> b0037150f65a8513160a43cd28cdeee53f65412d:site/src/Entity/SiteDefinition.php
     return $build;
   }
 

@@ -44,9 +44,6 @@ site.advanced:
   title: 'Site Settings'
   route_name: site.advanced
   base_route: site.status
-
-<<<<<<<< HEAD:web/modules/ox/operations/modules/site/site.links.task.yml
-========
 site.edit:
   title: 'Edit Info'
   route_name: site.edit
@@ -78,7 +75,6 @@ site.display:
 
 
 
->>>>>>>> b0037150f65a8513160a43cd28cdeee53f65412d:site/site.links.task.yml
 #entity.site_environment.settings:
 #  title: 'Settings'
 #  route_name: entity.site_environment.settings

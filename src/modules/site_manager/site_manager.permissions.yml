@@ -2,8 +2,6 @@ administer site_manager configuration:
   title: 'Administer site_manager configuration'
   description: 'Optional description.'
   restrict access: true
-<<<<<<<< HEAD:web/modules/ox/operations/modules/site_manager/site_manager.permissions.yml
-========
 
 administer site types:
   title: 'Administer site types'
@@ -14,4 +12,3 @@ request login link:
   title: 'Request one-time login links'
   description: 'Returns a link for use to sign in without a password.'
   restrict access: true
->>>>>>>> b0037150f65a8513160a43cd28cdeee53f65412d:site_manager/site_manager.permissions.yml

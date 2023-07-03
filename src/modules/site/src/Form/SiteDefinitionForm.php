@@ -181,9 +181,6 @@ class SiteDefinitionForm extends EntityForm {
 
   public function buildEntity(array $form, FormStateInterface $form_state) {
 
-<<<<<<<< HEAD:web/modules/ox/operations/modules/site/src/Form/SiteDefinitionForm.php
-    foreach (['configs_load' , 'configs_allow_override'] as $name) {
-========
     $array_fields = [
       'fields_allow_override' ,
       'configs_load' ,
@@ -193,7 +190,6 @@ class SiteDefinitionForm extends EntityForm {
     ];
 
     foreach ($array_fields as $name) {
->>>>>>>> b0037150f65a8513160a43cd28cdeee53f65412d:site/src/Form/SiteDefinitionForm.php
       $config_load = $form_state->getValue($name);
       if (is_string($config_load)) {
         $config_load = explode(PHP_EOL, $config_load);

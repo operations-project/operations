@@ -22,8 +22,6 @@
 #  route_name: entity.site_environment.add_form
 #  appears_on:
 #    - entity.site_environment.collection
-<<<<<<<< HEAD:web/modules/ox/operations/modules/site/site.links.action.yml
-========
 site.field_add:
   title: 'Add field'
   route_name: field_ui.field_storage_config_add_site
@@ -39,4 +37,3 @@ site.save:
     - site.status
     - site.history
     - site.settings
->>>>>>>> b0037150f65a8513160a43cd28cdeee53f65412d:site/site.links.action.yml

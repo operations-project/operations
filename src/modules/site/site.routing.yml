@@ -5,7 +5,6 @@ system.admin_config_development:
     _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
     _title: 'Development'
   requirements:
-<<<<<<<< HEAD:web/modules/ox/operations/modules/site/site.routing.yml
     _permission: 'administer operations'
 
 site.advanced:
@@ -39,9 +38,6 @@ entity.site_definition.canonical:
 #    _title: 'Delete a site definition'
 #  requirements:
 #    _permission: 'administer site_definition'
-========
-    _permission: 'access administration pages'
->>>>>>>> b0037150f65a8513160a43cd28cdeee53f65412d:site/site.routing.yml
 
 site.status:
   path: '/admin/about/site'

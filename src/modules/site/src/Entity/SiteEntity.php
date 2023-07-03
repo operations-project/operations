@@ -15,11 +15,8 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\RevisionableContentEntityBase;
 use Drupal\Core\Entity\RevisionableEntityBundleInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
-<<<<<<<< HEAD:web/modules/ox/operations/modules/site/src/Entity/SiteEntity.php
-========
 use Drupal\Core\Field\Plugin\Field\FieldType\MapItem;
 use Drupal\Core\Serialization\Yaml;
->>>>>>>> b0037150f65a8513160a43cd28cdeee53f65412d:site/src/Entity/SiteEntity.php
 use Drupal\Core\Url;
 use Drupal\site\SiteEntityTrait;
 use Drupal\user\EntityOwnerInterface;
@@ -152,8 +149,6 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
   /**
    * {@inheritdoc}
    */
-<<<<<<<< HEAD:web/modules/ox/operations/modules/site/src/Entity/SiteEntity.php
-========
   public function save()
   {
     // @TODO: Only send when site is self, or site_manager can POST back (if we have API key).
@@ -273,7 +268,6 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
   /**
    * {@inheritdoc}
    */
->>>>>>>> b0037150f65a8513160a43cd28cdeee53f65412d:site/src/Entity/SiteEntity.php
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
 
     $fields = parent::baseFieldDefinitions($entity_type);
