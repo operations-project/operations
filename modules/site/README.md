@@ -37,6 +37,18 @@ On the far upper left corner of the Admin Toolbar, Click "Manage", then hover ov
 - **Edit Info:** The Site Entity Edit page, with fields, revision log, and standard entity form features.
 - **Fields:** Manage fields, form, and display of the Site Entity.
 
+## Development
+
+Development for this project takes place within the [Drupal Operations Module](https://www.drupal.org/project/operations). 
+
+See that project for more information.
+
+### Branches
+
+The main branch is `1.0.x`. 
+
+Old branches `1.1.x` and `1.2.x` were created when debugging composer dependency issues. They are now stale. They will be revived in the future when moving to those versions.
+
 ## Side Definition Entity
 
 ### Dynamic Properties
