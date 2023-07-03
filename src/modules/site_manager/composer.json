@@ -15,6 +15,7 @@
         }
     },
     "require": {
-        "drupal/site": "^1.2"
+        "drupal/site-site": "^1.10",
+        "drupal/operations": "^1.10"
     }
 }
