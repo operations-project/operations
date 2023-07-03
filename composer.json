@@ -1,0 +1,120 @@
+{
+    "name": "drupal/ox",
+    "description": "Operations Experience Platform",
+    "type": "project",
+    "license": "GPL-2.0-or-later",
+    "authors": [
+        {
+            "name": "Jon Pugh",
+            "role": "author",
+            "email": "jon@thinkdrop.net",
+            "homepage": "https://thinkdrop.net"
+        }
+    ],
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://packages.drupal.org/8"
+        },
+        {
+            "type": "path",
+            "url": "composer/Plugin/GitSplit"
+        }
+    ],
+    "require": {
+        "php": ">=8.1",
+        "composer/installers": "^2.1",
+        "cweagans/composer-patches": "^1.7",
+        "drupal-operations/git-split": "self.version",
+        "drupal/admin_toolbar": "^3.4",
+        "drupal/core-composer-scaffold": "^9.0.0",
+        "drupal/core-recommended": "^9.0.0",
+        "drupal/devel": "^5.1",
+        "drupal/operations": "^1.2@dev",
+        "drupal/restui": "^1.21",
+        "drupal/site_audit": "4.x-dev",
+        "drupal/site_audit_server": "^4.0@dev",
+        "drush/drush": "^11.4.0",
+        "vlucas/phpdotenv": "^5.1",
+        "webflo/drupal-finder": "^1.2"
+    },
+    "require-dev": {
+        "drupal/core-dev": "^9.0.0"
+    },
+    "conflict": {
+        "drupal/drupal": "*"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": false,
+    "config": {
+        "bin-dir": "bin",
+        "discard-changes": true,
+        "sort-packages": true,
+        "allow-plugins": {
+            "composer/installers": true,
+            "cweagans/composer-patches": true,
+            "drupal/core-composer-scaffold": true,
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "phpstan/extension-installer": true,
+            "drupal-operations/git-split": true
+        }
+    },
+    "autoload": {
+        "classmap": [
+            "scripts/composer/ScriptHandler.php"
+        ],
+        "files": ["load.environment.php"],
+        "psr-4": {
+            "Operations\\Composer\\": "composer"
+        }
+    },
+    "scripts": {
+        "drush": "drush",
+        "pre-install-cmd": [
+            "DrupalProject\\composer\\ScriptHandler::checkComposerVersion"
+        ],
+        "pre-update-cmd": [
+            "DrupalProject\\composer\\ScriptHandler::checkComposerVersion"
+        ],
+        "post-install-cmd": [
+            "DrupalProject\\composer\\ScriptHandler::createRequiredFiles"
+        ],
+        "post-update-cmd": [
+            "DrupalProject\\composer\\ScriptHandler::createRequiredFiles"
+         ],
+        "ox:install": [
+          "drush si  --yes",
+          "drush en site operations devel admin_toolbar key_auth restui -y",
+          "drush uli --uri=ox.lndo.site"
+        ]
+    },
+    "extra": {
+        "drupal-scaffold": {
+            "locations": {
+                "web-root": "web/"
+            }
+        },
+        "installer-paths": {
+            "web/core": ["type:drupal-core"],
+            "web/libraries/{$name}": ["type:drupal-library"],
+            "web/modules/contrib/{$name}": ["type:drupal-module"],
+            "web/profiles/contrib/{$name}": ["type:drupal-profile"],
+            "web/themes/contrib/{$name}": ["type:drupal-theme"],
+            "drush/Commands/contrib/{$name}": ["type:drupal-drush"]
+        },
+        "composer-exit-on-patch-failure": true,
+        "git-split": {
+          "repos": {
+            "composer/Plugin/GitSplit": "git@github.com:drupal-operations/git-split.git",
+            "web/modules/contrib/operations": "git@git.drupal.org:project/operations.git",
+            "web/modules/contrib/operations/modules/site": "git@git.drupal.org:project/site.git",
+            "web/modules/contrib/operations/modules/site_manager": "git@git.drupal.org:project/site_manager.git"
+          }
+        },
+        "patchLevel": {
+            "drupal/core": "-p2"
+        },
+        "patches": {
+        }
+    }
+}
