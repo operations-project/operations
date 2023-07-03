@@ -7,38 +7,6 @@ system.admin_config_development:
   requirements:
     _permission: 'administer operations'
 
-site.advanced:
-  path: '/admin/config/system/settings'
-  defaults:
-    _entity_form: 'site_definition.edit'
-    _title: 'Advanced site settings'
-  requirements:
-    _permission: 'administer site_definition'
-
-entity.site_definition.edit_form:
-  path: '/admin/config/system/settings/{site_definition}'
-  defaults:
-    _entity_form: 'site_definition.edit'
-    _title: 'Site Settings'
-  requirements:
-    _permission: 'administer site_definition'
-
-entity.site_definition.canonical:
-  path: '/admin/reports/site/{site_definition}'
-  defaults:
-    _entity_form: 'site_definition.edit'
-    _title: 'Edit site information'
-  requirements:
-    _permission: 'administer site_definition'
-#
-#entity.site_definition.delete_form:
-#  path: '/admin/structure/site-definition/{site_definition}/delete'
-#  defaults:
-#    _entity_form: 'site_definition.delete'
-#    _title: 'Delete a site definition'
-#  requirements:
-#    _permission: 'administer site_definition'
-
 site.status:
   path: '/admin/about/site'
   defaults:
