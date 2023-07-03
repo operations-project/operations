@@ -2,7 +2,7 @@ name: Site Entity
 type: module
 description: Provides an entity that represents a Drupal website.
 package: Operations
-core_version_requirement: ^9 || ^10
+core_version_requirement: ">=8"
 dependencies:
   - admin_toolbar_tools
   - key_auth
