@@ -42,6 +42,11 @@ function site_toolbar() {
   if ($user->hasPermission('access site status')) {
 
     $site = SiteDefinition::load('self');
+
+    if (empty($site)) {
+      return;
+    }
+
     $items['site'] += [
       '#type' => 'toolbar_item',
       '#wrapper_attributes' => [
