@@ -4,11 +4,38 @@ The **Site.Module** provides a new way to view and store data about your Drupal 
 
 The *Site Entity* has a "Site State" property indicating the overall health of your site using the core "Status report", [Site Audit module](https://www.drupal.org/project/site_audit) reports, or write your own SiteState plugin. The "Reason" property stores text describing why the site is in a certain state.
 
-The *Site Entity* is revisionable, Addproviding a detailed history of the state of your site, including changes to configuration with a log of who changed what, where.
+The *Site Entity* is revisionable, providing a detailed history of the state of your site, including changes to configuration with a log of who changed what, where.
 
-The *Site Entity* is fieldable, allowing you to add fields *to your website*.
+The *Site Entity* is fieldable, allowing you to add fields to your website.
 
 The *Site Entity* has a REST API, allowing you to POST or GET site entities from one site to another or to third-party systems, such as the [Site Manager module](https://www.drupal.org/project/site_audit).
+
+## How to use
+
+Install site.module with composer & drush:
+
+        composer require drupal/site
+        drush en site
+
+### Site Status Widget
+
+When enabled, you will see an indicator at the top right of the Admin Toolbar showing "OK", "Warning", or "Error". Click that indicator to view the "Site Status" page.
+
+### Site Status Page
+
+On the far upper left corner of the Admin Toolbar, Click "Manage", then hover over the "Drupal Logo" menu to see "Site Status" and sub pages:
+
+- **Status:** View current Site State, reasons, & properties. Click the "+Save Report" button to save a snapshot of this data.
+- **History:** View Site Status snapshots. 
+  - This is the Site Entity Revisions page. New snapshots are made when config changes or on cron. 
+  - Click the site title links to view the data from that snapshot.
+- **Settings:** Configure how Site.Module behaves.
+  - *State:* Allows you to control what factors affect Site State. Built in state handlers include Drupal core "Status report" and Site Audit reports.
+  - *Site Reporting:* Control when snapshots are saved or sent. Set a "Site Data Destination" to post updates to another site via REST.
+  - *Site Config:* Configure what Drupal Configuration items and Drupal State values are stored in the Site Entity. 
+  - *Site Overrides:* Allow a remote site data receiver to override configuration or fields. Choose what fields, configurations, or states will be set from the remote site entity.
+- **Edit Info:** The Site Entity Edit page, with fields, revision log, and standard entity form features.
+- **Fields:** Manage fields, form, and display of the Site Entity.
 
 ## Side Definition Entity
 
