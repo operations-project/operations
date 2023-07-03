@@ -13,12 +13,24 @@
     ],
     "repositories": [
         {
-            "type": "composer",
-            "url": "https://packages.drupal.org/8"
+          "type": "path",
+          "url": "composer/Plugin/GitSplit"
         },
         {
-            "type": "path",
-            "url": "composer/Plugin/GitSplit"
+          "type": "path",
+          "url": "src/modules/operations"
+        },
+        {
+          "type": "path",
+          "url": "src/modules/site"
+        },
+        {
+          "type": "path",
+          "url": "src/modules/site_manager"
+        },
+        {
+          "type": "composer",
+          "url": "https://packages.drupal.org/8"
         }
     ],
     "require": {
@@ -30,9 +42,12 @@
         "drupal/core-composer-scaffold": "^9.0.0",
         "drupal/core-recommended": "^9.0.0",
         "drupal/devel": "^5.1",
+        "drupal/operations": "*",
         "drupal/restui": "^1.21",
+        "drupal/site": "*",
         "drupal/site_audit": "4.x-dev",
         "drupal/site_audit_server": "^4.0@dev",
+        "drupal/site_manager": "*",
         "drush/drush": "^11.4.0",
         "vlucas/phpdotenv": "^5.1",
         "webflo/drupal-finder": "^1.2"

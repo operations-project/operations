@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1714609468b4ca8d9b05aad9c8078eb0",
+    "content-hash": "3c3339344925bc2bc6242219d219df54",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -2087,6 +2087,29 @@
             }
         },
         {
+            "name": "drupal/operations",
+            "version": "1.2.x-dev",
+            "dist": {
+                "type": "path",
+                "url": "src/modules/operations",
+                "reference": "fb16c44ccb35ca3450001b15c4e7d4796f2b6f18"
+            },
+            "require": {
+                "drupal/key_auth": "^2.1"
+            },
+            "type": "drupal-module",
+            "authors": [
+                {
+                    "name": "Jon Pugh",
+                    "email": "jon@thinkdrop.net"
+                }
+            ],
+            "description": "Tools for operating Drupal sites.",
+            "transport-options": {
+                "relative": true
+            }
+        },
+        {
             "name": "drupal/restui",
             "version": "dev-1.x",
             "source": {
@@ -2137,6 +2160,29 @@
             "homepage": "https://www.drupal.org/project/restui",
             "support": {
                 "source": "https://git.drupalcode.org/project/restui"
+            }
+        },
+        {
+            "name": "drupal/site",
+            "version": "1.2.x-dev",
+            "dist": {
+                "type": "path",
+                "url": "src/modules/site",
+                "reference": "62dde2094a393c6486ed2e7f169415fb6f739c63"
+            },
+            "require": {
+                "drupal/admin_toolbar": "^3.4"
+            },
+            "type": "drupal-module",
+            "authors": [
+                {
+                    "name": "Jon Pugh",
+                    "email": "jon@thinkdrop.net"
+                }
+            ],
+            "description": "Provides a Site entity about your website. Tracks state, metadata, and configuration changes over time using revisions.",
+            "transport-options": {
+                "relative": true
             }
         },
         {
@@ -2245,6 +2291,29 @@
             "homepage": "https://www.drupal.org/project/site_audit_server",
             "support": {
                 "source": "https://git.drupalcode.org/project/site_audit_server"
+            }
+        },
+        {
+            "name": "drupal/site_manager",
+            "version": "1.2.x-dev",
+            "dist": {
+                "type": "path",
+                "url": "src/modules/site_manager",
+                "reference": "25ac3b8fa1dad8f6d3c48ebfcc818e4a2afc9f2c"
+            },
+            "require": {
+                "drupal/site": "^1.2"
+            },
+            "type": "drupal-module",
+            "authors": [
+                {
+                    "name": "Jon Pugh",
+                    "email": "jon@thinkdrop.net"
+                }
+            ],
+            "description": "A manager for other sites. Collect Site Entities in a central location.",
+            "transport-options": {
+                "relative": true
             }
         },
         {
