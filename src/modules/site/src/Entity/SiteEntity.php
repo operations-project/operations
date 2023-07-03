@@ -39,6 +39,7 @@ use GuzzleHttp\Psr7\Response;
  *     singular = "@count site",
  *     plural = "@count sites",
  *   ),
+ *   bundle_label = @Translation("Site type"),
  *   handlers = {
  *     "list_builder" = "Drupal\site\SiteListBuilder",
  *     "views_data" = "Drupal\views\EntityViewsData",
@@ -60,6 +61,7 @@ use GuzzleHttp\Psr7\Response;
  *   admin_permission = "administer sites",
  *   entity_keys = {
  *     "id" = "site_uuid",
+ *     "bundle" = "type",
  *     "revision" = "vid",
  *     "label" = "site_title",
  *     "owner" = "uid",
@@ -76,6 +78,7 @@ use GuzzleHttp\Psr7\Response;
  *     "revision_created" = "revision_timestamp",
  *     "revision_log_message" = "revision_log",
  *   },
+ *   bundle_entity_type = "site_type",
  *   field_ui_base_route = "entity.site_type.edit_form",
  *   common_reference_target = TRUE,
  * )
@@ -84,13 +87,6 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
 
   use EntityChangedTrait;
   use EntityOwnerTrait;
-//  use SiteEntityTrait;
-//
-//  public function save() {
-//    dsm($this->toArray(), 'data');
-//    dsm($this->fieldDefinitions, 'field def');
-//    parent::save();
-//  }
 
   protected array $property_plugins;
   static public function load($id) {
@@ -278,10 +274,10 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
       ->setRequired(true)
       ->setRevisionable(TRUE)
       ->setDefaultValueCallback(static::class . '::getDefaultSiteTitle')
-      ->setDisplayOptions('form', [
-        'type' => 'string_textfield',
-      ])
-      ->setDisplayConfigurable('form', TRUE)
+//      ->setDisplayOptions('form', [
+//        'type' => 'string_textfield',
+//      ])
+//      ->setDisplayConfigurable('form', TRUE)
       ->setDisplayOptions('view', [
         'label' => 'inline',
         'type' => 'string',
@@ -294,10 +290,10 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
       ->setRequired(true)
       ->setReadOnly(true)
       ->setDefaultValueCallback(static::class . '::getSiteUuid')
-      ->setDisplayOptions('form', [
-        'type' => 'string_textfield',
-      ])
-      ->setDisplayConfigurable('form', TRUE)
+//      ->setDisplayOptions('form', [
+//        'type' => 'string_textfield',
+//      ])
+//      ->setDisplayConfigurable('form', TRUE)
       ->setDisplayOptions('view', [
         'label' => 'inline',
         'type' => 'string',
@@ -311,12 +307,12 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
       ->setRequired(TRUE)
       ->setDefaultValueCallback(static::class . '::getDefaultUri')
       ->setDisplayConfigurable('form', TRUE)
+//      ->setDisplayOptions('form', [
+//        'type' => 'string_textfield',
+//      ])
       ->setDisplayOptions('view', [
         'label' => 'above',
-        'type' => 'uri',
-      ])
-      ->setDisplayOptions('form', [
-        'type' => 'string_textfield',
+        'type' => 'uri_link',
       ])
       ->setDisplayConfigurable('view', TRUE);
     ;
@@ -334,13 +330,13 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
       ->setRevisionable(TRUE)
       ->setDefaultValue(static::SITE_INFO)
       ->setDisplayConfigurable('form', TRUE)
-      ->setDisplayOptions('form', [
-        'type' => 'options_select',
-        'weight' => -1,
-      ])
+//      ->setDisplayOptions('form', [
+//        'type' => 'options_select',
+//        'weight' => -1,
+//      ])
       ->setDisplayConfigurable('view', TRUE)
       ->setDisplayOptions('view', [
-        'type' => 'integer',
+        'type' => 'number_integer',
         'label' => 'inline',
         'weight' => 0,
         'settings' => [
@@ -352,11 +348,6 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
      $fields['reason'] = BaseFieldDefinition::create('map')
         ->setLabel(t('State Reason'))
         ->setRevisionable(TRUE)
-        ->setDisplayOptions('view', [
-            'type' => 'text_default',
-            'label' => 'above',
-            'weight' => 10,
-        ])
         ->setDisplayOptions('view', [
             'type' => 'text_default',
             'label' => 'above',
@@ -390,7 +381,7 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
       ->setLabel(t('Description'))
       ->setRevisionable(TRUE)
       ->setDisplayOptions('form', [
-        'type' => 'text_textarea',
+        'type' => 'string_textarea',
         'weight' => 10,
       ])
       ->setDisplayConfigurable('form', TRUE)
@@ -455,20 +446,17 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
       ->setRequired(FALSE)
       ->setDisplayConfigurable('view', TRUE)
     ;
-    $fields['config_overrides'] = BaseFieldDefinition::create('string')
+    $fields['config_overrides'] = BaseFieldDefinition::create('map')
       ->setRevisionable(TRUE)
       ->setLabel(t('Site Config Overrides'))
       ->setDescription(t('A Yaml map of Drupal configuration to apply to this site.'))
       ->setRequired(FALSE)
-      ->setDisplayConfigurable('view', TRUE)
-      ->setDisplayOptions('view', [
-        'label' => 'above',
-        'type' => 'text_default',
-      ])
-      ->setDisplayConfigurable('form', TRUE)
-      ->setDisplayOptions('form', [
-        'type' => 'text_textarea',
-      ])
+    ;
+    $fields['state_overrides'] = BaseFieldDefinition::create('map')
+      ->setRevisionable(TRUE)
+      ->setLabel(t('Site State Overrides'))
+      ->setDescription(t('A Yaml map of Drupal states to apply to this site. See https://www.drupal.org/docs/8/api/state-api/overview'))
+      ->setRequired(FALSE)
     ;
 
     // See https://www.drupal.org/docs/drupal-apis/plugin-api/creating-your-own-plugin-manager
@@ -513,6 +501,13 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
    */
   public static function getSiteUuid() {
     return \Drupal::config('system.site')->get('uuid');
+  }
+
+  /**
+   * Load the site entity with the same UUID as this site.
+   */
+  public function isSelf() {
+    return static::getSiteUuid() == $this->site_uuid->value;
   }
 
   /**

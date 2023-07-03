@@ -3,10 +3,6 @@ administer site configuration:
   description: 'Optional description.'
   restrict access: true
 
-administer site types :
-  title: 'Administer site types '
-  description: 'Maintain the types of sites.'
-  restrict access: true
 delete site:
   title: Delete site
 create site:

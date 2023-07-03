@@ -31,7 +31,7 @@ entity.site.version-history:
 #  base_route: system.admin_index
 
 site.status:
-  title: 'Site Status'
+  title: 'Status'
   route_name: site.status
   base_route: site.status
 
@@ -41,9 +41,10 @@ site.history:
   base_route: site.status
 
 site.advanced:
-  title: 'Site Settings'
+  title: 'Settings'
   route_name: site.advanced
   base_route: site.status
+
 site.edit:
   title: 'Edit Info'
   route_name: site.edit

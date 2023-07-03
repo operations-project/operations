@@ -5,6 +5,7 @@ namespace Drupal\site\Form;
 use Drupal\Core\Entity\BundleEntityFormBase;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\site\Entity\SiteType;
 
 /**
  * Form handler for site type forms.
@@ -15,6 +16,11 @@ class SiteTypeForm extends BundleEntityFormBase {
    * {@inheritdoc}
    */
   public function form(array $form, FormStateInterface $form_state) {
+
+    if (empty($this->entity)) {
+      $this->setEntity(SiteType::load('default'));
+    }
+
     $form = parent::form($form, $form_state);
 
     $entity_type = $this->entity;

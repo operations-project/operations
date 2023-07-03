@@ -5,7 +5,7 @@ system.admin_config_development:
     _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
     _title: 'Development'
   requirements:
-    _permission: 'administer operations'
+    _permission: 'access administration pages'
 
 site.status:
   path: '/admin/about/site'

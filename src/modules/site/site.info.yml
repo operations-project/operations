@@ -1,4 +1,4 @@
-name: Site Entity
+name: Site
 type: module
 description: Provides an entity that represents a Drupal website.
 package: Operations
