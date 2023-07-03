@@ -1,0 +1,28 @@
+id: self
+
+# Editable Properties
+canonical_url: ""
+git_remote: ""
+description: "A site definition representing this site."
+
+# List of config items to load into a Site Entity.
+configs_load: []
+
+# List of config items to allow loading from remote site entity.
+configs_allow_override: []
+
+# List of factors that affect state
+state_factors:
+  - system
+
+# Arbitrary data
+data: {}
+settings: {}
+
+# Derived properties
+#site_title: "This site's title."
+#site_uuid: ""
+#git_reference: ""
+#
+#state: 0
+#reason: A string explaining why a site is in a certain state.

@@ -1,0 +1,70 @@
+
+operations.admin_operations_sites:
+  path: '/admin/operations/sites'
+  defaults:
+    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: 'Sites'
+  requirements:
+    _permission: 'administer operations'
+
+site.advanced:
+  path: '/admin/config/system/settings'
+  defaults:
+    _entity_form: 'site_definition.edit'
+    _title: 'Advanced site settings'
+  requirements:
+    _permission: 'administer site_definition'
+
+entity.site_definition.edit_form:
+  path: '/admin/config/system/settings/{site_definition}'
+  defaults:
+    _entity_form: 'site_definition.edit'
+    _title: 'Site Settings'
+  requirements:
+    _permission: 'administer site_definition'
+
+entity.site_definition.canonical:
+  path: '/admin/reports/site/{site_definition}'
+  defaults:
+    _entity_form: 'site_definition.edit'
+    _title: 'Edit site information'
+  requirements:
+    _permission: 'administer site_definition'
+#
+#entity.site_definition.delete_form:
+#  path: '/admin/structure/site-definition/{site_definition}/delete'
+#  defaults:
+#    _entity_form: 'site_definition.delete'
+#    _title: 'Delete a site definition'
+#  requirements:
+#    _permission: 'administer site_definition'
+
+site.status:
+  path: '/admin/reports/site'
+  defaults:
+    _title: 'Site Status'
+    _controller: '\Drupal\site\Controller\SiteStatusController::build'
+  requirements:
+    _permission: 'access site status'
+
+site.site_definition_entity_save:
+  path: '/admin/reports/site/save'
+  defaults:
+    _title: 'Save Site information'
+    _form: 'Drupal\site\Form\SiteDefinitionEntitySaveForm'
+  requirements:
+    _permission: 'save site definition'
+
+
+entity.site.revision:
+  path:  '/admin/reports/site/{site}/revisions/{site_revision}/view'
+  defaults:
+    _controller: '\Drupal\site\Controller\SiteController::revisionShow'
+  requirements:
+    _permission: 'view site entity revisions'
+  options:
+    parameters:
+      site:
+        type: entity:site
+      site_revision:
+        type: entity_revision:site

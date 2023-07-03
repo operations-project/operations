@@ -1,0 +1,5 @@
+access operations pages:
+  title: 'Access operations pages'
+  description: 'View operations admin section.'
+  restrict access: true
+
