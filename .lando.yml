@@ -1,8 +1,65 @@
 name: ox
 recipe: drupal9
 config:
-  webroot: web
-  php: "8.1"
+  webroot: docroot
+  php: '8.1'
 
-env_file:
-  - .lando.env
+proxy:
+  appserver:
+    - ox.lndo.site
+#
+#  mercury_web:
+#    - mercury.lndo.site
+#
+#  venus_web:
+#    - venus.lndo.site
+#
+#  mars_web:
+#    - mars.lndo.site
+
+services:
+
+  ##
+  # OX Site: The Management Dashboard: https://ox.lndo.site
+  ##
+  appserver:
+    build:
+      - 'composer install'
+    overrides:
+      environment:
+        DRUSH_OPTIONS_URI: "https://ox.lndo.site"
+    # xdebug: true
+
+#  appserver_db:
+#    type: mysql
+#    portforward: 33060
+#
+#  ##
+#  # OX Client Site: Mercury
+#  ##
+#  mercury_web:
+#    type: php:8.0
+#    webroot: docroot
+#  mercury_db:
+#    type: mysql
+#    portforward: 33061
+#
+#  ##
+#  # OX Client Site: Venus
+#  ##
+#  venus_web:
+#    type: php:8.0
+#    webroot: docroot
+#  venus_db:
+#    type: mysql
+#    portforward: 33062
+#
+#  ##
+#  # OX Client Site: Mars
+#  ##
+#  mars_web:
+#    type: php:8.0
+#    webroot: docroot
+#  mars_db:
+#    type: mysql
+#    portforward: 33063
