@@ -1,0 +1,34 @@
+name: "Ox: Stock Install"
+type: profile
+description: "Default installation config for the Ox platform."
+core_version_requirement: '^8.8 || ^9 || ^10'
+
+distribution:
+  name: "Ox Platform"
+#  install:
+#    theme: olivero
+
+themes:
+  - olivero
+#  - claro
+
+# Modules to install to support the profile.
+install:
+  - history
+  - breakpoint
+  - config
+  - help
+  - options
+  - path
+  - dblog
+  - shortcut
+  - toolbar
+  - field_ui
+  - views
+  - views_ui
+  - editor
+  - ckeditor
+
+# Required modules
+dependencies:
+  - operations

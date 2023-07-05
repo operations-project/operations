@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3c3339344925bc2bc6242219d219df54",
+    "content-hash": "0dc59c9bea42afb5042c59c95aceddbf",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -1540,7 +1540,7 @@
         },
         {
             "name": "drupal-operations/git-split",
-            "version": "1.2.x-dev",
+            "version": "1.x-dev",
             "dist": {
                 "type": "path",
                 "url": "composer/Plugin/GitSplit",
@@ -2088,7 +2088,7 @@
         },
         {
             "name": "drupal/operations",
-            "version": "1.2.x-dev",
+            "version": "1.x-dev",
             "dist": {
                 "type": "path",
                 "url": "src/modules/operations",
@@ -2105,6 +2105,29 @@
                 }
             ],
             "description": "Tools for operating Drupal sites.",
+            "transport-options": {
+                "relative": true
+            }
+        },
+        {
+            "name": "drupal/ox_stock",
+            "version": "1.x-dev",
+            "dist": {
+                "type": "path",
+                "url": "src/profiles/ox_stock",
+                "reference": "0b6ea2536ed3cb71cd25d69f1baf1bf566f30b56"
+            },
+            "type": "drupal-profile",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Jon Pugh",
+                    "email": "jon@thinkdrop.net"
+                }
+            ],
+            "description": "Stock install profile for an Ox instance.",
             "transport-options": {
                 "relative": true
             }
@@ -2164,7 +2187,7 @@
         },
         {
             "name": "drupal/site",
-            "version": "1.2.x-dev",
+            "version": "1.x-dev",
             "dist": {
                 "type": "path",
                 "url": "src/modules/site",
@@ -2183,6 +2206,55 @@
             "description": "Provides a Site entity about your website. Tracks state, metadata, and configuration changes over time using revisions.",
             "transport-options": {
                 "relative": true
+            }
+        },
+        {
+            "name": "drupal/site-site",
+            "version": "1.10.0-alpha6",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/site.git",
+                "reference": "1.10.0-alpha6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/site-1.10.0-alpha6.zip",
+                "reference": "1.10.0-alpha6",
+                "shasum": "d379d64db2a2f79896b59a94c21f23ef8089e5f9"
+            },
+            "require": {
+                "drupal/admin_toolbar": "^3.4",
+                "drupal/core": ">=8"
+            },
+            "require-dev": {
+                "drupal/key_auth": "*"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "1.10.0-alpha6",
+                    "datestamp": "1688420668",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "Alpha releases are not covered by Drupal security advisories."
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Jon Pugh",
+                    "homepage": "https://www.drupal.org/user/17028",
+                    "email": "jon@thinkdrop.net"
+                }
+            ],
+            "description": "Provides a Site entity about your website. Tracks state, metadata, and configuration changes over time using revisions.",
+            "homepage": "https://www.drupal.org/project/site",
+            "support": {
+                "source": "https://git.drupalcode.org/project/site"
             }
         },
         {
@@ -2295,14 +2367,15 @@
         },
         {
             "name": "drupal/site_manager",
-            "version": "1.2.x-dev",
+            "version": "1.x-dev",
             "dist": {
                 "type": "path",
                 "url": "src/modules/site_manager",
-                "reference": "25ac3b8fa1dad8f6d3c48ebfcc818e4a2afc9f2c"
+                "reference": "2739022ff46b751ff1e9b27d9142da4b7af92cba"
             },
             "require": {
-                "drupal/site": "^1.2"
+                "drupal/operations": "^1.10",
+                "drupal/site-site": "^1.10"
             },
             "type": "drupal-module",
             "authors": [
@@ -11356,5 +11429,5 @@
         "php": ">=8.1"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.2.0"
+    "plugin-api-version": "2.3.0"
 }
