@@ -8,10 +8,7 @@ distribution:
 
 # not sure why, but this isn't working
 themes:
-  - olivero
   - claro
-
-
 
 # Modules to install to support the profile.
 install:
