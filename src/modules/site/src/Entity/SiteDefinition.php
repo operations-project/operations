@@ -212,14 +212,14 @@ class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface
       }
     }
 
-    $site_entity = SiteEntity::loadSelf();
-
-    $build['info'] = [
-      '#title' => t('Site Information'),
-      '#type' => 'details',
-      '#open' => true,
-      'view' => $site_entity->view()
-    ];
+//    $site_entity = SiteEntity::loadSelf();
+//
+//    $build['info'] = [
+//      '#title' => t('Site Information'),
+//      '#type' => 'details',
+//      '#open' => true,
+//      'view' => $site_entity->view()
+//    ];
 //
 //    $build['site_title'] = $entity_object->site_title->view($label_inline);
 //    $build['site_uri'] = $entity_object->site_uri->view($label_inline);
