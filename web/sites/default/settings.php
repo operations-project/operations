@@ -120,34 +120,27 @@ $settings['rebuild_access'] = FALSE;
 // DSD/Site Manager settings.
 
 // The full URL to send site reports to.
-if ($projects[$_SERVER['HTTP_HOST']] != 'vsd') {
+if ($projects[$_SERVER['HTTP_HOST']] != 'ox') {
 
-// The state values to allow overriding in this site.
-  $config['site.site_definition.self']['states_allow_override'] = [
-    'vardot_subscription_end_date',
-    'vardot_subscription_support_url',
-    'vardot_subscription_support_widget',
-    'vardot_subscription_is_active',
-  ];
-
-// The config items to send along with the report.
-// use main config name, or value in the format system.site:name
-  $config['site.site_definition.self']['configs_load'] = [
-    'core.extension',
-    'system.cron',
-    'system.site',
-  ];
-  $config['site.site_definition.self']['settings']['save_on_config'] = true;
-  $config['site.site_definition.self']['settings']['send_on_save'] = true;
-
-  # Un hard code for testing.
-  # $config['site.site_definition.self']['settings']['send_interval'] = 60;
-  # $config['site.site_definition.self']['settings']['save_interval'] = 0;
-
-  if ((bool) getenv('LANDO')) {
-    $config['site.site_definition.self']['settings']['send_destinations'] = "https://appserver.vsd.internal/api/site/data?api-key=9f6dfc256451638821d1c88f46ea659d";
-  }
-  else {
-    $config['site.site_definition.self']['settings']['send_destinations'] = "https://vsd.demo.support.devshop.cloud/api/site/data?api-key=c2895f91b56dc5b1e952645760a584c8";
-  }
+//
+//// The config items to send along with the report.
+//// use main config name, or value in the format system.site:name
+//  $config['site.site_definition.self']['configs_load'] = [
+//    'core.extension',
+//    'system.cron',
+//    'system.site',
+//  ];
+//  $config['site.site_definition.self']['settings']['save_on_config'] = true;
+//  $config['site.site_definition.self']['settings']['send_on_save'] = true;
+//
+//  # Un hard code for testing.
+//  # $config['site.site_definition.self']['settings']['send_interval'] = 60;
+//  # $config['site.site_definition.self']['settings']['save_interval'] = 0;
+//
+//  if ((bool) getenv('LANDO')) {
+//    $config['site.site_definition.self']['settings']['send_destinations'] = "https://appserver.vsd.internal/api/site/data?api-key=9f6dfc256451638821d1c88f46ea659d";
+//  }
+//  else {
+//    $config['site.site_definition.self']['settings']['send_destinations'] = "https://vsd.demo.support.devshop.cloud/api/site/data?api-key=c2895f91b56dc5b1e952645760a584c8";
+//  }
 }
