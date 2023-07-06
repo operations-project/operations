@@ -33,7 +33,9 @@ install:
   - views_ui
   - editor
   - ckeditor
-  - site
+# @TODO: I have NO idea why, but when trying to install ox_stock with site,
+# it throws an error:  The module ox_stock does not exist or is not installed.
+# - site
 
 # Required modules
 dependencies:
