@@ -8,7 +8,7 @@ The *Site Entity* is revisionable, providing a detailed history of the state of 
 
 The *Site Entity* is fieldable, allowing you to add fields to your website.
 
-The *Site Entity* has a REST API, allowing you to POST or GET site entities from one site to another or to third-party systems, such as the [Site Manager module](https://www.drupal.org/project/site_audit).
+The *Site Entity* has a REST API, allowing you to POST or GET site entities from one site to another or to third-party systems, such as the [Site Manager module](https://www.drupal.org/project/site_manager).
 
 
 ## Drupal Operations Experience Platform
