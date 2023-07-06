@@ -13,15 +13,15 @@ For more information, see the [Drupal.org Project Page](https://www.drupal.org/p
 
 Whenever possible, the Drupal Operations Modules can be installed independently of one another. The Site module is designed to go into every site, so that it can report back to Site Manager.
 
-1. [Site Entity Module](/src/modules/site) - https://www.drupal.org/project/site
+1. [Site Entity Module](https://www.drupal.org/project/site) - https://www.drupal.org/project/site
 
    Provides advanced status and information about any Drupal site. Connects to Site Manager for tracking and control.
 
-2. [Site Manager Module](/src/modules/site_manager)- https://www.drupal.org/project/site_manager
+2. [Site Manager Module](https://www.drupal.org/project/site_manager)- https://www.drupal.org/project/site_manager
 
    Provides a CMS-like experience for monitoring and managing multiple sites.
 
-3. [Operations](/src/modules/operations) - https://www.drupal.org/project/operations
+3. [Operations](https://www.drupal.org/project/site) - https://www.drupal.org/project/operations
 
    Provides a central dashboard for browsing Sites, Servers, Tasks & Users. Right now, it doesn't do much other than add an Admin menu section.
 
@@ -29,7 +29,7 @@ Whenever possible, the Drupal Operations Modules can be installed independently 
 
 Since there are many possibilities with Ox, the project could contain different distributions for different purposes. Additions are welcome!
 
-1. [Stock Ox](src/profiles/ox_stock)
+1. [Stock Ox](https://www.drupal.org/project/ox_stock)
 
    Stock installation of the Ox Platform. Enables Site Manager & Operations out of the box. Used for development.
 
