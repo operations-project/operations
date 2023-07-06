@@ -12,14 +12,20 @@ use Drupal\site\SitePropertyPluginBase;
  * @SiteProperty(
  *   id = "api_key",
  *   name = "api_key",
+ *   hidden = true,
  *   label = @Translation("API Key"),
  *   description = @Translation("The API key to use when posting back to this site.")
  * )
+ *
+ * @TODO: Allow Property plugins to opt out of being included as a SiteDefinition property.
  */
 class ApiKey extends SitePropertyPluginBase {
 
+  /**
+   * @return string
+   */
   public function value() {
-    return 'abcdefg';
+    return '';
   }
 
   /**

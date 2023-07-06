@@ -12,14 +12,17 @@ use Drupal\site\SitePropertyPluginBase;
  * @SiteProperty(
  *   id = "api_url",
  *   name = "api_url",
+ *   hidden = true,
  *   label = @Translation("API Url"),
  *   description = @Translation("The API url to use when posting back to this site.")
  * )
+ *
+ * @TODO: Allow Property plugins to opt out of being included as a SiteDefinition property.
  */
 class ApiUrl extends SitePropertyPluginBase {
 
   public function value() {
-    return 'abcdefg';
+    return '';
   }
 
   /**
