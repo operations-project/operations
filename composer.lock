@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8c8b2c5953e079001a29d7761d375327",
+    "content-hash": "b70fa739eda1069d543a333aa849ea34",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -2241,12 +2241,12 @@
             }
         },
         {
-            "name": "drupal/site",
+            "name": "drupal/site-site",
             "version": "1.x-dev",
             "dist": {
                 "type": "path",
                 "url": "src/modules/site",
-                "reference": "62dde2094a393c6486ed2e7f169415fb6f739c63"
+                "reference": "c3dd08c673311706286d23d7d2f83f56665e2d4e"
             },
             "require": {
                 "drupal/admin_toolbar": "^3.4"
@@ -2261,55 +2261,6 @@
             "description": "Provides a Site entity about your website. Tracks state, metadata, and configuration changes over time using revisions.",
             "transport-options": {
                 "relative": true
-            }
-        },
-        {
-            "name": "drupal/site-site",
-            "version": "1.10.0-alpha6",
-            "source": {
-                "type": "git",
-                "url": "https://git.drupalcode.org/project/site.git",
-                "reference": "1.10.0-alpha6"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/site-1.10.0-alpha6.zip",
-                "reference": "1.10.0-alpha6",
-                "shasum": "d379d64db2a2f79896b59a94c21f23ef8089e5f9"
-            },
-            "require": {
-                "drupal/admin_toolbar": "^3.4",
-                "drupal/core": ">=8"
-            },
-            "require-dev": {
-                "drupal/key_auth": "*"
-            },
-            "type": "drupal-module",
-            "extra": {
-                "drupal": {
-                    "version": "1.10.0-alpha6",
-                    "datestamp": "1688420668",
-                    "security-coverage": {
-                        "status": "not-covered",
-                        "message": "Alpha releases are not covered by Drupal security advisories."
-                    }
-                }
-            },
-            "notification-url": "https://packages.drupal.org/8/downloads",
-            "license": [
-                "GPL-2.0-or-later"
-            ],
-            "authors": [
-                {
-                    "name": "Jon Pugh",
-                    "homepage": "https://www.drupal.org/user/17028",
-                    "email": "jon@thinkdrop.net"
-                }
-            ],
-            "description": "Provides a Site entity about your website. Tracks state, metadata, and configuration changes over time using revisions.",
-            "homepage": "https://www.drupal.org/project/site",
-            "support": {
-                "source": "https://git.drupalcode.org/project/site"
             }
         },
         {
@@ -2421,12 +2372,12 @@
             }
         },
         {
-            "name": "drupal/site_manager",
+            "name": "drupal/site_manager-site_manager",
             "version": "1.x-dev",
             "dist": {
                 "type": "path",
                 "url": "src/modules/site_manager",
-                "reference": "5429744dcf7c091210aa3ee2e23ea92e97b8946d"
+                "reference": "af0bd0c8a885fdf2c05bfaca4594ce151e2f844d"
             },
             "require": {
                 "drupal/site-site": "^1.10"
@@ -11474,6 +11425,7 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
+        "drupal/devel_entity_updates": 20,
         "drupal/site_audit": 20,
         "drupal/site_audit_server": 20
     },
