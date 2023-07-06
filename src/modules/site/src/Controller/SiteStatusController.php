@@ -70,17 +70,12 @@ class SiteStatusController extends ControllerBase {
 
         $state['#attributes']['class'][] = $site_revision->getStateClass();
 
-        if ($site_revision->reason->value) {
-          $reason = $site_revision->reason->view([
-            'label' => 'hidden',
-            'type'=> 'text',
-          ]);
-          $reason[0]['#format'] = 'basic_html';
-          $reason[0]['#prefix'] = '<blockquote>';
-          $reason[0]['#suffix'] = '</blockquote>';
+        $reason = [];
+        $reason_value = $site_revision->reason->getValue();
+        if ($reason_value) {
           $reason['#type'] = 'details';
           $reason['#title'] = t('Reason');
-
+          $reason['reason'] = $reason_value;
         }
         else {
           $reason = [];
