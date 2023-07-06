@@ -47,7 +47,7 @@
         "drupal/core-recommended": "^9.0.0",
         "drupal/devel": "^5.1",
         "drupal/operations": "*",
-        "drupal/ox_stock": "1.x-dev",
+        "drupal/ox_stock": "*",
         "drupal/restui": "^1.21",
         "drupal/site": "*",
         "drupal/site_audit": "4.x-dev",
