@@ -107,8 +107,8 @@
          ],
         "ox:install": [
           "drush si  --yes",
-          "drush en site operations devel admin_toolbar key_auth restui -y",
-          "drush uli --uri=ox.lndo.site"
+          "drush en site_manager operations devel admin_toolbar key_auth restui -y",
+          "drush uli"
         ]
     },
     "extra": {
