@@ -107,8 +107,8 @@
          ],
         "ox:install": [
           "drush si  --yes",
-          "drush en site_manager operations devel admin_toolbar key_auth restui -y",
-          "drush uli"
+          "drush uli",
+          "drush en site_manager operations devel devel_entity_updates admin_toolbar key_auth restui -y"
         ]
     },
     "extra": {
