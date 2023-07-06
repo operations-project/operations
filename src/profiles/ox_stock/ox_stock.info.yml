@@ -7,8 +7,6 @@ distribution:
   name: "Ox Platform"
 
 # not sure why, but this isn't working
-  install:
-    theme: olivero
 themes:
   - olivero
   - claro
