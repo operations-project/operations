@@ -329,16 +329,7 @@ class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface
   public function saveEntity($revision_log = '', $no_send = false) {
     $site_entity = SiteEntity::load($this->site_uuid);
 
-    if ($site_entity) {
-      /** @var SiteEntityInterface $new_site_entity */
-      $new_site_entity = $this->toEntity();
-
-      foreach ($new_site_entity->getFields() as $property => $field) {
-        $site_entity->set($property, $this->get($property));
-      }
-
-    }
-    else {
+    if (!$site_entity) {
       $site_entity = $this->toEntity();
     }
 
