@@ -49,7 +49,6 @@ use Drupal\site\SiteEntityTrait;
  *   config_export = {
  *     "id",
  *     "canonical_url",
- *     "git_remote",
  *     "description",
  *     "fields_allow_override",
  *     "configs_load",
@@ -116,6 +115,7 @@ class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface
       $plugin = $type->createInstance($plugin_definition['id']);
       $site_definition->property_plugins[$name] = $plugin;
       $site_definition->data['plugins'][$name] = $plugin->value() ?: '';
+      $site_definition->$name = $plugin->value() ?: '';
 
       if (method_exists($plugin, 'state')){
         $plugin_state = $plugin->state($site_definition);
@@ -283,7 +283,6 @@ class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface
         'site_uuid' => $this->site_uuid,
         'site_title' => $this->site_title,
         'site_uri' => $this->site_uri,
-        'git_remote' => $this->git_remote,
         'state' => $this->state,
         'reason' => $this->reason,
         'data' => $this->data,
