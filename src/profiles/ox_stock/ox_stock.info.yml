@@ -17,6 +17,7 @@ themes:
 
 # Modules to install to support the profile.
 install:
+  - admin_toolbar_tools
   - history
   - block
   - breakpoint
