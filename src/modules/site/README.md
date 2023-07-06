@@ -1,4 +1,4 @@
-# Site.Module
+# Site Entity Module
 
 The **Site.Module** provides a new way to view and store data about your Drupal site. When enabled, a *Site Entity* is created that includes data on Drupal & PHP versions, Git information, and more. 
 
@@ -9,6 +9,12 @@ The *Site Entity* is revisionable, providing a detailed history of the state of 
 The *Site Entity* is fieldable, allowing you to add fields to your website.
 
 The *Site Entity* has a REST API, allowing you to POST or GET site entities from one site to another or to third-party systems, such as the [Site Manager module](https://www.drupal.org/project/site_audit).
+
+## Drupal Operations Experience Platform
+
+This project is a part of the [Drupal OX Platform](https://www.drupal.org/project/ox), the Ops Dashboard built in Drupal.
+
+For all issues, development, and more information, see https://www.drupal.org/project/ox
 
 ## How to use
 
@@ -36,18 +42,6 @@ On the far upper left corner of the Admin Toolbar, Click "Manage", then hover ov
   - *Site Overrides:* Allow a remote site data receiver to override configuration or fields. Choose what fields, configurations, or states will be set from the remote site entity.
 - **Edit Info:** The Site Entity Edit page, with fields, revision log, and standard entity form features.
 - **Fields:** Manage fields, form, and display of the Site Entity.
-
-## Development
-
-Development for this project takes place within the [Drupal Operations Module](https://www.drupal.org/project/operations). 
-
-See that project for more information.
-
-### Branches
-
-The main branch is `1.0.x`. 
-
-Old branches `1.1.x` and `1.2.x` were created when debugging composer dependency issues. They are now stale. They will be revived in the future when moving to those versions.
 
 ## Side Definition Entity
 
