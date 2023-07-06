@@ -5,16 +5,20 @@ core_version_requirement: '^8.8 || ^9 || ^10'
 
 distribution:
   name: "Ox Platform"
-#  install:
-#    theme: olivero
 
+# not sure why, but this isn't working
+  install:
+    theme: olivero
 themes:
   - olivero
-#  - claro
+  - claro
+
+
 
 # Modules to install to support the profile.
 install:
   - history
+  - block
   - breakpoint
   - config
   - help
