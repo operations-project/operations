@@ -10,6 +10,7 @@ The *Site Entity* is fieldable, allowing you to add fields to your website.
 
 The *Site Entity* has a REST API, allowing you to POST or GET site entities from one site to another or to third-party systems, such as the [Site Manager module](https://www.drupal.org/project/site_audit).
 
+
 ## Drupal Operations Experience Platform
 
 This project is a part of the [Drupal OX Platform](https://www.drupal.org/project/ox), the Ops Dashboard built in Drupal.
@@ -20,8 +21,10 @@ For all issues, development, and more information, see https://www.drupal.org/pr
 
 Install site.module with composer & drush:
 
-        composer require drupal/site
+        composer require drupal/site-site
         drush en site
+
+*NOTE:* The package name is "site-site" due to a mistake in Drupal packagist packing.
 
 ### Site Status Widget
 
