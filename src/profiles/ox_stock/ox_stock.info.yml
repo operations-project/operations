@@ -37,3 +37,4 @@ install:
 # Required modules
 dependencies:
   - operations
+  - site_manager
