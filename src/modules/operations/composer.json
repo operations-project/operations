@@ -15,6 +15,5 @@
     }
   },
   "require": {
-    "drupal/key_auth": "^2.1"
   }
 }
