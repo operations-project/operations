@@ -26,7 +26,7 @@ if ((bool) getenv('LANDO')) {
 
   // Pull the subdomain out and use that as the host.
   $host = strtr($_SERVER['HTTP_HOST'], ['.lndo.site' => '']);
-  $database_host = $host;
+  $database_host = $host . '_db';
 
   if ($host == 'ox.lndo.site') {
     $host = 'vsd';
@@ -38,12 +38,12 @@ if ((bool) getenv('LANDO')) {
   }
 
   if ($host){
-    putenv("LANDO_DATABASE_HOST={$database_host}_db");
+    putenv("LANDO_DATABASE_HOST={$database_host}");
     $settings['file_public_path'] = 'sites/' . $host . '/files';
   }
 
   $uuids = [
-    'vsd' => 'd3c85e16-e0db-49f1-b7fd-f13e84f3b9dd',
+    'ox' => 'd3c85e16-e0db-49f1-b7fd-f13e84f3b9dd',
     'mercury' => 'daaa81bd-5f27-4152-a209-511e31368848',
     'mars' => 'site.mars',
     'venus' => 'site.venus',
