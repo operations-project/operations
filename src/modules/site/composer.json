@@ -1,5 +1,5 @@
 {
-    "name": "drupal/site",
+    "name": "drupal/site-site",
      "description": "Provides a Site entity about your website. Tracks state, metadata, and configuration changes over time using revisions.",
     "type": "drupal-module",
     "authors": [

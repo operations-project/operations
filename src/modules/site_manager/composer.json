@@ -1,5 +1,5 @@
 {
-    "name": "drupal/site_manager",
+    "name": "drupal/site_manager-site_manager",
     "description": "A manager for other sites. Collect Site Entities in a central location.",
     "type": "drupal-module",
     "authors": [
