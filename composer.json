@@ -127,7 +127,8 @@
             "composer/Plugin/GitSplit": "git@github.com:drupal-operations/git-split.git",
             "src/modules/operations": "git@git.drupal.org:project/operations.git",
             "src/modules/site": "git@git.drupal.org:project/site.git",
-            "src/modules/site_manager": "git@git.drupal.org:project/site_manager.git"
+            "src/modules/site_manager": "git@git.drupal.org:project/site_manager.git",
+            "src/profiles/ox_stock": "git@git.drupal.org:project/ox_stock.git"
           }
         },
         "patchLevel": {

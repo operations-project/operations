@@ -33,7 +33,7 @@ install:
   - views_ui
   - editor
   - ckeditor
-  - site_manager
+  - site
 
 # Required modules
 dependencies:
