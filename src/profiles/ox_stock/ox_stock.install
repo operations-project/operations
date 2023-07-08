@@ -12,6 +12,5 @@
 * @see system_install()
 */
 function ox_stock_install() {
-  // @TODO
-
+  \Drupal::configFactory()->getEditable('system.theme')->set('default', 'claro');
 }
