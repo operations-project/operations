@@ -11,7 +11,12 @@ $projects = [
   'mars.lndo.site' => 'mars',
 ];
 
-$project = $projects[$_SERVER['HTTP_HOST'] ?? 'vsd'];
+
+if (empty($projects[$_SERVER['HTTP_HOST']])) {
+  $_SERVER['HTTP_HOST'] = 'ox.lndo.site';
+}
+
+$project = $projects[$_SERVER['HTTP_HOST'] ?: 'ox'] ?? 'ox';
 $settings['config_sync_directory'] = "../config/{$project}";
 $settings['hash_salt'] = '';
 
