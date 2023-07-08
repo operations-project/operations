@@ -37,7 +37,7 @@ if ((bool) getenv('LANDO')) {
   if ($host){
     putenv("LANDO_DATABASE_HOST=$database_host");
     $settings['file_public_path'] = 'sites/' . $host . '/files';
-    $settings['file_private_path'] = 'sites/' . $host . '/private';
+    $settings['file_private_path'] = 'sites/' . $host . '/files/private';
   }
 
   $uuids = [
@@ -107,6 +107,6 @@ if ($projects[$_SERVER['HTTP_HOST']] != 'ox') {
   # $config['site.site_definition.self']['settings']['save_interval'] = 0;
 
   if ((bool) getenv('LANDO')) {
-    $config['site.site_definition.self']['settings']['send_destinations'] = "https://ox.lndo.site/api/site/data?api-key=9f6dfc256451638821d1c88f46ea659d";
+    $config['site.site_definition.self']['settings']['send_destinations'] = "https://ox.lndo.site/api/site/data?api-key=61455cf19e740372b155ee6c380d3d7a";
   }
 }
