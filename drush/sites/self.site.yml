@@ -1,24 +1,24 @@
 
 ox:
-  uri: 'ox.lndo.site'
+  uri: 'https://ox.lndo.site'
   root: /app/docroot
   env-vars:
     HTTP_HOST: ox.lndo.site
 
 mercury:
-  uri: 'mercury.lndo.site'
+  uri: 'https://mercury.lndo.site'
   root: /app/docroot
   env-vars:
     HTTP_HOST: mercury.lndo.site
 
 venus:
-  uri: 'venus.lndo.site'
+  uri: 'https://venus.lndo.site'
   root: /app/docroot
   env-vars:
     HTTP_HOST: venus.lndo.site
 
 mars:
-  uri: 'mars.lndo.site'
+  uri: 'https://mars.lndo.site'
   root: /app/docroot
   env-vars:
     HTTP_HOST: mars.lndo.site
