@@ -33,15 +33,15 @@ services:
 
   mercury_web:
     type: php:8.0
-    webroot: docroot
+    webroot: web
 
   mars_web:
     type: php:8.0
-    webroot: docroot
+    webroot: web
 
   venus_web:
     type: php:8.0
-    webroot: docroot
+    webroot: web
 
   ox:
     type: mysql:8.0
