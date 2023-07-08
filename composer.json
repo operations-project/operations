@@ -110,7 +110,10 @@
         "ox:install": [
           "drush si  --yes",
           "drush uli",
-          "drush en site_manager operations devel devel_entity_updates admin_toolbar key_auth restui -y"
+          "# OX Stock profile wont work when site module is in dependencies.",
+          "drush en site_manager operations devel devel_entity_updates admin_toolbar key_auth restui -y",
+          "# OX Stock install wont work to set default theme.",
+          "drush cset system.theme default claro -y"
         ]
     },
     "extra": {
