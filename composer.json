@@ -107,13 +107,17 @@
         "post-update-cmd": [
             "DrupalProject\\composer\\ScriptHandler::createRequiredFiles"
          ],
+        "ox:launch": [
+          "@ox:install",
+          "@ox:sites:install"
+        ],
         "ox:install": [
           "drush si  --yes",
           "drush uli",
-          "# OX Stock profile wont work when site module is in dependencies.",
-          "drush en site_manager operations devel devel_entity_updates admin_toolbar key_auth restui -y",
           "# OX Stock install wont work to set default theme.",
-          "drush cset system.theme default claro -y"
+          "drush cset system.theme default claro -y",
+          "# OX Stock profile wont work when site module is in dependencies.",
+          "drush en site_manager operations devel devel_entity_updates admin_toolbar key_auth restui -y"
         ],
         "ox:sites:install": [
           "drush @local.mercury si --yes",
