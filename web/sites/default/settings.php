@@ -13,8 +13,10 @@ $projects = [
 
 $project = $projects[$_SERVER['HTTP_HOST'] ?? 'vsd'];
 $settings['config_sync_directory'] = "../config/{$project}";
+$settings['hash_salt'] = '';
 
 if ((bool) getenv('LANDO')) {
+  $settings['hash_salt'] = md5(getenv('LANDO_HOST_IP'));
   # To disable forced config like caching, set LANDO_PROD_MODE
   # putenv("LANDO_PROD_MODE=TRUE");
 
@@ -39,18 +41,18 @@ if ((bool) getenv('LANDO')) {
     'venus' => 'site.venus',
   ];
   $config['system.site']['uuid'] = $uuids[$host] ?: random_bytes(10);
-
-  $lando_info = json_decode(getenv('LANDO_INFO'), TRUE);
-
-  // To alter what database host is used, set LANDO_DATABASE_HOST.
-  $lando_database_host = getenv('LANDO_DATABASE_HOST') ?: 'database';
-
-  // Set 'standard' env vars.
-  putenv('MYSQL_DATABASE=' . $lando_info[$lando_database_host]['creds']['database']);
-  putenv('MYSQL_USER=' . $lando_info[$lando_database_host]['creds']['user']);
-  putenv('MYSQL_PASSWORD=' . $lando_info[$lando_database_host]['creds']['password']);
-  putenv('MYSQL_HOSTNAME=' . $lando_info[$lando_database_host]['internal_connection']['host']);
-  putenv('MYSQL_PORT=' . $lando_info[$lando_database_host]['internal_connection']['port']);
+//
+//  $lando_info = json_decode(getenv('LANDO_INFO'), TRUE);
+//
+//  // To alter what database host is used, set LANDO_DATABASE_HOST.
+//  $lando_database_host = getenv('LANDO_DATABASE_HOST') ?: 'database';
+//
+//  // Set 'standard' env vars.
+//  putenv('MYSQL_DATABASE=' . $lando_info[$lando_database_host]['creds']['database']);
+//  putenv('MYSQL_USER=' . $lando_info[$lando_database_host]['creds']['user']);
+//  putenv('MYSQL_PASSWORD=' . $lando_info[$lando_database_host]['creds']['password']);
+//  putenv('MYSQL_HOSTNAME=' . $lando_info[$lando_database_host]['internal_connection']['host']);
+//  putenv('MYSQL_PORT=' . $lando_info[$lando_database_host]['internal_connection']['port']);
 
 
 }
