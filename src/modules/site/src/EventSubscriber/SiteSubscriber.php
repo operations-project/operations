@@ -55,16 +55,18 @@ class SiteSubscriber implements EventSubscriberInterface {
 
   public function onKernelResponse(ResponseEvent $event) {
     if ($this->site) {
-      $entity = $this->site->saveEntity(t('Configs :config updated at :url by ":user" (:ip)', [
-        ':config' => implode(', ', array_keys($this->site->get('data')['config_changes'])),
-        ':user' => \Drupal::currentUser()->getDisplayName(),
-        ':url' => \Drupal::request()->getUri(),
-        ':ip' => \Drupal::request()->getClientIp(),
-      ]));
+      if (is_array($this->site->get('data')['config_changes'])) {
+        $entity = $this->site->saveEntity(t('Configs :config updated at :url by ":user" (:ip)', [
+          ':config' => implode(', ', array_keys($this->site->get('data')['config_changes'])),
+          ':user' => \Drupal::currentUser()->getDisplayName(),
+          ':url' => \Drupal::request()->getUri(),
+          ':ip' => \Drupal::request()->getClientIp(),
+        ]));
 
-      \Drupal::messenger()->addStatus(t('Site report saved: @link', [
-        '@link' => $entity->toLink()->toString(),
-      ]));
+        \Drupal::messenger()->addStatus(t('Site report saved: @link', [
+          '@link' => $entity->toLink()->toString(),
+        ]));
+      }
     }
   }
 }
