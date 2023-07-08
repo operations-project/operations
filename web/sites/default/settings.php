@@ -33,12 +33,12 @@ if ((bool) getenv('LANDO')) {
   }
 
   $uuids = [
-    'vsd' => 'd3c85e16-e0db-49f1-b7fd-f13e84f3b9dd',
+    'ox' => 'd3c85e16-e0db-49f1-b7fd-f13e84f3b9dd',
     'mercury' => 'daaa81bd-5f27-4152-a209-511e31368848',
     'mars' => 'site.mars',
     'venus' => 'site.venus',
   ];
-  $config['system.site']['uuid'] = $uuids[$host];
+  $config['system.site']['uuid'] = $uuids[$host] ?: random_bytes(10);
 
   $lando_info = json_decode(getenv('LANDO_INFO'), TRUE);
 

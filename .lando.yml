@@ -2,57 +2,100 @@ name: ox
 recipe: drupal9
 config:
   webroot: web
-  php: '8.1'
+  php: '8.0'
+  drush: ^10
+
+  # See https://github.com/lando/lando/issues/2948#issuecomment-1003484299
+  database: mysql:8.0
+  config:
+    database: /dev/null
 
 proxy:
   appserver:
     - ox.lndo.site
-
-  mercury:
+  mercury_web:
     - mercury.lndo.site
 
-  venus:
+  venus_web:
     - venus.lndo.site
-
   mars_web:
     - mars.lndo.site
 
 services:
-
-  ##
-  # OX Site: The Management Dashboard: https://ox.lndo.site
-  ##
   appserver:
-    overrides:
-      environment:
-        DRUSH_OPTIONS_URI: "https://ox.lndo.site"
-    # xdebug: true
+    build:
+      - 'export PATH="/var/www/.composer/vendor/bin"'
+      - 'composer install'
+    xdebug: true
+#    overrides:
+#      environment:
+#        DRUSH_OPTIONS_URI: "https://ox.lndo.site"
 
-  # OX Client Site: Mercury
-  ##
+  mercury_web:
+    type: php:8.0
+    webroot: docroot
+
+  mars_web:
+    type: php:8.0
+    webroot: docroot
+
+  venus_web:
+    type: php:8.0
+    webroot: docroot
+
+  ox:
+    type: mysql:8.0
+    portforward: 33067
+#    config:
+#      confd: lando/mysql/conf.d
+
   mercury:
-    type: php:8.0
-    webroot: web
-  mercury_db:
-    type: mysql
-    portforward: 33061
+    type: mysql:8.0
+    portforward: 33068
+#    config:
+#      confd: lando/mysql/conf.d
 
-  ##
-  # OX Client Site: Venus
-  ##
   venus:
-    type: php:8.0
-    webroot: web
-  venus_db:
-    type: mysql
-    portforward: 33062
+    type: mysql:8.0
+    portforward: 33069
+#    config:
+#      confd: .lando/mysql/conf.d
 
-  ##
-  # OX Client Site: Mars
-  ##
   mars:
-    type: php:8.0
-    webroot: web
-  mars_db:
-    type: mysql
-    portforward: 33063
+    type: mysql:8.0
+    portforward: 33070
+#    config:
+#      confd: .lando/mysql/conf.d
+
+
+tooling:
+  sync:
+    service: appserver
+    cmd: "drush sql:sync --extra-dump=--single-transaction=false @live @self"
+  phpcs:
+    service: appserver
+    cmd: "phpcs"
+    options:
+    description: Run phpcs for given folder or file.
+  drupal-check:
+    service: appserver
+    cmd: "drupal-check"
+    options:
+    description: Run drupal-check for given folder or file.
+  twig-lint:
+    service: appserver
+    cmd: "php /var/www/twig-lint.phar"
+    options:
+    description: Run twig-lint for given folder or file.
+  eslint:
+    service: node
+    cmd: "node ./node_modules/eslint/bin/eslint.js --config=.eslintrc.json"
+    options:
+    description: Run jshint for given folder or file.
+  stylelint:
+    service: node
+    cmd: "npx stylelint --config=.stylelintrc.json"
+    options:
+    description: Run stylelint for given folder or file.
+  drush:
+    service: appserver
