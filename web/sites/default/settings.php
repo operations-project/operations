@@ -80,7 +80,9 @@ if ((bool) getenv('LANDO')) {
   putenv('MYSQL_HOSTNAME=' . $lando_info[$lando_database_host]['internal_connection']['host']);
   putenv('MYSQL_PORT=' . $lando_info[$lando_database_host]['internal_connection']['port']);
 
-
+  if (file_exists($app_root . '/sites/example.settings.local.php')) {
+    include $app_root . '/sites/example.settings.local.php';
+  }
 }
 
 
