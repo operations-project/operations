@@ -37,6 +37,7 @@ if ((bool) getenv('LANDO')) {
   if ($host){
     putenv("LANDO_DATABASE_HOST=$database_host");
     $settings['file_public_path'] = 'sites/' . $host . '/files';
+    $settings['file_private_path'] = 'sites/' . $host . '/private';
   }
 
   $uuids = [
