@@ -120,15 +120,13 @@
           "drush en site_manager operations devel devel_entity_updates admin_toolbar key_auth restui -y"
         ],
         "ox:sites:install": [
-          "drush @local.mercury si --yes",
-          "drush @local.mercury en site --yes",
-          "drush @local.venus si --yes",
-          "drush @local.venus en site --yes",
-          "drush @local.mars si --yes",
-          "drush @local.mars en site --yes",
+          "drush @local.mercury si standard --yes",
+          "drush @local.venus si standard --yes",
+          "drush @local.mars si standard --yes",
           "@ox:sites:uli"
         ],
         "ox:sites:uli": [
+          "drush @local.ox uli",
           "drush @local.mercury uli",
           "drush @local.venus uli",
           "drush @local.mars uli"
