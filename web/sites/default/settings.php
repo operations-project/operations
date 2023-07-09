@@ -39,6 +39,11 @@ if ((bool) getenv('LANDO')) {
     $settings['file_public_path'] = 'sites/' . $host . '/files';
     $settings['file_private_path'] = 'sites/' . $host . '/files/private';
   }
+  else {
+    $host = 'default';
+    $settings['file_public_path'] = 'sites/' . $host . '/files';
+    $settings['file_private_path'] = 'sites/' . $host . '/files/private';
+  }
 
   $uuids = [
     'ox' => 'd3c85e16-e0db-49f1-b7fd-f13e84f3b9dd',
