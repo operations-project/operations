@@ -121,12 +121,12 @@
         ],
         "ox:sites:install": [
           "drush @local.mercury si standard --yes",
-          "drush @local.venus si standard --yes",
-          "drush @local.mars si standard --yes",
+          "# drush @local.venus si standard --yes",
+          "# drush @local.mars si standard --yes",
           "@ox:sites:uli"
         ],
         "ox:sites:uli": [
-          "drush @local.ox uli",
+          "drush uli",
           "drush @local.mercury uli",
           "drush @local.venus uli",
           "drush @local.mars uli"
