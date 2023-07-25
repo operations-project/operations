@@ -58,7 +58,7 @@ site.history:
     type: 'default'
 
   requirements:
-    _permission: 'site.view site history'
+    _permission: 'access site history page'
 
 site.edit:
   path: '/admin/about/site/edit'

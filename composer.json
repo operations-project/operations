@@ -55,11 +55,14 @@
         "drupal/site_audit_server": "^4.0@dev",
         "drupal/site_manager-site_manager": "*",
         "drush/drush": "^11.4.0",
+        "jonpugh/drush-behat-params": "dev-main",
+        "symfony/http-client": "5.4.x-dev",
         "vlucas/phpdotenv": "^5.1",
         "webflo/drupal-finder": "^1.2"
     },
     "require-dev": {
-        "drupal/core-dev": "^9.0.0"
+        "drupal/core-dev": "^9.0.0",
+        "drupal/drupal-extension": "4.2.x-dev"
     },
     "conflict": {
         "drupal/drupal": "*"

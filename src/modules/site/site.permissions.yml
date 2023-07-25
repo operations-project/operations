@@ -1,3 +1,8 @@
+access about site page:
+  title: 'Access the Site Status page.'
+access site history page:
+  title: 'Access the Site Status History page.'
+
 administer site configuration:
   title: 'Administer site configuration'
   description: 'Optional description.'
