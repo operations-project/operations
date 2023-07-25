@@ -52,47 +52,7 @@ if ((bool) getenv('LANDO')) {
     'venus' => 'site.venus',
   ];
   $config['system.site']['uuid'] = $uuids[$host] ?: random_bytes(10);
-//
-//  $lando_info = json_decode(getenv('LANDO_INFO'), TRUE);
-//
-//  // To alter what database host is used, set LANDO_DATABASE_HOST.
-//  $lando_database_host = getenv('LANDO_DATABASE_HOST') ?: 'database';
-//
-//  // Set 'standard' env vars.
-//  putenv('MYSQL_DATABASE=' . $lando_info[$lando_database_host]['creds']['database']);
-//  putenv('MYSQL_USER=' . $lando_info[$lando_database_host]['creds']['user']);
-//  putenv('MYSQL_PASSWORD=' . $lando_info[$lando_database_host]['creds']['password']);
-//  putenv('MYSQL_HOSTNAME=' . $lando_info[$lando_database_host]['internal_connection']['host']);
-//  putenv('MYSQL_PORT=' . $lando_info[$lando_database_host]['internal_connection']['port']);
-
-
 }
-
-
-
-
-if (empty($databases['default']['default'])) {
-  // Global database settings from ENV vars.
-  // These can be set a number of ways:
-  // - settings.HOST.php can automatically detect them.
-  $databases['default']['default'] = [
-    'driver' => 'mysql',
-    'database' => getenv('MYSQL_DATABASE'),
-    'username' => getenv('MYSQL_USER'),
-    'password' => getenv('MYSQL_PASSWORD'),
-    'host' => getenv('MYSQL_HOSTNAME'),
-    'port' => getenv('MYSQL_PORT'),
-    'prefix' => '',
-    'init_commands' => [
-      'isolation_level' => 'SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED',
-    ],
-  ];
-}
-
-// @TODO: Detect appropriate namespace depending on drupal version.
-$databases['default']['default']['namespace'] = 'Drupal\\Core\\Database\\Driver\\mysql';
-
-$settings['rebuild_access'] = FALSE;
 
 // The full URL to send site reports to.
 if ($projects[$_SERVER['HTTP_HOST']] != 'ox') {
@@ -115,3 +75,5 @@ if ($projects[$_SERVER['HTTP_HOST']] != 'ox') {
     $config['site.site_definition.self']['settings']['send_destinations'] = "https://ox.lndo.site/api/site/data?api-key=61455cf19e740372b155ee6c380d3d7a";
   }
 }
+
+require $app_root . "/../vendor/drupal-operations/drupal-settings/Settings/settings.include.php";

@@ -14,7 +14,11 @@
     "repositories": [
         {
           "type": "path",
-          "url": "composer/Plugin/GitSplit"
+          "url": "src/composer/Plugin/GitSplit"
+        },
+        {
+          "type": "path",
+          "url": "src/composer/Plugin/DrupalSettings"
         },
         {
           "type": "path",
@@ -41,6 +45,7 @@
         "php": ">=8.0",
         "composer/installers": "^2.1",
         "cweagans/composer-patches": "^1.7",
+        "drupal-operations/drupal-settings": "*",
         "drupal-operations/git-split": "*",
         "drupal/admin_toolbar": "^3.4",
         "drupal/core-composer-scaffold": "^9.0.0",
@@ -152,7 +157,8 @@
         "composer-exit-on-patch-failure": true,
         "git-split": {
           "repos": {
-            "composer/Plugin/GitSplit": "git@github.com:drupal-operations/git-split.git",
+            "src/composer/Plugin/DrupalSettings": "git@github.com:drupal-operations/drupal-settings.git",
+            "src/composer/Plugin/GitSplit": "git@github.com:drupal-operations/git-split.git",
             "src/modules/operations": "git@git.drupal.org:project/operations.git",
             "src/modules/site": "git@git.drupal.org:project/site.git",
             "src/modules/site_manager": "git@git.drupal.org:project/site_manager.git",

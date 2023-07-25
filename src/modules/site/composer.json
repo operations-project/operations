@@ -15,6 +15,7 @@
         }
     },
     "require": {
-        "drupal/admin_toolbar": "^3.4"
+        "drupal/admin_toolbar": "^3.4",
+        "drupal/key_auth": "^2.1"
     }
 }

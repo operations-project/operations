@@ -1,0 +1,17 @@
+{
+    "name": "drupal-operations/drupal-settings",
+    "description": "Automatic Drupal Settings.",
+    "type": "library",
+    "license": "GPL-2.0-or-later",
+    "authors": [
+        {
+            "name": "Jon Pugh",
+            "email": "jon@thinkdrop.net"
+        }
+    ],
+    "minimum-stability": "dev",
+    "autoload": {
+      "files": ["Settings/autoload.php"]
+    },
+    "require": {}
+}

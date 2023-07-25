@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "047ed89dfea5d407515819dbba270c2b",
+    "content-hash": "b5fecb3dfb2a079ccf836bb04ff00462",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -1586,11 +1586,39 @@
             "time": "2022-05-31T18:46:25+00:00"
         },
         {
+            "name": "drupal-operations/drupal-settings",
+            "version": "1.x-dev",
+            "dist": {
+                "type": "path",
+                "url": "src/composer/Plugin/DrupalSettings",
+                "reference": "a01bbad1b73a4bafbc1e6a1274815a8537c27559"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "Settings/autoload.php"
+                ]
+            },
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Jon Pugh",
+                    "email": "jon@thinkdrop.net"
+                }
+            ],
+            "description": "Automatic Drupal Settings.",
+            "transport-options": {
+                "relative": true
+            }
+        },
+        {
             "name": "drupal-operations/git-split",
             "version": "1.x-dev",
             "dist": {
                 "type": "path",
-                "url": "composer/Plugin/GitSplit",
+                "url": "src/composer/Plugin/GitSplit",
                 "reference": "89da7ff2647aa177da91d7fb73508afbde9f76c4"
             },
             "require": {
@@ -2293,10 +2321,11 @@
             "dist": {
                 "type": "path",
                 "url": "src/modules/site",
-                "reference": "c3dd08c673311706286d23d7d2f83f56665e2d4e"
+                "reference": "cfc302e75d36447346085e704b281ac1f3091294"
             },
             "require": {
-                "drupal/admin_toolbar": "^3.4"
+                "drupal/admin_toolbar": "^3.4",
+                "drupal/key_auth": "^2.1"
             },
             "type": "drupal-module",
             "authors": [
@@ -3248,16 +3277,16 @@
         },
         {
             "name": "laminas/laminas-feed",
-            "version": "2.21.x-dev",
+            "version": "2.20.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laminas/laminas-feed.git",
-                "reference": "4efdf913e7bb93310f9afd5d4267cba170e2c165"
+                "reference": "508ebef6e622f2f2ce3dd0559739ffd0dfa3b938"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laminas/laminas-feed/zipball/4efdf913e7bb93310f9afd5d4267cba170e2c165",
-                "reference": "4efdf913e7bb93310f9afd5d4267cba170e2c165",
+                "url": "https://api.github.com/repos/laminas/laminas-feed/zipball/508ebef6e622f2f2ce3dd0559739ffd0dfa3b938",
+                "reference": "508ebef6e622f2f2ce3dd0559739ffd0dfa3b938",
                 "shasum": ""
             },
             "require": {
@@ -3275,7 +3304,7 @@
             "require-dev": {
                 "laminas/laminas-cache": "^2.13.2 || ^3.6",
                 "laminas/laminas-cache-storage-adapter-memory": "^1.1.0 || ^2.1",
-                "laminas/laminas-coding-standard": "~2.5.0",
+                "laminas/laminas-coding-standard": "~2.4.0",
                 "laminas/laminas-db": "^2.15",
                 "laminas/laminas-http": "^2.17.0",
                 "laminas/laminas-validator": "^2.26",
@@ -3325,7 +3354,7 @@
                     "type": "community_bridge"
                 }
             ],
-            "time": "2023-01-17T01:38:35+00:00"
+            "time": "2022-12-03T19:40:30+00:00"
         },
         {
             "name": "laminas/laminas-servicemanager",
@@ -8219,12 +8248,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/composer.git",
-                "reference": "77e89fb3e4c9d565733523981d1811b101f26b26"
+                "reference": "3d5f4757035f25e986b931637d829368eb375efe"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/composer/zipball/77e89fb3e4c9d565733523981d1811b101f26b26",
-                "reference": "77e89fb3e4c9d565733523981d1811b101f26b26",
+                "url": "https://api.github.com/repos/composer/composer/zipball/3d5f4757035f25e986b931637d829368eb375efe",
+                "reference": "3d5f4757035f25e986b931637d829368eb375efe",
                 "shasum": ""
             },
             "require": {
@@ -8310,7 +8339,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-05-23T21:06:48+00:00"
+            "time": "2023-07-21T08:58:54+00:00"
         },
         {
             "name": "composer/metadata-minifier",
@@ -9786,12 +9815,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpDocumentor/TypeResolver.git",
-                "reference": "b2fe4d22a5426f38e014855322200b97b5362c0d"
+                "reference": "07100e65d09fd50608d649fc656cae1c921a2495"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpDocumentor/TypeResolver/zipball/b2fe4d22a5426f38e014855322200b97b5362c0d",
-                "reference": "b2fe4d22a5426f38e014855322200b97b5362c0d",
+                "url": "https://api.github.com/repos/phpDocumentor/TypeResolver/zipball/07100e65d09fd50608d649fc656cae1c921a2495",
+                "reference": "07100e65d09fd50608d649fc656cae1c921a2495",
                 "shasum": ""
             },
             "require": {
@@ -9835,9 +9864,9 @@
             "description": "A PSR-5 based resolver of Class names, Types and Structural Element Names",
             "support": {
                 "issues": "https://github.com/phpDocumentor/TypeResolver/issues",
-                "source": "https://github.com/phpDocumentor/TypeResolver/tree/1.7.2"
+                "source": "https://github.com/phpDocumentor/TypeResolver/tree/1.x"
             },
-            "time": "2023-05-30T18:13:47+00:00"
+            "time": "2023-07-20T19:57:33+00:00"
         },
         {
             "name": "phpspec/prophecy",
@@ -9910,16 +9939,16 @@
         },
         {
             "name": "phpstan/phpdoc-parser",
-            "version": "1.22.x-dev",
+            "version": "1.23.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpdoc-parser.git",
-                "reference": "2108d702baa4883362a8824def66b96733b8cf82"
+                "reference": "4a1ab8e11e9957f9cc9f89f87a7c912489f08119"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpdoc-parser/zipball/2108d702baa4883362a8824def66b96733b8cf82",
-                "reference": "2108d702baa4883362a8824def66b96733b8cf82",
+                "url": "https://api.github.com/repos/phpstan/phpdoc-parser/zipball/4a1ab8e11e9957f9cc9f89f87a7c912489f08119",
+                "reference": "4a1ab8e11e9957f9cc9f89f87a7c912489f08119",
                 "shasum": ""
             },
             "require": {
@@ -9952,9 +9981,9 @@
             "description": "PHPDoc parser with support for nullable, intersection and generic types",
             "support": {
                 "issues": "https://github.com/phpstan/phpdoc-parser/issues",
-                "source": "https://github.com/phpstan/phpdoc-parser/tree/1.22.x"
+                "source": "https://github.com/phpstan/phpdoc-parser/tree/1.23.x"
             },
-            "time": "2023-07-17T07:08:06+00:00"
+            "time": "2023-07-24T11:53:35+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -11591,28 +11620,28 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/slevomat/coding-standard.git",
-                "reference": "4446ad26b21ca4b25c23593b13cf7c077986f18b"
+                "reference": "4b2af2fb17773656d02fbfb5d18024ebd19fe322"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/slevomat/coding-standard/zipball/4446ad26b21ca4b25c23593b13cf7c077986f18b",
-                "reference": "4446ad26b21ca4b25c23593b13cf7c077986f18b",
+                "url": "https://api.github.com/repos/slevomat/coding-standard/zipball/4b2af2fb17773656d02fbfb5d18024ebd19fe322",
+                "reference": "4b2af2fb17773656d02fbfb5d18024ebd19fe322",
                 "shasum": ""
             },
             "require": {
                 "dealerdirect/phpcodesniffer-composer-installer": "^0.6.2 || ^0.7 || ^1.0",
                 "php": "^7.2 || ^8.0",
-                "phpstan/phpdoc-parser": "^1.22.0",
+                "phpstan/phpdoc-parser": "^1.23.0",
                 "squizlabs/php_codesniffer": "^3.7.1"
             },
             "require-dev": {
                 "phing/phing": "2.17.4",
                 "php-parallel-lint/php-parallel-lint": "1.3.2",
-                "phpstan/phpstan": "1.10.22",
+                "phpstan/phpstan": "1.10.26",
                 "phpstan/phpstan-deprecation-rules": "1.1.3",
                 "phpstan/phpstan-phpunit": "1.3.13",
                 "phpstan/phpstan-strict-rules": "1.5.1",
-                "phpunit/phpunit": "7.5.20|8.5.21|9.6.8|10.2.3"
+                "phpunit/phpunit": "7.5.20|8.5.21|9.6.8|10.2.6"
             },
             "default-branch": true,
             "type": "phpcodesniffer-standard",
@@ -11637,7 +11666,7 @@
             ],
             "support": {
                 "issues": "https://github.com/slevomat/coding-standard/issues",
-                "source": "https://github.com/slevomat/coding-standard/tree/master"
+                "source": "https://github.com/slevomat/coding-standard/tree/8.13.4"
             },
             "funding": [
                 {
@@ -11649,7 +11678,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-07-12T20:00:29+00:00"
+            "time": "2023-07-25T10:28:55+00:00"
         },
         {
             "name": "squizlabs/php_codesniffer",
@@ -12298,6 +12327,7 @@
         "drupal/site_audit": 20,
         "drupal/site_audit_server": 20,
         "jonpugh/drush-behat-params": 20,
+        "symfony/http-client": 20,
         "drupal/drupal-extension": 20
     },
     "prefer-stable": false,
