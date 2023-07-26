@@ -332,6 +332,13 @@ class SiteDefinition extends ConfigEntityBase implements SiteDefinitionInterface
       $site_entity = $this->toEntity();
     }
 
+    // Generate a new site entity so new properties are set.
+    /** @var SiteEntityInterface $new_site_entity */
+    $new_site_entity = $this->toEntity();
+    foreach ($new_site_entity->getFields() as $property => $field) {
+      $site_entity->set($property, $this->get($property));
+    }
+
     // Not sure why type is not set here.
     $site_entity->set('type', 'default');
     $site_entity->setNewRevision();

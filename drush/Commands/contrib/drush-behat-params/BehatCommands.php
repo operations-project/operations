@@ -20,13 +20,27 @@ class BehatCommands extends DrushCommands implements CustomEventAwareInterface, 
   use SiteAliasManagerAwareTrait;
 
   /**
-   * Run bin/behat
+   * @description Run bin/behat with BEHAT_PARAMS set from the drush information.
+   *
+   * Additional arguments are passed to behat command line.
+   * To pass options to behat, add "--" and then the behat options.
    *
    * @command behat
+   * @param $arguments A list of arguments and options to pass to behat. When using options, put after "--" so the options are passed to behat and not drush.
    * @usage drush behat
-   *   Run behat tests with info from the alias.
+   *   Run all behat tests.
+   * @usage drush behat -- --format=progress
+   *   Run all behat tests using "progress" format.
+   * @usage drush behat -- --help
+   *   Run bin/behat --help
+   * @usage drush behat -- -dl
+   *   Get a list of step definitions
+   * @usage drush behat -- --story-syntax
+   *   Print out a sample test.
+   * @usage drush behat features/content
+   *   Run bin/behat features/content
    */
-  public function behat($options = [
+  public function behat(array $arguments, $options = [
     'behat_command' => 'bin/behat --colors',
   ])
   {
@@ -53,6 +67,7 @@ class BehatCommands extends DrushCommands implements CustomEventAwareInterface, 
     // @TODO: Make configurable
     $cwd = realpath($this->commandData->options()['root'] . '/..');
     $command = $this->input()->getOption('behat_command');
+    $command .= ' ' . implode(' ', $arguments);
 
     $this->logger()->notice("Detected URL and root from Drush:");
     $this->logger()->notice($this->commandData->options()['uri']);

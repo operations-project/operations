@@ -77,14 +77,3 @@ if ($projects[$_SERVER['HTTP_HOST']] != 'operations') {
 }
 
 require $app_root . "/../vendor/drupal-operations/drupal-settings/Settings/settings.include.php";
-$databases['default']['default'] = array (
-  'database' => 'drupal9',
-  'username' => 'drupal9',
-  'password' => 'drupal9',
-  'prefix' => '',
-  'host' => 'database',
-  'port' => '3306',
-  'namespace' => 'Drupal\\mysql\\Driver\\Database\\mysql',
-  'driver' => 'mysql',
-  'autoload' => 'core/modules/mysql/src/Driver/Database/mysql/',
-);
