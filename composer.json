@@ -1,7 +1,7 @@
 {
     "name": "drupal/operations",
     "description": "Operations Experience Platform",
-    "type": "drupal-drupal-multisite",
+    "type": "project",
     "license": "GPL-2.0-or-later",
     "authors": [
         {
