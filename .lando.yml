@@ -2,7 +2,7 @@ name: operations
 recipe: drupal9
 config:
   webroot: web
-  php: '8.0'
+  php: '8.1'
   drush: ^10
 
   # See https://github.com/lando/lando/issues/2948#issuecomment-1003484299
@@ -32,15 +32,15 @@ services:
 #        DRUSH_OPTIONS_URI: "https://ox.lndo.site"
 
   mercury_web:
-    type: php:8.0
+    type: php:8.1
     webroot: web
 
   mars_web:
-    type: php:8.0
+    type: php:8.1
     webroot: web
 
   venus_web:
-    type: php:8.0
+    type: php:8.1
     webroot: web
 
   operations:

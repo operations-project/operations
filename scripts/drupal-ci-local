@@ -1,0 +1,7 @@
+#!/bin/bash
+composer install
+bin/npm install gitlab-ci-local
+bin/node node_modules/.bin/gitlab-ci-local \
+  --remote-variables git@git.drupal.org:project/gitlab_templates=includes/include.drupalci.variables.yml=1.0.x \
+  --variable="_GITLAB_TEMPLATES_REPO=project/gitlab_templates" \
+  "$@"

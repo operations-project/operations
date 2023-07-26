@@ -1,132 +1,313 @@
-################
-# DrupalCI GitLabCI template
-#
-# Gitlab-ci.yml to replicate DrupalCI testing for Contrib
-#
-# With thanks to:
-#   * The GitLab Acceleration Initiative participants
-#   * DrupalSpoons
-################
-
-################
-# Guidelines
-#
-# This template is designed to give any Contrib maintainer everything they need to test, without requiring modification. It is also designed to keep up to date with Core Development automatically through the use of include files that can be centrally maintained.
-#
-# However, you can modify this template if you have additional needs for your project.
-################
-
-################
-# Includes
-#
-# Additional configuration can be provided through includes.
-# One advantage of include files is that if they are updated upstream, the changes affect all pipelines using that include.
-#
-# Includes can be overridden by re-declaring anything provided in an include, here in gitlab-ci.yml
-# https://docs.gitlab.com/ee/ci/yaml/includes.html#override-included-configuration-values
-################
-
 include:
-  ################
-  # DrupalCI includes:
-  # As long as you include this, any future includes added by the Drupal Association will be accessible to your pipelines automatically.
-  # View these include files at https://git.drupalcode.org/project/gitlab_templates/
-  ################
-  - project: $_GITLAB_TEMPLATES_REPO
+  # This include centralizes our CI "golden path" https://docs.gitlab.com/ee/ci/yaml/#includefile
+  - project: 'project/gitlab_templates'
     ref: $_GITLAB_TEMPLATES_REF
     file:
       - '/includes/include.drupalci.main.yml'
       - '/includes/include.drupalci.variables.yml'
       - '/includes/include.drupalci.workflows.yml'
 
-################
-# Pipeline configuration variables
-#
-# These are the variables provided to the Run Pipeline form that a user may want to override.
-#
-# Docs at https://git.drupalcode.org/project/gitlab_templates/-/blob/1.0.x/includes/include.drupalci.variables.yml
-################
+.with-database: &with-database
+  name: $_CONFIG_DOCKERHUB_ROOT/$_TARGET_DB_TYPE-$_TARGET_DB_VERSION:production
+  alias: database
+
+.with-chrome: &with-chrome
+  name: $_CONFIG_DOCKERHUB_ROOT/chromedriver:production
+  alias: chrome
+  entrypoint:
+    - chromedriver
+    - "--no-sandbox"
+    - "--log-path=/tmp/chromedriver.log"
+    - "--verbose"
+    - "--whitelisted-ips="
+
+.test-variables:
+  variables:
+    BROWSERTEST_OUTPUT_DIRECTORY: $CI_PROJECT_DIR/$_WEB_ROOT/sites/simpletest/browser_output
+    FF_NETWORK_PER_BUILD: 1
+    SIMPLETEST_BASE_URL: http://localhost/$_WEB_ROOT
+    DB_DRIVER: mysql
+    MYSQL_ROOT_PASSWORD: root
+    MYSQL_DATABASE: mysql
+    MYSQL_USER: drupaltestbot
+    MYSQL_PASSWORD: drupaltestbotpw
+    MYSQL_HOSTNAME: database
+    MYSQL_PORT: 3306
+    MARIADB_TAG: $_TARGET_DB_VERSION
+    POSTGRES_TAG: $_TARGET_DB_VERSION
+    POSTGRES_DB: pgsql
+    POSTGRES_USER: drupaltestbot
+    POSTGRES_PASSWORD: drupaltestbotpw
+    MINK_DRIVER_ARGS_WEBDRIVER: '["chrome", {"browserName":"chrome","chromeOptions":{"args":["--disable-dev-shm-usage","--disable-gpu","--headless"]}}, "http://localhost:9515"]'
+
+.show-environment-variables: &show-environment-variables
+  - |
+    echo -e "\e[0Ksection_start:`date +%s`:show_env_vars[collapsed=true]\r\e[0KShow Environment Variables"
+    env | sort
+    echo -e "\e[0Ksection_end:`date +%s`:show_env_vars\r\e[0K"
+
+.simpletest_db: &simpletest-db
+  - |
+    [[ $_TARGET_DB_TYPE == "sqlite" ]] && export SIMPLETEST_DB=sqlite://localhost/sites/default/files/db.sqlite
+    [[ $_TARGET_DB_TYPE == "mysql" ]] && export SIMPLETEST_DB=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE
+    [[ $_TARGET_DB_TYPE == "pgsql" ]] && export SIMPLETEST_DB=pgsql://$POSTGRES_USER:$POSTGRES_PASSWORD@database/$POSTGRES_DB
+
+.setup_webserver: &setup-webserver
+  - mkdir -p $BROWSERTEST_OUTPUT_DIRECTORY
+  - chmod -R 755 $BROWSERTEST_OUTPUT_DIRECTORY
+  - ln -s $CI_PROJECT_DIR/$_WEB_ROOT /var/www/html
+  - chown -R www-data:www-data $CI_PROJECT_DIR
+  - service apache2 start
+
+.setup_operations: &setup-operations
+  # Try to generate a .env file from MYSQL vars
+  - env | grep "MYSQL_" > .env
+  - cat .env
+  - export DRUPAL_TEST_DB_URL=$SIMPLETEST_DB
+  - bin/drush status
+  - bin/drush sql:query "show tables"
+  - bin/drush si ox_stock --yes
+  # The install profile should handle this, but it's not working!
+  - bin/drush cset system.theme default claro -y
+  - bin/drush en site_manager operations_ui devel devel_entity_updates admin_toolbar key_auth restui -y
+
+
 variables:
+  _TARGET_PHP: "8.1"
+  _TARGET_CORE: "9.5.7"
+  SYMFONY_DEPRECATIONS_HELPER: weak
+
+  # Can't use, parent jobs looks in modules/custom.
+  # https://git.drupalcode.org/project/gitlab_templates/-/blob/1.0.x/includes/include.drupalci.main.yml#L222
   SKIP_COMPOSER_LINT: 1
-  SKIP_PHPCS: 1
-  SKIP_STYLELINT: 1
   SKIP_ESLINT: 1
+  SKIP_STYLELINT: 1
+  SKIP_PHPCS: 1
   SKIP_PHPUNIT: 1
+
+#################
+## Override composer base because this is not a module project.
+#################
+
+# A hidden re-usable job. Useful when using a job matrix.
+# For example https://git.drupalcode.org/project/keycdn
+.composer-local:
+  script:
+#    - *show-environment-variables
+#    - curl -OL https://git.drupalcode.org/$_GITLAB_TEMPLATES_REPO/-/raw/$_GITLAB_TEMPLATES_REF/scripts/expand_composer_json.php
+#    - php expand_composer_json.php
+    - composer install
+#    - curl -OL https://git.drupalcode.org/$_GITLAB_TEMPLATES_REPO/-/raw/$_GITLAB_TEMPLATES_REF/scripts/symlink_project.php
+#    - php symlink_project.php
+    # For Nightwatch et al.
+    - yarn --cwd $_WEB_ROOT/core install
+    - touch $_WEB_ROOT/core/.env
+
+.nightwatch-local:
+  script:
+    - *setup-webserver
+    - *simpletest-db
+    - export DRUPAL_TEST_DB_URL=$SIMPLETEST_DB
+    - *show-environment-variables
+    - *setup-operations
+    - yarn --cwd $_WEB_ROOT/core test:nightwatch  $CI_PROJECT_DIR/tests
 
 composer:
   extends:
     - .composer-base
-#    - .composer-local
+    - .composer-local
+
+# @TODO: Nightwatch fails, the scripts can't detect the database settings: https://git.drupalcode.org/project/operations/-/jobs/61357
+nightwatch:
+  rules:
+    - when: never
+  extends:
+    - .nightwatch-base
+    - .nightwatch-local
+
+.behat-base:
+  stage: test
+  rules:
+    - if: '$SKIP_BEHAT == "1"'
+      when: never
+    - when: on_success
+  needs: ["composer"]
+  services:
+    - <<: *with-database
+    - <<: *with-chrome
+  extends:
+    - .test-variables
   variables:
-    _TARGET_PHP: "7.4"
-    _TARGET_CORE: "9.5.9"
-
+    DRUPAL_TEST_BASE_URL: $SIMPLETEST_BASE_URL
+    DRUSH_OPTIONS_URI: $SIMPLETEST_BASE_URL
+    DRUPAL_TEST_WEBDRIVER_HOSTNAME: localhost
+    DRUPAL_TEST_WEBDRIVER_PORT: "9515"
+    DRUPAL_TEST_WEBDRIVER_CHROME_ARGS: '--disable-dev-shm-usage --disable-gpu --headless'
+    DRUPAL_TEST_CHROMEDRIVER_AUTOSTART: "false"
+#    DRUPAL_NIGHTWATCH_SEARCH_DIRECTORY: ../
+#    DRUPAL_NIGHTWATCH_IGNORE_DIRECTORIES: node_modules,vendor,.*,sites/*/files,sites/*/private,sites/simpletest
+#    DRUPAL_NIGHTWATCH_OUTPUT: reports/nightwatch
   script:
-    - composer install
+    - *setup-webserver
+    - *simpletest-db
+    - *show-environment-variables
+    - *setup-operations
+    - bin/drush behat
+  artifacts:
+    expire_in: 6 mos
+    expose_as: 'reports'
+    when: always
+    reports:
+      junit: $CI_PROJECT_DIR/$_WEB_ROOT/core/reports/nightwatch/Nightwatch/*.xml
+    paths:
+      - $_WEB_ROOT/core/reports/nightwatch
 
-# install:
-#   stage: validate
-#   extends:
-#     - .phpunit-base
-#   needs: [ "composer" ]
-#   rules:
-#     - if: '$SKIP_INSTALL == "1"'
-#       when: never
-#     - when: on_success
-#   script:
-#     # Not sure how to do this quite yet.
-#     # Error was: /scripts-113331-59601/step_script: line 267: warning: here-document at line 253 delimited by end-of-file (wanted `:*setup-webserver')
-#     - :*setup-webserver
-#     - :*simpletest-db
-#     - :*show-environment-variables
-#     - bin/drush site-install --verbose --yes --db-url=sqlite://tmp/site.sqlite
-#     - bin/drush runserver $SIMPLETEST_BASE_URL &
-#     - until curl -s $SIMPLETEST_BASE_URL; do true; done > /dev/null
-#     - bin/phpunit -c ./web/core ./web/core/modules/user/tests/src/Unit/UserAccessControlHandlerTest.php
-#     - bin/drush status
+behat:
+  # An include of the code above, for easy reuse. See https://docs.gitlab.com/ee/ci/yaml/#extends.
+  extends: .behat-base
 
-###################################################################################
+
+#################
+## DrupalCI GitLabCI template
+##
+## Gitlab-ci.yml to replicate DrupalCI testing for Contrib
+##
+## With thanks to:
+##   * The GitLab Acceleration Initiative participants
+##   * DrupalSpoons
+#################
 #
-#                                        *
-#                                       /(
-#                                      ((((,
-#                                    /(((((((
-#                                   ((((((((((*
-#                                ,(((((((((((((((
-#                              ,(((((((((((((((((((
-#                            ((((((((((((((((((((((((*
-#                         *(((((((((((((((((((((((((((((
-#                       ((((((((((((((((((((((((((((((((((*
-#                    *((((((((((((((((((  .((((((((((((((((((
-#                  ((((((((((((((((((.       /(((((((((((((((((*
-#                /(((((((((((((((((            .(((((((((((((((((,
-#             ,((((((((((((((((((                 ((((((((((((((((((
-#           .((((((((((((((((((((                   .(((((((((((((((((
-#          (((((((((((((((((((((((                     ((((((((((((((((/
-#        (((((((((((((((((((((((((((/                    ,(((((((((((((((*
-#      .((((((((((((((/  /(((((((((((((.                   ,(((((((((((((((
-#     *((((((((((((((      ,(((((((((((((/                   *((((((((((((((.
-#    ((((((((((((((,          /(((((((((((((.                  ((((((((((((((,
-#   (((((((((((((/              ,(((((((((((((*                 ,(((((((((((((,
-#  *(((((((((((((                .(((((((((((((((                ,(((((((((((((
-#  ((((((((((((/                /((((((((((((((((((.              ,((((((((((((/
-# (((((((((((((              *(((((((((((((((((((((((*             *((((((((((((
-# (((((((((((((            ,(((((((((((((..(((((((((((((           *((((((((((((
-# ((((((((((((,          /((((((((((((*      /((((((((((((/         ((((((((((((
-# (((((((((((((        /((((((((((((/          (((((((((((((*       ((((((((((((
-# (((((((((((((/     /((((((((((((               ,((((((((((((,    *((((((((((((
-#  ((((((((((((((  *(((((((((((/                   *((((((((((((.  ((((((((((((/
-#  *((((((((((((((((((((((((((,                      /(((((((((((((((((((((((((
-#   (((((((((((((((((((((((((                         ((((((((((((((((((((((((,
-#   .(((((((((((((((((((((((/                         ,(((((((((((((((((((((((
-#     ((((((((((((((((((((((/                         ,(((((((((((((((((((((/
-#      *(((((((((((((((((((((                         (((((((((((((((((((((,
-#       ,(((((((((((((((((((((,                      ((((((((((((((((((((/
-#         ,(((((((((((((((((((((*                  /((((((((((((((((((((
-#            ((((((((((((((((((((((,           ,/((((((((((((((((((((,
-#              ,(((((((((((((((((((((((((((((((((((((((((((((((((((
-#                 .(((((((((((((((((((((((((((((((((((((((((((((
-#                     .((((((((((((((((((((((((((((((((((((,.
-#                          .,(((((((((((((((((((((((((.
+#################
+## Guidelines
+##
+## This template is designed to give any Contrib maintainer everything they need to test, without requiring modification. It is also designed to keep up to date with Core Development automatically through the use of include files that can be centrally maintained.
+##
+## However, you can modify this template if you have additional needs for your project.
+#################
 #
-###################################################################################
+#################
+## Includes
+##
+## Additional configuration can be provided through includes.
+## One advantage of include files is that if they are updated upstream, the changes affect all pipelines using that include.
+##
+## Includes can be overridden by re-declaring anything provided in an include, here in gitlab-ci.yml
+## https://docs.gitlab.com/ee/ci/yaml/includes.html#override-included-configuration-values
+#################
+#
+#include:
+#  ################
+#  # DrupalCI includes:
+#  # As long as you include this, any future includes added by the Drupal Association will be accessible to your pipelines automatically.
+#  # View these include files at https://git.drupalcode.org/project/gitlab_templates/
+#  ################
+#  - project: $_GITLAB_TEMPLATES_REPO
+#    ref: $_GITLAB_TEMPLATES_REF
+#    file:
+#      - '/includes/include.drupalci.main.yml'
+#      - '/includes/include.drupalci.variables.yml'
+#      - '/includes/include.drupalci.workflows.yml'
+#
+#################
+## Pipeline configuration variables
+##
+## These are the variables provided to the Run Pipeline form that a user may want to override.
+##
+## Docs at https://git.drupalcode.org/project/gitlab_templates/-/blob/1.0.x/includes/include.drupalci.variables.yml
+#################
+#variables:
+#  SKIP_COMPOSER_LINT: 1
+#  SKIP_PHPCS: 1
+#  SKIP_STYLELINT: 1
+#  SKIP_ESLINT: 1
+#  SKIP_PHPUNIT: 1
+#  SKIP_COMPOSER: 1
+#  SKIP_NIGHTWATCH: 0
+#
+#.composer-local:
+#  variables:
+#    SKIP_COMPOSER: 0
+#
+##composer-php74:
+##  extends:
+##    - .composer-base
+##    - .composer-local
+##  variables:
+##    _TARGET_PHP: "7.4"
+##    _TARGET_CORE: "9.5.9"
+#
+#composer-php81:
+#  extends:
+#    - .composer-base
+#    - .composer-local
+#  variables:
+#    _TARGET_PHP: "8.1"
+#    _TARGET_CORE: "9.5.9"
+#
+## install:
+##   stage: validate
+##   extends:
+##     - .phpunit-base
+##   needs: [ "composer" ]
+##   rules:
+##     - if: '$SKIP_INSTALL == "1"'
+##       when: never
+##     - when: on_success
+##   script:
+##     # Not sure how to do this quite yet.
+##     # Error was: /scripts-113331-59601/step_script: line 267: warning: here-document at line 253 delimited by end-of-file (wanted `:*setup-webserver')
+##     - :*setup-webserver
+##     - :*simpletest-db
+##     - :*show-environment-variables
+##     - bin/drush site-install --verbose --yes --db-url=sqlite://tmp/site.sqlite
+##     - bin/drush runserver $SIMPLETEST_BASE_URL &
+##     - until curl -s $SIMPLETEST_BASE_URL; do true; done > /dev/null
+##     - bin/phpunit -c ./web/core ./web/core/modules/user/tests/src/Unit/UserAccessControlHandlerTest.php
+##     - bin/drush status
+#
+####################################################################################
+##
+##                                        *
+##                                       /(
+##                                      ((((,
+##                                    /(((((((
+##                                   ((((((((((*
+##                                ,(((((((((((((((
+##                              ,(((((((((((((((((((
+##                            ((((((((((((((((((((((((*
+##                         *(((((((((((((((((((((((((((((
+##                       ((((((((((((((((((((((((((((((((((*
+##                    *((((((((((((((((((  .((((((((((((((((((
+##                  ((((((((((((((((((.       /(((((((((((((((((*
+##                /(((((((((((((((((            .(((((((((((((((((,
+##             ,((((((((((((((((((                 ((((((((((((((((((
+##           .((((((((((((((((((((                   .(((((((((((((((((
+##          (((((((((((((((((((((((                     ((((((((((((((((/
+##        (((((((((((((((((((((((((((/                    ,(((((((((((((((*
+##      .((((((((((((((/  /(((((((((((((.                   ,(((((((((((((((
+##     *((((((((((((((      ,(((((((((((((/                   *((((((((((((((.
+##    ((((((((((((((,          /(((((((((((((.                  ((((((((((((((,
+##   (((((((((((((/              ,(((((((((((((*                 ,(((((((((((((,
+##  *(((((((((((((                .(((((((((((((((                ,(((((((((((((
+##  ((((((((((((/                /((((((((((((((((((.              ,((((((((((((/
+## (((((((((((((              *(((((((((((((((((((((((*             *((((((((((((
+## (((((((((((((            ,(((((((((((((..(((((((((((((           *((((((((((((
+## ((((((((((((,          /((((((((((((*      /((((((((((((/         ((((((((((((
+## (((((((((((((        /((((((((((((/          (((((((((((((*       ((((((((((((
+## (((((((((((((/     /((((((((((((               ,((((((((((((,    *((((((((((((
+##  ((((((((((((((  *(((((((((((/                   *((((((((((((.  ((((((((((((/
+##  *((((((((((((((((((((((((((,                      /(((((((((((((((((((((((((
+##   (((((((((((((((((((((((((                         ((((((((((((((((((((((((,
+##   .(((((((((((((((((((((((/                         ,(((((((((((((((((((((((
+##     ((((((((((((((((((((((/                         ,(((((((((((((((((((((/
+##      *(((((((((((((((((((((                         (((((((((((((((((((((,
+##       ,(((((((((((((((((((((,                      ((((((((((((((((((((/
+##         ,(((((((((((((((((((((*                  /((((((((((((((((((((
+##            ((((((((((((((((((((((,           ,/((((((((((((((((((((,
+##              ,(((((((((((((((((((((((((((((((((((((((((((((((((((
+##                 .(((((((((((((((((((((((((((((((((((((((((((((
+##                     .((((((((((((((((((((((((((((((((((((,.
+##                          .,(((((((((((((((((((((((((.
+##
+####################################################################################
+
