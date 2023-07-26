@@ -9941,12 +9941,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "f1564623dc5330085a73cefcf824b48cdec997b2"
+                "reference": "b0a88255cb70d52653d80c890bd7f38740ea50d1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/f1564623dc5330085a73cefcf824b48cdec997b2",
-                "reference": "f1564623dc5330085a73cefcf824b48cdec997b2",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/b0a88255cb70d52653d80c890bd7f38740ea50d1",
+                "reference": "b0a88255cb70d52653d80c890bd7f38740ea50d1",
                 "shasum": ""
             },
             "require": {
@@ -10003,7 +10003,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/php-code-coverage/issues",
                 "security": "https://github.com/sebastianbergmann/php-code-coverage/security/policy",
-                "source": "https://github.com/sebastianbergmann/php-code-coverage/tree/9.2"
+                "source": "https://github.com/sebastianbergmann/php-code-coverage/tree/9.2.27"
             },
             "funding": [
                 {
@@ -10011,7 +10011,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-07-17T04:56:01+00:00"
+            "time": "2023-07-26T13:44:30+00:00"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -12274,6 +12274,7 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "drupal/devel_entity_updates": 20,
+        "drupal/operations_ui": 20,
         "drupal/site_audit": 20,
         "drupal/site_audit_server": 20,
         "symfony/http-client": 20,
