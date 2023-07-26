@@ -3,7 +3,17 @@
     "description": "Operations Experience Platform",
     "type": "project",
     "license": "GPL-2.0-or-later",
+    "homepage": "https://drupal.org/project/operations",
+    "support": {
+        "chat": "https://drupal.slack.com/archives/C05CM6A9UDN",
+        "issues": "https://www.drupal.org/project/issues/operations?categories=All",
+        "source": "https://git.drupalcode.org/project/operations"
+    },
     "authors": [
+        {
+          "name": "Drupal Operations Contributors",
+          "homepage": "https://git.drupalcode.org/project/operations/-/graphs/1.x?ref_type=heads"
+        },
         {
             "name": "Jon Pugh",
             "role": "author",

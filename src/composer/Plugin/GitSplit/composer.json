@@ -4,11 +4,22 @@
   "description": "Adds composer git:split composer command for easy splitting of a git repository into many others.",
   "keywords": [],
   "homepage": "https://drupal.org/project/operations",
-  "license": "MIT",
+  "license": "GPL-2.0-or-later",
+  "support": {
+    "chat": "https://drupal.slack.com/archives/C05CM6A9UDN",
+    "issues": "https://www.drupal.org/project/issues/operations?categories=All",
+    "source": "https://git.drupalcode.org/project/operations"
+  },
   "authors": [
     {
+      "name": "Drupal Operations Contributors",
+      "homepage": "https://git.drupalcode.org/project/operations/-/graphs/1.x?ref_type=heads"
+    },
+    {
       "name": "Jon Pugh",
-      "email": "jon@thinkdrop.net"
+      "role": "author",
+      "email": "jon@thinkdrop.net",
+      "homepage": "https://thinkdrop.net"
     }
   ],
   "require": {

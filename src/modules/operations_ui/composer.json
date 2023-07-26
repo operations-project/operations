@@ -2,10 +2,22 @@
   "name": "drupal/operations_ui-operations_ui",
   "description": "User interface for Drupal Operations Experience Platform",
   "type": "drupal-module",
+  "homepage": "https://drupal.org/project/operations",
+  "support": {
+    "chat": "https://drupal.slack.com/archives/C05CM6A9UDN",
+    "issues": "https://www.drupal.org/project/issues/operations?categories=All",
+    "source": "https://git.drupalcode.org/project/operations"
+  },
   "authors": [
     {
+      "name": "Drupal Operations Contributors",
+      "homepage": "https://git.drupalcode.org/project/operations/-/graphs/1.x?ref_type=heads"
+    },
+    {
       "name": "Jon Pugh",
-      "email": "jon@thinkdrop.net"
+      "role": "author",
+      "email": "jon@thinkdrop.net",
+      "homepage": "https://thinkdrop.net"
     }
   ],
   "repositories": {
