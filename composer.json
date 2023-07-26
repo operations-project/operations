@@ -52,7 +52,7 @@
         "drupal/core-recommended": "^9.0.0",
         "drupal/devel": "^5.1",
         "drupal/devel_entity_updates": "^4.1@dev",
-        "drupal/operations_ui": "1.x-dev",
+        "drupal/operations_ui-operations_ui": "*",
         "drupal/ox_stock": "*",
         "drupal/restui": "^1.21",
         "drupal/site-site": "*",

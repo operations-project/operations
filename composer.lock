@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ffab8f5626f1371e626ae91acf349a1a",
+    "content-hash": "cbfa122a8638b9ca0907c0165db12f8a",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -2220,12 +2220,12 @@
             }
         },
         {
-            "name": "drupal/operations_ui",
+            "name": "drupal/operations_ui-operations_ui",
             "version": "1.x-dev",
             "dist": {
                 "type": "path",
                 "url": "src/modules/operations_ui",
-                "reference": "ce2b31660a43733ae80e0b21893ba37b1ef33106"
+                "reference": "8639eaa244bd54dc404178b00584c613d0b4ac33"
             },
             "type": "drupal-module",
             "authors": [
@@ -12274,7 +12274,6 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "drupal/devel_entity_updates": 20,
-        "drupal/operations_ui": 20,
         "drupal/site_audit": 20,
         "drupal/site_audit_server": 20,
         "symfony/http-client": 20,

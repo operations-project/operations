@@ -1,5 +1,5 @@
 {
-  "name": "drupal/operations_ui",
+  "name": "drupal/operations_ui-operations_ui",
   "description": "User interface for Drupal Operations Experience Platform",
   "type": "drupal-module",
   "authors": [
