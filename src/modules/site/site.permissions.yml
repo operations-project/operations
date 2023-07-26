@@ -3,9 +3,9 @@ access about site page:
 access site history page:
   title: 'Access the Site Status History page.'
 
-administer site configuration:
-  title: 'Administer site configuration'
-  description: 'Optional description.'
+administer site entity settings:
+  title: 'Administer site entity settings'
+  description: 'Configure the site entity for this site.'
   restrict access: true
 
 delete site:

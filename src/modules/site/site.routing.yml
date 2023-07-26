@@ -107,7 +107,7 @@ site.advanced:
     _entity_form: 'site_definition.edit'
     _title: 'Advanced site settings'
   requirements:
-    _permission: 'administer site_definition'
+    _permission: 'administer site entity settings'
 
 entity.site_definition.edit_form:
   path: '/admin/about/site/settings/{site_definition}'

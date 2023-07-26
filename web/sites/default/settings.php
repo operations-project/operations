@@ -18,7 +18,7 @@ if (empty($projects[$_SERVER['HTTP_HOST']])) {
 
 $project = $projects[$_SERVER['HTTP_HOST'] ?: 'operations'] ?? 'operations';
 $settings['config_sync_directory'] = "../config/{$project}";
-$settings['hash_salt'] = '';
+$settings['hash_salt'] = '1v_Ft27e4p5H8bIPxEsjWujOluWZMJy_C1lY2tVec2As7Rup_rmEp7YY7HdVF6ArnClwfu1_fA';
 
 if ((bool) getenv('LANDO')) {
   $settings['hash_salt'] = md5(getenv('LANDO_HOST_IP'));
@@ -77,3 +77,14 @@ if ($projects[$_SERVER['HTTP_HOST']] != 'operations') {
 }
 
 require $app_root . "/../vendor/drupal-operations/drupal-settings/Settings/settings.include.php";
+$databases['default']['default'] = array (
+  'database' => 'drupal9',
+  'username' => 'drupal9',
+  'password' => 'drupal9',
+  'prefix' => '',
+  'host' => 'database',
+  'port' => '3306',
+  'namespace' => 'Drupal\\mysql\\Driver\\Database\\mysql',
+  'driver' => 'mysql',
+  'autoload' => 'core/modules/mysql/src/Driver/Database/mysql/',
+);
