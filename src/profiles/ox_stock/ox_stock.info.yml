@@ -3,8 +3,9 @@ type: profile
 description: "Default installation config for the Ox platform."
 core_version_requirement: '^8.8 || ^9 || ^10'
 
-distribution:
-  name: "Ox Platform"
+# If this is not commented, all sites with ox_stock profile are forced to use that install profile.
+#distribution:
+#  name: "Ox Platform"
 
 # not sure why, but this isn't working
 themes:
@@ -35,4 +36,4 @@ install:
 
 # Required modules
 dependencies:
-  - operations
+  - operations_ui

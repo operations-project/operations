@@ -14,14 +14,11 @@ $settings['hash_salt'] = md5(getenv('LANDO_HOST_IP'));
 
 # See https://www.drupal.org/docs/getting-started/installing-drupal/trusted-host-settings
 
-# Add all lndo.site urls to trusted_host_patterns.
-$settings['trusted_host_patterns'] = [
-  # Lando Proxy
-  '\.lndo\.site$',
-  '\.internal$',
-  # Lando Share
-  '\.localtunnel\.me$',
-];
+// Allow all hostnames. It's local.
+$settings['trusted_host_patterns'] = ['.*'];
+
+// This will prevent Drupal from setting read-only permissions on sites/default.
+$settings['skip_permissions_hardening'] = TRUE;
 
 // Do not redirect to www if using httpswww module.
 $config['httpswww.settings']['prefix'] = 'no';

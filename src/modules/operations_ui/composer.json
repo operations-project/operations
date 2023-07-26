@@ -1,6 +1,6 @@
 {
-  "name": "drupal/operations",
-  "description": "Tools for operating Drupal sites.",
+  "name": "drupal/operations_ui",
+  "description": "User interface for Drupal Operations Experience Platform",
   "type": "drupal-module",
   "authors": [
     {

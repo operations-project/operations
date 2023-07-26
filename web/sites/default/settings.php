@@ -4,8 +4,8 @@
  */
 
 $projects = [
-  'ox' => 'ox',
-  'ox.lndo.site' => 'ox',
+  'operations' => 'operations',
+  'operations.lndo.site' => 'operations',
   'mercury.lndo.site' => 'mercury',
   'venus.lndo.site' => 'venus',
   'mars.lndo.site' => 'mars',
@@ -13,10 +13,10 @@ $projects = [
 
 
 if (empty($projects[$_SERVER['HTTP_HOST']])) {
-  $_SERVER['HTTP_HOST'] = 'ox.lndo.site';
+  $_SERVER['HTTP_HOST'] = 'operations.lndo.site';
 }
 
-$project = $projects[$_SERVER['HTTP_HOST'] ?: 'ox'] ?? 'ox';
+$project = $projects[$_SERVER['HTTP_HOST'] ?: 'operations'] ?? 'operations';
 $settings['config_sync_directory'] = "../config/{$project}";
 $settings['hash_salt'] = '';
 
@@ -29,8 +29,8 @@ if ((bool) getenv('LANDO')) {
   $host = strtr($_SERVER['HTTP_HOST'], ['.lndo.site' => '']);
   $database_host = $host . '_db';
 
-  if ($host == 'ox') {
-    $host = 'ox';
+  if ($host == 'operations') {
+    $host = 'operations';
     $database_host = 'database';
   }
 
@@ -46,7 +46,7 @@ if ((bool) getenv('LANDO')) {
   }
 
   $uuids = [
-    'ox' => 'd3c85e16-e0db-49f1-b7fd-f13e84f3b9dd',
+    'operations' => 'd3c85e16-e0db-49f1-b7fd-f13e84f3b9dd',
     'mercury' => 'daaa81bd-5f27-4152-a209-511e31368848',
     'mars' => 'site.mars',
     'venus' => 'site.venus',
@@ -55,7 +55,7 @@ if ((bool) getenv('LANDO')) {
 }
 
 // The full URL to send site reports to.
-if ($projects[$_SERVER['HTTP_HOST']] != 'ox') {
+if ($projects[$_SERVER['HTTP_HOST']] != 'operations') {
 
   // The config items to send along with the report.
   // use main config name, or value in the format system.site:name
@@ -72,7 +72,7 @@ if ($projects[$_SERVER['HTTP_HOST']] != 'ox') {
   # $config['site.site_definition.self']['settings']['save_interval'] = 0;
 
   if ((bool) getenv('LANDO')) {
-    $config['site.site_definition.self']['settings']['send_destinations'] = "https://ox.lndo.site/api/site/data?api-key=61455cf19e740372b155ee6c380d3d7a";
+    $config['site.site_definition.self']['settings']['send_destinations'] = "https://operations.lndo.site/api/site/data?api-key=61455cf19e740372b155ee6c380d3d7a";
   }
 }
 

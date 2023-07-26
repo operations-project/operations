@@ -1,7 +1,7 @@
 {
-    "name": "drupal/ox",
+    "name": "drupal/operations",
     "description": "Operations Experience Platform",
-    "type": "project",
+    "type": "drupal-drupal-multisite",
     "license": "GPL-2.0-or-later",
     "authors": [
         {
@@ -26,15 +26,15 @@
         },
         {
           "type": "path",
-          "url": "src/modules/operations"
-        },
-        {
-          "type": "path",
           "url": "src/modules/site"
         },
         {
           "type": "path",
           "url": "src/modules/site_manager"
+        },
+        {
+          "type": "path",
+          "url": "src/modules/operations_ui"
         },
         {
           "type": "composer",
@@ -52,7 +52,7 @@
         "drupal/core-recommended": "^9.0.0",
         "drupal/devel": "^5.1",
         "drupal/devel_entity_updates": "^4.1@dev",
-        "drupal/operations": "*",
+        "drupal/operations_ui": "1.x-dev",
         "drupal/ox_stock": "*",
         "drupal/restui": "^1.21",
         "drupal/site-site": "*",
@@ -116,27 +116,27 @@
          ],
         "ox:launch": [
           "@ox:install",
-          "@ox:sites:install"
+          "@ox:sites:install",
+          "@ox:sites:uli"
         ],
         "ox:install": [
-          "drush si  --yes",
+          "drush si ox_stock --yes",
           "drush uli",
           "# OX Stock install wont work to set default theme.",
           "drush cset system.theme default claro -y",
           "# OX Stock profile wont work when site module is in dependencies.",
-          "drush en site_manager operations devel devel_entity_updates admin_toolbar key_auth restui -y"
+          "drush en site_manager operations_ui devel devel_entity_updates admin_toolbar key_auth restui -y"
         ],
         "ox:sites:install": [
-          "drush @local.mercury si standard --yes",
-          "# drush @local.venus si standard --yes",
-          "# drush @local.mars si standard --yes",
-          "@ox:sites:uli"
+          "drush @mercury si standard --yes",
+          "drush @venus si standard --yes",
+          "drush @mars si standard --yes"
         ],
         "ox:sites:uli": [
           "drush uli",
-          "drush @local.mercury uli",
-          "drush @local.venus uli",
-          "drush @local.mars uli"
+          "drush @mercury uli",
+          "drush @venus uli",
+          "drush @mars uli"
         ]
     },
     "extra": {
@@ -159,7 +159,7 @@
             "drush/Commands/contrib/drush-behat-params": "git@github.com:drupal-operations/drush-behat-params.git",
             "src/composer/Plugin/DrupalSettings": "git@github.com:drupal-operations/drupal-settings.git",
             "src/composer/Plugin/GitSplit": "git@github.com:drupal-operations/git-split.git",
-            "src/modules/operations": "git@git.drupal.org:project/operations.git",
+            "src/modules/operations_ui": "git@git.drupal.org:project/operations_ui.git",
             "src/modules/site": "git@git.drupal.org:project/site.git",
             "src/modules/site_manager": "git@git.drupal.org:project/site_manager.git",
             "src/profiles/ox_stock": "git@git.drupal.org:project/ox_stock.git"
