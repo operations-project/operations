@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b5fecb3dfb2a079ccf836bb04ff00462",
+    "content-hash": "49eed6f352647e386d0c7580b20033e0",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -3161,56 +3161,6 @@
                 }
             ],
             "time": "2023-04-17T16:00:37+00:00"
-        },
-        {
-            "name": "jonpugh/drush-behat-params",
-            "version": "dev-main",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/jonpugh/drush-behat-params.git",
-                "reference": "794f2414119bee1457a1c44d3ed2dcff82caeae8"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/jonpugh/drush-behat-params/zipball/794f2414119bee1457a1c44d3ed2dcff82caeae8",
-                "reference": "794f2414119bee1457a1c44d3ed2dcff82caeae8",
-                "shasum": ""
-            },
-            "require": {
-                "consolidation/site-alias": "^3.0.1",
-                "consolidation/site-process": "^2.1 || ^4",
-                "php": ">=5.6"
-            },
-            "require-dev": {
-                "composer/installers": "^1.2",
-                "drupal/core-composer-scaffold": "^8.8.1",
-                "drupal/core-recommended": "^8.8",
-                "drush/drush": "^8.3.3 || ^10.2.2",
-                "g1a/composer-test-scenarios": "^3.0.2",
-                "pantheon-systems/drupal-integrations": "^8",
-                "phpunit/phpunit": "^6.5",
-                "symfony/filesystem": "^3.4.28",
-                "webflo/drupal-finder": "^1.1.0",
-                "webmozart/path-util": "^2.3",
-                "zaporylie/composer-drupal-optimizations": "^1.0.2"
-            },
-            "default-branch": true,
-            "type": "drupal-drush",
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jon Pugh"
-                }
-            ],
-            "description": "Drush command wrapper for behat.",
-            "support": {
-                "issues": "https://github.com/jonpugh/drush-behat-params/issues",
-                "source": "https://github.com/jonpugh/drush-behat-params/tree/1.0.0"
-            },
-            "time": "2023-05-22T20:14:13+00:00"
         },
         {
             "name": "laminas/laminas-escaper",
@@ -12326,7 +12276,6 @@
         "drupal/devel_entity_updates": 20,
         "drupal/site_audit": 20,
         "drupal/site_audit_server": 20,
-        "jonpugh/drush-behat-params": 20,
         "symfony/http-client": 20,
         "drupal/drupal-extension": 20
     },

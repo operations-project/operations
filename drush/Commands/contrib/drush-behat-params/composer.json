@@ -1,0 +1,38 @@
+{
+    "name": "drupal-operations/drush-behat-params",
+    "description": "Drush command wrapper for behat that pre-configures BEHAT_PARAMS.",
+    "type": "drupal-drush",
+    "license": "MIT",
+    "authors": [
+      {
+        "name": "Jon Pugh",
+        "email": "jon@thinkdrop.net"
+      }
+    ],
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://packages.drupal.org/8"
+        }
+    ],
+    "require": {
+        "php": ">=5.6",
+        "consolidation/site-alias": "^3.0.1",
+        "consolidation/site-process": "^2.1 || ^4"
+    },
+    "require-dev": {
+        "composer/installers": "^1.2",
+        "drupal/core-composer-scaffold": "^8.8.1",
+        "drupal/core-recommended": "^8.8",
+        "pantheon-systems/drupal-integrations": "^8",
+        "drush/drush": "^8.3.3 || ^10.2.2",
+        "g1a/composer-test-scenarios": "^3.0.2",
+        "phpunit/phpunit": "^6.5",
+        "symfony/filesystem": "^3.4.28",
+        "webflo/drupal-finder": "^1.1.0",
+        "webmozart/path-util": "^2.3",
+        "zaporylie/composer-drupal-optimizations": "^1.0.2"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

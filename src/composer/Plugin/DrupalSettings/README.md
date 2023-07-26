@@ -4,8 +4,8 @@ This PHP Package is a smart include for Drupal settings.php.
 
 Add it to your project to simplify your settings.php file by using common defaults for each hosting vendor and environment types.
 
+It just makes things easier. For example, when using Lando, you don't have to set the database settings or DRUSH_OPTIONS_URI, and it automatically enables development mode.
 ## Usage
-
 
 1. Install with composer:
   
@@ -24,12 +24,13 @@ To override any defaults provided by [`settings.include.php`](./Settings/setting
 ## Components
 
 1. [Drupal Settings Include File](./Settings/settings.include.php) - settings.include.php
-
-    Include this file from settings.php and remove all the extra settings.
+   
+    Include this file from settings.php and remove all the extra settings. For full documentation on what it does, see 
+    the file [./Settings/settings.include.php](./Settings/settings.include.php).
 
 2. [Vendor-specific settings files](./Settings/Vendors) - Included automatically when their environment variables are detected.
 
-2. [Composer Autoload File](./Settings/autoload.php) - autoload.php
+3. [Composer Autoload File](./Settings/autoload.php) - autoload.php
 
     This file is included in your site's Autoloader as early as possible. 
     
@@ -55,3 +56,11 @@ The main features are:
 3. Platform.sh
 4. Acquia
 5. OpenDevShop
+
+We invite all other systems to submit merge requests to the project here: https://git.drupalcode.org/project/ox/-/tree/1.x/src/composer/Plugin/DrupalSettings/Settings/Vendors
+
+## Development
+
+This tool is a part of the [Drupal Operations / OX project](https://drupal.org/project/ox). The code is maintained in the monorepo "ox".
+
+See https://git.drupalcode.org/project/ox for more information.

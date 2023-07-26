@@ -60,7 +60,6 @@
         "drupal/site_audit_server": "^4.0@dev",
         "drupal/site_manager-site_manager": "*",
         "drush/drush": "^11.4.0",
-        "jonpugh/drush-behat-params": "dev-main",
         "symfony/http-client": "5.4.x-dev",
         "vlucas/phpdotenv": "^5.1",
         "webflo/drupal-finder": "^1.2"
@@ -157,6 +156,7 @@
         "composer-exit-on-patch-failure": true,
         "git-split": {
           "repos": {
+            "drush/Commands/contrib/drush-behat-params": "git@github.com:drupal-operations/drush-behat-params.git",
             "src/composer/Plugin/DrupalSettings": "git@github.com:drupal-operations/drupal-settings.git",
             "src/composer/Plugin/GitSplit": "git@github.com:drupal-operations/git-split.git",
             "src/modules/operations": "git@git.drupal.org:project/operations.git",
