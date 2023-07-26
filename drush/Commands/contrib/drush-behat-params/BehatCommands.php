@@ -61,9 +61,10 @@ class BehatCommands extends DrushCommands implements CustomEventAwareInterface, 
     $this->logger()->notice("Cwd: " . $cwd );
     $this->logger()->notice("Command: " . $command );
 
-    $this->processManager()->shell($command, $cwd, $env)->mustRun(function ($type, $buffer) {
+    $exit = $this->processManager()->shell($command, $cwd, $env)->run(function ($type, $buffer) {
       echo $buffer;
     }
     );
+    return $exit;
   }
 }
