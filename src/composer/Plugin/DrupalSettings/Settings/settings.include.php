@@ -91,8 +91,8 @@ if (!(bool) getenv('DRUPAL_ENV')) {
  *
  * Include the global settings file in drupal-operations/drupal-settings based on DRUPAL_ENV.
  */
-if (file_exists('Environments/settings' . getenv('DRUPAL_ENV') . '.php')) {
-  include('Environments/settings' . getenv('DRUPAL_ENV') . '.php');
+if (file_exists(__DIR__ . '/Environments/settings.' . getenv('DRUPAL_ENV') . '.php')) {
+  include(__DIR__ . '/Environments/settings.' . getenv('DRUPAL_ENV') . '.php');
 }
 
 /**
