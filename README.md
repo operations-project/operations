@@ -1,11 +1,11 @@
-# Drupal Ox
-## The Operations Experience Platform
+# Drupal Operations
+## Tools for Operating Drupal Sites
 
-Welcome to Drupal Ox: the Ops Dashboard built in Drupal.
+Welcome to Drupal Operations: a suite of modules and tools to build ops platforms out of Drupal.
 
 This repository serves as the main development codebase for all of the Operations submodules and packages.
 
-For more information, see the [Drupal.org Project Page](https://www.drupal.org/project/ox).
+For more information, see the [Drupal.org Project Page](https://www.drupal.org/project/operations).
 
 ## Components
 
@@ -21,13 +21,13 @@ Whenever possible, the Drupal Operations Modules can be installed independently 
 
    Provides a CMS-like experience for monitoring and managing multiple sites.
 
-3. [Operations](https://www.drupal.org/project/site) - https://www.drupal.org/project/operations
+3. [Operations](https://www.drupal.org/project/operations_ui) - https://www.drupal.org/project/operations_ui
 
    Provides a central dashboard for browsing Sites, Servers, Tasks & Users. Right now, it doesn't do much other than add an Admin menu section.
 
 ### Drupal Distributions
 
-Since there are many possibilities with Ox, the project could contain different distributions for different purposes. Additions are welcome!
+Since there are many possibilities with Ox, the project will contain different distributions for different purposes. Additions are welcome!
 
 1. [Stock Ox](https://www.drupal.org/project/ox_stock)
 
@@ -39,13 +39,22 @@ Whenever a useful tool is created, a PHP Package can be created to release indep
 
 The following PHP Packages are developed in this repository:
 
-1. [Git Split](composer/Plugin/GitSplit)
+1. [Git Split](src/composer/Plugin/GitSplit)
 
    A composer plugin that pushes subfolders into other git repositories using "git-split" method. Add `composer.json:extras.git-split` configuration and use `composer git:split` to push branches and tags.
 
+2. [Drush Behat Params](drush/Commands/contrib/drush-behat-params)
+
+    A basic drush plugin that calls behat with BEHAT_PARAMS with URL, root and drush alias set automatically.
+
+3. [Drupal Settings](src/composer/Plugin/DrupalSettings)
+
+    A universal Settings.php file that sets recommended defaults based on the hosting environment. Removes the need for complex settings.php files or manually setting database configuration.
+
+
 ## Issues
 
-Issue management takes place in the Ox project issue queues: https://www.drupal.org/project/issues/ox?categories=All
+Issue management takes place in the Operations project issue queues: https://www.drupal.org/project/issues/operations?categories=All
 
 
 ## Development
@@ -54,27 +63,25 @@ The primary branch of development is `1.x`.
 
 The release branch is currently `1.10.x`. 
 
-Everything needed to develop Ox is in this repository, including a Lando development environment with multiple sites for testing Site Manager connections:
+Everything needed to develop Operations is in this repository, including a Lando development environment with multiple sites for testing Site Manager connections:
 
-1. Find or Submit an issue to work on at https://www.drupal.org/project/issues/ox?categories=All
+1. Find or Submit an issue to work on at https://www.drupal.org/project/issues/operations?categories=All
 
 1. Create an issue fork: On the issue page, underneath the issue description, there is a big green button labelled "Create Issue Fork".
 
 2. Clone your repository and create a branch for the issue:
 
-        # Replace the number with issue ID        
-        git clone git@git.drupal.org:project/ox-12345678.git
-        git checkout -b 12345678-fix-thing
-        git push -u origin 12345678-fix-thing
+    See the buttons on the issue.
     
-3. Enter the directory and launch lando:
+3. Enter the code and launch lando:
 
-        cd ox
         lando start
 
-4. Install Drupal Ox using Drush or the Web UI.
+4. Install Drupal Operations using the composer command.
 
-        drush site:install
+        composer ox:launch
+
+This will give you 4 sites to work with.
 
 5. Do the work, push the code.
 6. Once ready, submit a Merge Request using the gitlab or the issue page.
