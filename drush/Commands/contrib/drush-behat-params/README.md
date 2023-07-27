@@ -29,6 +29,9 @@ Instead of messing with ENV vars, this plugin sets BEHAT_PARAMS for you using th
 
 ## Development
 
-This tool is a part of the [Drupal Operations / OX project](https://drupal.org/project/ox). The code is maintained in the monorepo "ox".
 
-See https://git.drupalcode.org/project/ox for more information.
+This tool is a part of the [Drupal Operations Project](https://drupal.org/project/operations).
+
+Source code is maintained at https://git.drupalcode.org/project/operations/-/tree/1.x/drush/Commands/contrib/drush-behat-params
+
+Issues can be filed at https://www.drupal.org/project/issues/operations?categories=All
