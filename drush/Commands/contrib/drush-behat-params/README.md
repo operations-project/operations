@@ -1,6 +1,6 @@
 # Drush Behat Params
 
-A basic drush plugin that calls behat with proper configuration.
+A basic drush plugin that calls behat with `BEHAT_PARAMS` with URL, root and drush alias set automatically.
 
 ![img.png](img.png)
 
