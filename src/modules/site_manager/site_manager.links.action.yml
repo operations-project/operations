@@ -1,9 +1,10 @@
 
-site.type_add:
-  title: 'Add site type'
-  route_name: entity.site_type.add_form
-  appears_on:
-    - entity.site_type.collection
+# @TODO: Implement site types.
+#site.type_add:
+#  title: 'Add site type'
+#  route_name: entity.site_type.add_form
+#  appears_on:
+#    - entity.site_type.collection
 
 site.add_page:
   title: 'Add site'

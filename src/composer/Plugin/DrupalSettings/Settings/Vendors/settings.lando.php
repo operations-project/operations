@@ -27,8 +27,14 @@ $config['httpswww.settings']['prefix'] = 'no';
 $lando_database_host = getenv('LANDO_DATABASE_HOST') ?: 'database';
 
 // Set 'standard' env vars.
-putenv('MYSQL_DATABASE=' . $lando_info[$lando_database_host]['creds']['database']);
-putenv('MYSQL_USER=' . $lando_info[$lando_database_host]['creds']['user']);
-putenv('MYSQL_PASSWORD=' . $lando_info[$lando_database_host]['creds']['password']);
-putenv('MYSQL_HOSTNAME=' . $lando_info[$lando_database_host]['internal_connection']['host']);
-putenv('MYSQL_PORT=' . $lando_info[$lando_database_host]['internal_connection']['port']);
+if (!empty($lando_info[$lando_database_host]['creds']['database'])) {
+  putenv('MYSQL_DATABASE=' . $lando_info[$lando_database_host]['creds']['database']);
+  putenv('MYSQL_USER=' . $lando_info[$lando_database_host]['creds']['user']);
+  putenv('MYSQL_PASSWORD=' . $lando_info[$lando_database_host]['creds']['password']);
+  putenv('MYSQL_HOSTNAME=' . $lando_info[$lando_database_host]['internal_connection']['host']);
+  putenv('MYSQL_PORT=' . $lando_info[$lando_database_host]['internal_connection']['port']);
+}
+else {
+  throw new \Exception("LANDO_DATABASE_HOST is set to $lando_database_host, but that host does not exist in \$lando_info. LANDO_INFO = " .getenv('LANDO_INFO'));
+}
+

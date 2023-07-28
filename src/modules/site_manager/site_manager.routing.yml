@@ -1,5 +1,5 @@
 operations.admin_operations_sites:
-  path: '/admin/operations/sites'
+  path: '/admin/content/sites'
   defaults:
     _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
     _title: 'Sites'
@@ -14,3 +14,10 @@ site_manager.settings_form:
   requirements:
     _permission: 'administer site_manager configuration'
 
+entity.site.add_form:
+  path: '/site/add'
+  defaults:
+    _title: 'Add Site'
+    _controller: '\Drupal\site_manager\Controller\SiteManagerAddSiteController::build'
+  requirements:
+    _permission: 'add site entities'

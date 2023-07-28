@@ -89,8 +89,14 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
   use EntityOwnerTrait;
 
   protected array $property_plugins;
-  static public function load($id) {
-    $site = parent::load($id);
+
+  /**
+   * @param $id string Site UUID. If not supplied, will load this site.
+   * @inheritdoc
+   */
+  static public function load($id = null) {
+    // If ID is not supplied, use site UUID.
+    $site = parent::load($id ?: self::getSiteUuid());
 
     if ($site) {
       // Load plugin data.
@@ -516,14 +522,11 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
   }
 
   /**
-   * Load the site entity with the same UUID as this site.
+   * Load the site entity for the current site.
+   * @return SiteEntity
    */
   public static function loadSelf() {
-    $self = parent::load(static::getSiteUuid());
-    if (!$self) {
-      $self = SiteDefinition::load('self')->saveEntity('Creating first site entity.');
-    }
-    return $self;
+    return self::load();
   }
 
   /**

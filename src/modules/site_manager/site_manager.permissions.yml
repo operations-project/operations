@@ -8,6 +8,11 @@ administer site types:
   description: 'Maintain the types of site entity.'
   restrict access: true
 
+add site entities:
+  title: 'Add site entities'
+  description: 'Create new site entities'
+  restrict access: true
+
 request login link:
   title: 'Request one-time login links'
   description: 'Returns a link for use to sign in without a password.'

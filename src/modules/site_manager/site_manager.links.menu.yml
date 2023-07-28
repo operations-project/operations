@@ -1,28 +1,42 @@
+# @TODO: Move to Operations UI
+#operations.admin_operations_sites:
+#  title: "Site Manager"
+#  route_name: operations.admin_operations_sites
+#  parent: operations.admin
+#  description: 'Configure sites.'
 
-operations.admin_operations_sites:
-  title: "Site Manager"
-  route_name: operations.admin_operations_sites
-  parent: operations.admin
-  description: 'Configure sites.'
-
-# /admin/operations/sites/list
+# /admin/content/sites
 entity.site.collection:
   title: 'Sites'
   description: 'List all site entities.'
   route_name: entity.site.collection
-  parent: operations.admin_operations_sites
+  parent: system.admin_content
   weight: 10
 
-entity.site_type.collection:
-  title: 'Site Types'
+site_manager.admin_structure:
+  title: 'Site Entity Structure'
   description: 'Manage fields and display configuration for sites.'
-  parent: operations.admin_operations_sites
+  parent: system.admin_structure
   route_name: entity.site_type.collection
   weight: 20
+#entity.site_type.collection:
+#  title: 'Site Types'
+#  description: 'Manage fields and display configuration for sites.'
+#  parent: system.admin_structure
+#  route_name: entity.site_type.collection
+#  weight: 20
+
+# @TODO: Move to operations_ui
+#entity.site_type.collection_operations:
+#  title: 'Site Types'
+#  description: 'Manage fields and display configuration for sites.'
+#  parent: operations.admin_operations_sites
+#  route_name: entity.site_type.collection
+#  weight: 20
 
 site_manager.settings_form:
   title: 'Site Manager Settings'
   description: 'Configure Site Manager.'
-  parent: operations.admin_operations_sites
+  parent: system.admin_content
   route_name: site_manager.settings_form
   weight: 30

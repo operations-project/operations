@@ -35,5 +35,5 @@ install:
 # - site
 
 # Required modules
-dependencies:
-  - operations_ui
+# dependencies:
+#   - operations_ui

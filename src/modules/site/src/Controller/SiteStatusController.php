@@ -24,6 +24,7 @@ class SiteStatusController extends ControllerBase {
     $build['view'] = $site_definition->view();
 
     $site_entity = SiteEntity::loadSelf();
+
 //    $build['status']['site'] = [
 //      '#title' => t('Site Information'),
 //      '#type' => 'details',
