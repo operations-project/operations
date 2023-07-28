@@ -36,7 +36,7 @@ entity.site.revision:
       site_revision:
         type: entity_revision:site
 
-entity.site.version-history:
+entity.site.version_history:
   path:  '/admin/about/site/{site}/history'
   defaults:
     _title: 'Site History'

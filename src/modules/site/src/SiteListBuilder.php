@@ -99,7 +99,7 @@ class SiteListBuilder extends EntityListBuilder {
       'label' => 'hidden',
     ]);
     $row['state'] = \Drupal::service('renderer')->render($state);
-    $row['site_title'] = $entity->toLink();
+    $row['site_title'] = $entity->toLink(null, 'version_history');
     $row['drupal_version'] =  \Drupal::service('renderer')->render($drupal_version);
     $row['php_version'] =  \Drupal::service('renderer')->render($php_version);
     $row['id'] = $entity->site_uuid->value;

@@ -70,8 +70,8 @@ use GuzzleHttp\Psr7\Response;
  *     "canonical" = "/admin/reports/site/{site}",
  *     "edit-form" = "/admin/reports/site/{site}/edit",
  *     "delete-form" = "/admin/reports/site/{site}/delete",
- *     "version-history" = "/admin/reports/site/{site}/revisions",
- *     "revision" = "/admin/reports/site/{site}/revisions/{site_revision}/view",
+ *     "version_history" = "/admin/reports/site/{site}/history",
+ *     "revision" = "/admin/reports/site/{site}/history/{site_revision}/view",
  *   },
  *   revision_metadata_keys = {
  *     "revision_user" = "revision_uid",
