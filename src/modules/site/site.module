@@ -291,3 +291,34 @@ function site_site_view(array &$build, \Drupal\Core\Entity\EntityInterface $enti
     $build['reason']['reasons'] = $entity->reason->getValue();
   }
 }
+
+
+/**
+ * Prepares variables for views table templates.
+ *
+ * Default template: views-view-table.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - view: A ViewExecutable object.
+ *   - rows: The raw row data.
+ */
+function site_preprocess_views_view_table(&$variables) {
+
+  /** @var \Drupal\views\ViewExecutable $view */
+  $view = $variables['view'];
+  if ($view->storage->get('base_table') == 'operations_site') {
+    foreach ($variables['result'] as $i => $result_row) {
+
+      /** @var \Drupal\views\ResultRow $result_row */
+      if ($result_row->_entity->get('state')) {
+        /** @var \Drupal\Core\Template\Attribute $attributes */
+        $attributes = $variables['rows'][$i]['attributes'];
+        $attributes->setAttribute('class',
+          'color-' . $result_row->_entity->getStateClass());
+
+        $variables['rows'][$i]['attributes'] = $attributes;
+      }
+    }
+  }
+}
