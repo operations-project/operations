@@ -4,7 +4,7 @@ entity.site.version_history:
   base_route: entity.site.version_history
 
 entity.site.view:
-  title: 'View'
+  title: 'Latest'
   route_name: entity.site.canonical
   base_route: entity.site.version_history
 
