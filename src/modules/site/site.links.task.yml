@@ -8,6 +8,17 @@ entity.site.view:
   route_name: entity.site.canonical
   base_route: entity.site.version_history
 
+entity.site.report_history:
+  title: 'History'
+  route_name: entity.site.version_history
+  weight: -10
+
+entity.site.report:
+  title: 'Report'
+  parent_id: entity.site.version_history
+  route_name: entity.site.revision
+  base_route: entity.site.revision
+
 entity.site.edit_form:
   title: 'Edit'
   route_name: entity.site.edit_form
