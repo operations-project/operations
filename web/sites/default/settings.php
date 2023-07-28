@@ -27,7 +27,7 @@ if ((bool) getenv('LANDO')) {
 
   // Pull the subdomain out and use that as the host.
   $host = strtr($_SERVER['HTTP_HOST'], ['.lndo.site' => '']);
-  $database_host = $host . '_db';
+  $database_host = $host;
 
   if ($host == 'operations') {
     $host = 'operations';

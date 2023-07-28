@@ -134,7 +134,7 @@
           "# OX Stock install wont work to set default theme.",
           "drush cset system.theme default claro -y",
           "# OX Stock profile wont work when site module is in dependencies.",
-          "drush en site_manager operations_ui devel devel_entity_updates admin_toolbar key_auth restui -y"
+          "drush en site_manager operations_ui devel devel_entity_updates admin_toolbar key_auth restui rest -y"
         ],
         "ox:sites:install": [
           "drush @mercury si standard --yes",
