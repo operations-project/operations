@@ -132,7 +132,7 @@ if (empty($databases['default']['default']) && !empty(getenv('MYSQL_DATABASE')))
     'password' => getenv('MYSQL_PASSWORD'),
     'host' => getenv('MYSQL_HOSTNAME'),
     'port' => getenv('MYSQL_PORT'),
-    'prefix' => '',
+    'prefix' => getenv('MYSQL_PREFIX'),
     'init_commands' => [
       'isolation_level' => 'SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED',
     ],
