@@ -14,7 +14,10 @@ use Drupal\site\SitePropertyPluginBase;
  *   name = "host_provider",
  *   default = "unknown",
  *   label = @Translation("Host Provider"),
- *   description = @Translation("A string with information about the host provider.")
+ *   description = @Translation("A string with information about the host provider."),
+ *   site_bundles = {
+ *     "Drupal\site\Entity\Bundle\DefaultSiteBundle"
+ *   },
  * )
  */
 class HostProvider extends SitePropertyPluginBase {
@@ -33,15 +36,16 @@ class HostProvider extends SitePropertyPluginBase {
    * @return static
    *   A new field definition object.
    */
-  public function baseFieldDefinitions(EntityTypeInterface $entity_type, &$fields) {
+  static public function bundleFieldDefinitions(EntityTypeInterface $entity_type, $bundle, array $base_field_definitions) {
     $fields['host_provider'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Host Provider'))
       ->setRevisionable(TRUE)
+      ->setDisplayConfigurable('view', TRUE)
       ->setDisplayOptions('view', [
+        'label' => 'above',
         'type' => 'string',
-        'label' => 'inline',
-        'weight' => 10,
       ])
-      ->setDisplayConfigurable('view', TRUE);
+    ;
+    return $fields;
   }
 }

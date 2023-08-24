@@ -13,7 +13,11 @@ use Drupal\site\SitePropertyPluginBase;
  *   id = "git_remote",
  *   name = "git_remote",
  *   label = @Translation("Git Remote"),
- *   description = @Translation("The git repository this site was cloned from.")
+ *   description = @Translation("The git repository this site was cloned from."),
+ *   site_bundles = {
+ *     "Drupal\site\Entity\Bundle\WebAppSiteBundle",
+ *     "Drupal\site\Entity\DrupalProject",
+ *   },
  * )
  */
 class GitRemote extends SitePropertyPluginBase {
@@ -41,15 +45,16 @@ class GitRemote extends SitePropertyPluginBase {
    * @return static
    *   A new field definition object.
    */
-  public function baseFieldDefinitions(EntityTypeInterface $entity_type, &$fields) {
+  static public function bundleFieldDefinitions(EntityTypeInterface $entity_type, $bundle, array $base_field_definitions) {
     $fields['git_remote'] = BaseFieldDefinition::create('string')
-      ->setLabel(t('Git Reference'))
+      ->setLabel(t('Git Remote'))
       ->setRevisionable(TRUE)
+      ->setDisplayConfigurable('view', TRUE)
       ->setDisplayOptions('view', [
+        'label' => 'above',
         'type' => 'string',
-        'label' => 'inline',
-        'weight' => 10,
       ])
-      ->setDisplayConfigurable('view', TRUE);
+    ;
+    return $fields;
   }
 }

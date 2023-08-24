@@ -9,6 +9,7 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
+use Drupal\site\Entity\SiteType;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -22,6 +23,14 @@ class SiteListBuilder extends EntityListBuilder {
    * @var \Drupal\Core\Datetime\DateFormatterInterface
    */
   protected $dateFormatter;
+
+
+  /**
+   * The site_type route param.
+   *
+   * @var SiteType
+   */
+  protected $site_type;
 
   /**
    * Constructs a new SiteListBuilder object.
@@ -39,6 +48,32 @@ class SiteListBuilder extends EntityListBuilder {
   }
 
   /**
+   * Loads entity IDs using a pager sorted by the entity id.
+   *
+   * @return array
+   *   An array of entity IDs.
+   */
+  protected function getEntityIds() {
+    $site_type = \Drupal::routeMatch()->getParameter('site_type');
+    $this->site_type = $site_type;
+    $query = $this->getStorage()->getQuery()
+      ->accessCheck(TRUE)
+      ->sort('changed', 'desc');
+
+    if ($site_type) {
+      $query
+        ->condition('site_type', $site_type->id())
+      ;
+    }
+
+    // Only add the pager if a limit is specified.
+    if ($this->limit) {
+      $query->pager($this->limit);
+    }
+    return $query->execute();
+  }
+
+  /**
    * {@inheritdoc}
    */
   public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
@@ -53,16 +88,54 @@ class SiteListBuilder extends EntityListBuilder {
    * {@inheritdoc}
    */
   public function render() {
+//    $this->site_type = \Drupal::routeMatch()->getParameter('site_type');
+
+//    if (!$this->site_type) {
+//      return $this->dashboard();
+//    }
+
     $build['table'] = parent::render();
+    $build['table']['#empty'] = $this->t('There are no @label yet.', ['@label' => t('sites')]);
 
     $total = $this->getStorage()
       ->getQuery()
       ->accessCheck(FALSE)
       ->count()
-      ->sort('changed', 'DESC')
       ->execute();
 
-    $build['summary']['#markup'] = $this->t('Total sites: @total', ['@total' => $total]);
+    $build['summary']['#markup'] = $this->t('Total @label_plural: @total', [
+      '@total' => $total,
+      '@label_plural' => t('sites'),
+    ]);
+    return $build;
+  }
+
+
+  /**
+   * @return void
+   */
+  public function dashboard() {
+
+
+    $total = $this->getStorage()
+      ->getQuery()
+      ->accessCheck(FALSE)
+      ->count()
+      ->execute();
+
+    $build['welcome'] = [
+      '#type' => 'fieldset',
+      '#title' => t('Welcome'),
+      '#markup' => t('Welcome to the Site Module. Create a site or browse your existing sites.'),
+    ];
+
+
+
+    $build['summary']['#markup'] = $this->t('Total @label_plural: @total', [
+      '@total' => $total,
+      '@label_plural' => $this->entityType->get('label_plural'),
+    ]);
+
     return $build;
   }
 
@@ -71,10 +144,8 @@ class SiteListBuilder extends EntityListBuilder {
    */
   public function buildHeader() {
     $header['state'] = $this->t('State');
-    $header['site_title'] = $this->t('Site Title');
-    $header['drupal_version'] = $this->t('Drupal');
-    $header['php_version'] = $this->t('PHP');
-    $header['site_title'] = $this->t('Site Title');
+    $header['http_status'] = $this->t('HTTP Code');
+    $header['site_title'] = $this->t('Label');
     $header['id'] = $this->t('ID');
     $header['site_uri'] = $this->t('Site URI');
     $header['date'] = $this->t('Last Report');
@@ -89,23 +160,20 @@ class SiteListBuilder extends EntityListBuilder {
     $state =  $entity->state->view([
       'label' => 'hidden',
     ]);
-    $drupal_version =  $entity->drupal_version->view([
-      'label' => 'hidden',
-    ]);
-    $php_version =  $entity->php_version->view([
-      'label' => 'hidden',
-    ]);
     $revision_log =  $entity->revision_log->view([
       'label' => 'hidden',
     ]);
-    $row['state'] = \Drupal::service('renderer')->render($state);
-    $row['site_title'] = $entity->toLink(null, 'version_history');
-    $row['drupal_version'] =  \Drupal::service('renderer')->render($drupal_version);
-    $row['php_version'] =  \Drupal::service('renderer')->render($php_version);
-    $row['id'] = $entity->site_uuid->value;
-    $row['site_uri'] = Link::fromTextAndUrl($entity->site_uri->value, Url::fromUri($entity->site_uri->value), [
-      'attributes' => ['target' => '_blank'],
+    $http_status =  $entity->http_status->view([
+      'label' => 'hidden',
     ]);
+    $row['state'] = \Drupal::service('renderer')->render($state);
+    $row['http_status'] = \Drupal::service('renderer')->render($http_status);
+    $row['site_title'] = $entity->toLink(null, 'version_history');
+    $row['id'] = $entity->site_uuid->value ?? '';
+
+    $row['site_uri'] = $entity->site_uri->value ? Link::fromTextAndUrl($entity->site_uri->value, Url::fromUri($entity->site_uri->value), [
+      'attributes' => ['target' => '_blank'],
+    ]) : t('Unknown');
     $date = $entity->revision_timestamp->view([
       'label' => 'hidden',
       'type' => 'timestamp_ago'
@@ -145,7 +213,7 @@ class SiteListBuilder extends EntityListBuilder {
     return [
       'data' => $row + parent::buildRow($entity),
       'class' => [
-        "color-" . $entity->getStateClass()
+        "color-" . $entity->stateClass()
       ]
     ];
   }

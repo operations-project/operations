@@ -1,32 +1,82 @@
 
-system.admin_config_development:
-  path: '/admin/config/development'
-  defaults:
-    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
-    _title: 'Development'
-  requirements:
-    _permission: 'access administration pages'
-
-site.status:
-  path: '/admin/about/site'
+site.about:
+  path: '/admin/site/about'
   defaults:
     _title: 'About this site'
-    _controller: '\Drupal\site\Controller\SiteStatusController::build'
+    _controller: '\Drupal\site\Controller\SiteAboutController::build'
   requirements:
-    _permission: 'access about site page'
+    _permission: 'access about this site page'
 
 site.save:
-  path: '/admin/about/site/save'
+  path: '/admin/site/save'
   defaults:
     _title: 'Save Site Report'
-    _controller: '\Drupal\site\Controller\SiteController::saveReport'
+    _controller: '\Drupal\site\Controller\SiteAboutController::saveReport'
   requirements:
     _permission: 'save site report'
 
-entity.site.revision:
-  path:  '/admin/about/site/{site}/history/{site_revision}'
+site.history:
+  path: '/admin/site/history'
   defaults:
-    _controller: '\Drupal\site\Controller\SiteController::revisionShow'
+    _title: 'Site History'
+    _controller: '\Drupal\site\Controller\SiteRevisionController::siteStatusHistoryWidget'
+    type: 'default'
+
+  requirements:
+    _permission: 'access site history page'
+
+site.edit:
+  path: '/admin/site/edit'
+  defaults:
+    _title: 'Edit Site Information'
+    _controller: '\Drupal\site\Controller\SiteAboutController::edit'
+  requirements:
+    _permission: 'edit site information'
+
+site.fields:
+  path: '/admin/about/fields'
+  defaults:
+    _controller: \Drupal\field_ui\Controller\FieldConfigListController::listing
+    _title: 'Manage Fields'
+    entity_type_id: 'drupal_project'
+    bundle: 'default'
+  requirements:
+    _permission: 'administer drupal_project fields'
+
+site.display:
+  path: '/admin/about/display'
+  defaults:
+    _entity_form: "entity_view_display.edit"
+    _title: "Manage Display"
+    view_mode_name: "default"
+    entity_type_id: "drupal_project"
+    bundle: "default"
+  requirements:
+    _permission: 'administer drupal_project display'
+
+site.form:
+  path: '/admin/about/form'
+  defaults:
+    _entity_form: "entity_form_display.edit"
+    _title: "Manage Form"
+    form_mode_name: "default"
+    entity_type_id: "drupal_project"
+    bundle: "default"
+  requirements:
+    _permission: 'administer drupal_project form'
+
+site.advanced:
+  path: '/admin/about/settings'
+  defaults:
+    _form: 'Drupal\site\Form\SiteSettingsForm'
+    _title: 'Advanced site settings'
+  requirements:
+    _permission: 'administer site entity settings'
+
+entity.site.revision:
+  path:  '/site/{site}/history/{site_revision}'
+  defaults:
+    _controller: '\Drupal\site\Controller\SiteRevisionController::revisionShow'
   requirements:
     _permission: 'view site entity revisions'
   options:
@@ -37,99 +87,94 @@ entity.site.revision:
         type: entity_revision:site
 
 entity.site.version_history:
-  path:  '/admin/about/site/{site}/history'
+  path:  '/site/{site}/history'
   defaults:
     _title: 'Site History'
-    _controller: '\Drupal\site\Controller\SiteStatusController::siteStatusHistoryWidget'
+    _controller: '\Drupal\site\Controller\SiteRevisionController::siteStatusHistoryWidget'
     type: 'default'
   options:
     parameters:
       site:
         type: entity:site
-
   requirements:
-    _permission: 'site.view site history'
+    _permission: 'site.view site environments'
 
-site.history:
-  path: '/admin/about/site/history'
+site.add:
+  path: '/site/add/{site_type}'
   defaults:
-    _title: 'Site History'
-    _controller: '\Drupal\site\Controller\SiteStatusController::siteStatusHistoryWidget'
-    type: 'default'
-
+    _entity_form: 'site.default'
   requirements:
-    _permission: 'access site history page'
+    _entity_create_access: 'site:{site_type}'
+  options:
+    parameters:
+      site_type:
+        type: entity:site_type
+        with_config_overrides: TRUE
 
-site.edit:
-  path: '/admin/about/site/edit'
+entity.site.refresh:
+  path: '/site/{site}/refresh'
   defaults:
-    _entity_form: 'site.edit'
-    _title: 'Edit Site Information'
-    type: 'default'
+    _title: 'Refresh Site Data'
+    _controller: '\Drupal\site\Controller\SiteActionsController::refresh'
   requirements:
-    _permission: 'administer site_definition'
+    _permission: 'refresh site data'
+  options:
+    parameters:
+      site:
+        type: entity:site
+        with_config_overrides: TRUE
 
-site.fields:
-  path: '/admin/about/site/fields'
+entity.site.collection.types:
+  path: '/admin/content/site/{site_type}'
   defaults:
-    _controller: \Drupal\field_ui\Controller\FieldConfigListController::listing
-    _title: 'Manage Site Fields'
-    entity_type_id: 'site'
-    bundle: 'default'
-  requirements:
-    _permission: 'administer site_definition'
+    _title: 'Site Data API'
+    _entity_list: 'site'
+  options:
+    parameters:
+      entity_type:
+        type: entity:site
+      site_type:
+        type: entity:site_type
+        with_config_overrides: TRUE
 
-site.display:
-  path: '/admin/about/site/display'
+  requirements:
+    _permission: 'administer sites'
+
+site.api:
+  path: '/jsonapi/self'
   defaults:
-    _entity_form: "entity_view_display.edit"
-    _title: "Manage Site Report Display"
-    view_mode_name: "default"
-    entity_type_id: "site"
-    bundle: "default"
+    _title: 'Site API'
+    _controller: '\Drupal\site\Controller\SiteApiController::self'
   requirements:
-    _permission: 'administer site_definition'
+    _permission: 'access site data api'
+  options:
+    _auth: ['basic_auth', 'cookie', 'key_auth', 'ip_consumer_auth']
 
-site.form:
-  path: '/admin/about/site/form'
+site.api.action:
+  path: '/jsonapi/action/{plugin_id}'
   defaults:
-    _entity_form: "entity_form_display.edit"
-    _title: "Manage Site Form"
-    form_mode_name: "default"
-    entity_type_id: "site"
-    bundle: "default"
+    _title: 'Site API'
+    _controller: '\Drupal\site\Controller\SiteApiController::action'
   requirements:
-    _permission: 'administer site_definition'
+    _permission: 'access site actions pages'
+  options:
+    _auth: ['basic_auth', 'cookie', 'key_auth', 'ip_consumer_auth']
+    parameters:
+      plugin_id:
+        type: string
+  methods:
+    - POST
 
-site.advanced:
-  path: '/admin/about/site/settings'
+entity.site.site_actions:
+  path: '/site/{site}/action/{plugin_id}'
   defaults:
-    _entity_form: 'site_definition.edit'
-    _title: 'Advanced site settings'
+    _controller: '\Drupal\site\Controller\SiteActionController::form'
+    _title_callback: '\Drupal\site\Controller\SiteActionController::formPageTitle'
   requirements:
-    _permission: 'administer site entity settings'
-
-entity.site_definition.edit_form:
-  path: '/admin/about/site/settings/{site_definition}'
-  defaults:
-    _entity_form: 'site_definition.edit'
-    _title: 'Advanced site settings'
-  requirements:
-    _permission: 'administer site_definition'
-
-# Don't need until we need multiple definitions.
-#entity.site_definition.canonical:
-#  path: '/admin/about/site/definition/{site_definition}'
-#  defaults:
-#    _entity_form: 'site_definition.edit'
-#    _title: 'Edit site information'
-#  requirements:
-#    _permission: 'administer site_definition'
-
-#entity.site_definition.delete_form:
-#  path: '/admin/structure/site-definition/{site_definition}/delete'
-#  defaults:
-#    _entity_form: 'site_definition.delete'
-#    _title: 'Delete a site definition'
-#  requirements:
-#    _permission: 'administer site_definition'
+    _permission: 'access site actions pages'
+  options:
+    parameters:
+      site:
+        type: entity:site
+      plugin_id:
+        type: string

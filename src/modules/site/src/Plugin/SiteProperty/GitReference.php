@@ -13,7 +13,10 @@ use Drupal\site\SitePropertyPluginBase;
  *   id = "git_reference",
  *   name = "git_reference",
  *   label = @Translation("Git Reference"),
- *   description = @Translation("The git branch or tag the site is running.")
+ *   description = @Translation("The git branch or tag the site is running."),
+ *   site_bundles = {
+ *     "Drupal\site\Entity\Bundle\WebAppSiteBundle"
+ *   },
  * )
  */
 class GitReference extends SitePropertyPluginBase {
@@ -55,15 +58,16 @@ class GitReference extends SitePropertyPluginBase {
    * @return static
    *   A new field definition object.
    */
-  public function baseFieldDefinitions(EntityTypeInterface $entity_type, &$fields) {
+  static public function bundleFieldDefinitions(EntityTypeInterface $entity_type, $bundle, array $base_field_definitions) {
     $fields['git_reference'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Git Reference'))
       ->setRevisionable(TRUE)
+      ->setDisplayConfigurable('view', TRUE)
       ->setDisplayOptions('view', [
+        'label' => 'above',
         'type' => 'string',
-        'label' => 'inline',
-        'weight' => 10,
       ])
-      ->setDisplayConfigurable('view', TRUE);
+    ;
+    return $fields;
   }
 }

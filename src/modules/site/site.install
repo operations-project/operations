@@ -5,16 +5,76 @@
  * Install, update and uninstall functions for the Site module.
  */
 
+use Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface;
+
 /**
  * Implements hook_install().
  */
 function site_install() {
 
-  $site = \Drupal\site\Entity\SiteDefinition::load('self');
-  if ($site) {
-    $site->saveEntity(t('Initial site entity created on installation of site.module.'), true);
-  }
+  // Ok this is crazy.
+  // This should not be necessary, but...
+  // See site_entity_field_storage_info()
+  // See site_entity_field_storage_info call allPropertyFieldDefinitions
+  // See allPropertyFieldDefinitions return ALL fields from ALL bundles.
+  // See allPropertyFieldDefinitions return NO FIELDS when installing site.module.
+  // See empty $bundles = $EntityTypeBundleInfo->getBundleInfo($entity_type->id());
+  // Every time.
+  // Had to use debugging and install via the extend form to figure this out. :D
 
+  // So this hack just reinstalls all the fields.
+  // This is the fastest way I could figure out how to do this.
+  // Stolen from DevelEntityDefinitionUpdateManager
+
+  // reinstall storage
+  $changes = \Drupal::entityDefinitionUpdateManager()
+    ->getChangeList();
+
+  // @TODO: Move to something.
+  foreach ($changes as $entity_type_id => $change_list) {
+    // Process entity type definition changes before storage definitions ones
+    // this is necessary when you change an entity type from non-revisionable
+    // to revisionable and at the same time add revisionable fields to the
+    // entity type.
+    if (!empty($change_list['entity_type'])) {
+      //$this->doEntityUpdate($change_list['entity_type'], $entity_type_id);
+      \Drupal::entityDefinitionUpdateManager()
+        ->updateEntityType($change_list['entity_type']);
+    }
+
+    // Process field storage definition changes.
+    if (!empty($change_list['field_storage_definitions'])) {
+
+      $storage_definitions = \Drupal::service('entity_field.manager')->getFieldStorageDefinitions($entity_type_id);
+      $original_storage_definitions = \Drupal::service('entity.last_installed_schema.repository')->getLastInstalledFieldStorageDefinitions($entity_type_id);
+
+      foreach ($change_list['field_storage_definitions'] as $field_name => $change) {
+        $storage_definition = isset($storage_definitions[$field_name]) ? $storage_definitions[$field_name] : NULL;
+        $original_storage_definition = isset($original_storage_definitions[$field_name]) ? $original_storage_definitions[$field_name] : NULL;
+        //$this->doFieldUpdate($change, $storage_definition, $original_storage_definition);
+
+        $op = $change;
+        switch ($op) {
+          case EntityDefinitionUpdateManagerInterface::DEFINITION_CREATED:
+            \Drupal::service('field_storage_definition.listener')->onFieldStorageDefinitionCreate($storage_definition);
+            break;
+
+          case EntityDefinitionUpdateManagerInterface::DEFINITION_UPDATED:
+            if ($storage_definition && $original_storage_definition) {
+              \Drupal::service('field_storage_definition.listener')->onFieldStorageDefinitionUpdate($storage_definition, $original_storage_definition);
+            }
+            break;
+
+          case EntityDefinitionUpdateManagerInterface::DEFINITION_DELETED:
+            if ($original_storage_definition) {
+              \Drupal::service('field_storage_definition.listener')->onFieldStorageDefinitionDelete($original_storage_definition);
+            }
+            break;
+        }
+
+      }
+    }
+  }
 }
 
 /**

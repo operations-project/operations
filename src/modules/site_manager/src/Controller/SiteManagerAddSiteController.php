@@ -69,7 +69,7 @@ class SiteManagerAddSiteController extends ControllerBase {
       '#theme' => 'item_list',
       '#list_type' => 'ol',
       '#items' => [
-        $this->t('Visit About this site > Settings page. (/admin/about/site)'),
+        $this->t('Visit About this site > Settings page. (/admin/site/about)'),
         $this->t('Open the "Site Reporting" fieldset.'),
         $this->t('Check "Send on save".'),
         $this->t('Enter this URL into Site Data Destinations: <pre>@link</pre>', [

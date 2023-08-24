@@ -1,0 +1,59 @@
+uuid: 631af11b-ec58-4cc4-afe7-e4617c07717b
+langcode: en
+status: true
+dependencies:
+  config:
+    - site.drupal_project_type.default
+id: drupal_project.default.default
+targetEntityType: drupal_project
+bundle: default
+mode: default
+content:
+  created:
+    type: timestamp
+    label: above
+    settings:
+      date_format: medium
+      custom_date_format: ''
+      timezone: ''
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  drupal_project_environments_drupal_project_environments:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  drupal_site_environments_drupal_site_environments:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  drupal_site_name:
+    type: string
+    label: inline
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  drupal_site_uuid:
+    type: string
+    label: inline
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  git_remote:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  changed: true
+  status: true
+  uid: true

@@ -12,5 +12,15 @@
 * @see system_install()
 */
 function ox_stock_install() {
-  \Drupal::configFactory()->getEditable('system.theme')->set('default', 'claro');
+  \Drupal::configFactory()->getEditable('system.theme')->set('default', 'claro')->save();
+  \Drupal::configFactory()->getEditable('system.site')->set('name', 'Operations Dashboard')->save();
+  \Drupal::configFactory()->getEditable('system.site')->set('page.front', '/sites/all')->save();
+  \Drupal::service('module_installer')->install([
+    'site_manager',
+    'operations_ui',
+    'devel',
+    'devel_entity_updates',
+    'key_auth',
+    'rest',
+  ]);
 }

@@ -1,8 +1,8 @@
 
-site.status:
+site.about:
   title: 'About this site'
   description: 'Review state and other information about the site.'
-  route_name: site.status
+  route_name: site.about
   weight: -100
   parent: admin_toolbar_tools.help
   menu_name: admin
@@ -10,8 +10,8 @@ site.status:
 site.status_state:
   title: 'Status'
   description: 'Review state and other information about the site.'
-  route_name: site.status
-  parent: site.status
+  route_name: site.about
+  parent: site.about
   position: left
   weight: 10
 
@@ -20,7 +20,7 @@ site.history:
   title: 'History'
   description: 'View historical reports.'
   route_name: site.history
-  parent: site.status
+  parent: site.about
   position: left
   weight: 20
 
@@ -29,7 +29,7 @@ site.advanced:
   title: 'Settings'
   description: 'Change advanced site configuration such as state factors, git information, and remote connections.'
   route_name: site.advanced
-  parent: site.status
+  parent: site.about
   position: left
   weight: 30
 
@@ -38,7 +38,7 @@ site.edit:
   title: 'Edit site information'
   description: 'Edit information about the site.'
   route_name: site.edit
-  parent: site.status
+  parent: site.about
   position: left
   weight: 40
 
@@ -47,7 +47,7 @@ site.fields:
   title: 'Manage fields'
   description: 'Manage the fields and display of site information.'
   route_name: site.fields
-  parent: site.status
+  parent: site.about
   position: left
   weight: 50
 
@@ -55,18 +55,27 @@ site.save:
   title: 'Save Report'
   description: 'Save a snapshot of site data.'
   route_name: site.save
-  parent: site.status
+  parent: site.about
   position: left
   weight: 30
 
-#entity.site_environment.settings:
-#  title: 'Site Environment'
-#  description: 'Configure a Site Environment entity type.'
-#  route_name:  entity.site_environment.settings
-#  parent: system.admin_config_system
+entity.site.collection:
+  title: 'Sites'
+  description: 'List all site entities.'
+  route_name: entity.site.collection
+  parent: system.admin_content
+  weight: 10
 
-#entity.site_environment.collection:
-#  title: 'Site Environment'
-#  description: "Information about this site's environments."
-#  route_name: entity.site_environment.collection
-#  parent: system.admin_content
+entity.site_type.collection:
+  title: 'Site types'
+  description: 'Manage site types.'
+  parent: system.admin_structure
+  route_name: entity.site_type.collection
+  weight: 20
+
+
+entity.drupal_project_type.collection:
+  title: 'Drupal Project types'
+  description: 'Manage and CRUD actions on Drupal Project type.'
+  parent: system.admin_structure
+  route_name: entity.drupal_project_type.collection

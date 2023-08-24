@@ -1,5 +1,5 @@
 {
-    "name": "drupal/site-site",
+    "name": "drupal/site",
      "description": "Provides a Site entity about your website. Tracks state, metadata, and configuration changes over time using revisions.",
     "type": "drupal-module",
     "homepage": "https://drupal.org/project/operations",
@@ -28,6 +28,15 @@
     },
     "require": {
         "drupal/admin_toolbar": "^3.4",
-        "drupal/key_auth": "^2.1"
+        "drupal/key_auth": "^2.1",
+        "drupal/ip_consumer_auth": "^9.0@alpha",
+        "drupal/eva": "^3.0"
+    },
+    "extra": {
+        "patches": {
+            "drupal/core": {
+                "EntityViewsData for bundle fields": "https://www.drupal.org/files/issues/2021-11-09/2898635-48.patch"
+            }
+        }
     }
 }

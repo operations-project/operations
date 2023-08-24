@@ -8,5 +8,39 @@ site.site_type.*:
     label:
       type: label
       label: 'Label'
+    description:
+      type: text
+      label: 'Description'
+    help:
+      type: text
+      label: 'Help'
+    uuid:
+      type: string
+    label_collection:
+      type: string
+      label: 'Collection label'
+    label_singular:
+      type: string
+      label: 'Singular label'
+    label_plural:
+      type: string
+      label: 'Plural label'
+    label_count_singular:
+      type: string
+      label: 'Singulur count label'
+    label_count_plural:
+      type: string
+      label: 'Plural count label'
+
+site.drupal_project_type.*:
+  type: config_entity
+  label: 'Drupal Project type config'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: label
+      label: 'Label'
     uuid:
       type: string

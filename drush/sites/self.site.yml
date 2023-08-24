@@ -1,24 +1,37 @@
+'*':
+  root: /app
+  uri: http://${env-name}.lndo.site
 
-ox:
-  uri: 'https://ox.lndo.site'
-  root: /app/docroot
-  env-vars:
-    HTTP_HOST: ox.lndo.site
+  command:
+    site:
+      install:
+        options:
+          site-name: 'Welcome to ${env-name}'
 
-mercury:
-  uri: 'https://mercury.lndo.site'
-  root: /app/docroot
   env-vars:
-    HTTP_HOST: mercury.lndo.site
+    DRUPAL_SITE_HOST: ${env-name}.lndo.site
 
-venus:
-  uri: 'https://venus.lndo.site'
-  root: /app/docroot
-  env-vars:
-    HTTP_HOST: venus.lndo.site
-
-mars:
-  uri: 'https://mars.lndo.site'
-  root: /app/docroot
-  env-vars:
-    HTTP_HOST: mars.lndo.site
+#
+#ox:
+#  uri: 'https://ox.lndo.site'
+#  root: /app/docroot
+#  env-vars:
+#    HTTP_HOST: ox.lndo.site
+#
+#mercury:
+#  uri: 'https://mercury.lndo.site'
+#  root: /app/docroot
+#  env-vars:
+#    HTTP_HOST: mercury.lndo.site
+#
+#venus:
+#  uri: 'https://venus.lndo.site'
+#  root: /app/docroot
+#  env-vars:
+#    HTTP_HOST: venus.lndo.site
+#
+#mars:
+#  uri: 'https://mars.lndo.site'
+#  root: /app/docroot
+#  env-vars:
+#    HTTP_HOST: mars.lndo.site

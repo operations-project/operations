@@ -67,6 +67,9 @@ include:
   - bin/drush status
   - bin/drush sql:query "show tables"
   - bin/drush si ox_stock --yes
+
+  # Currently, fields are from plugins so install is not creating them properly.
+  # - bin/drush entup --yes
   # The install profile should handle this, but it's not working!
   - bin/drush cset system.theme default claro -y
   - bin/drush en site_manager operations_ui devel devel_entity_updates admin_toolbar key_auth restui -y
@@ -152,6 +155,7 @@ nightwatch:
     - *simpletest-db
     - *show-environment-variables
     - *setup-operations
+    - export PATH=./bin:$PATH
     - bin/drush behat
   artifacts:
     expire_in: 6 mos

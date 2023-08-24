@@ -1,4 +1,4 @@
-
+s
 .toolbar-icon-site.error:before {
     background-image: url(../../../../../../core/misc/icons/dc2323/error.svg);
 }
@@ -36,3 +36,458 @@
 .toolbar-icon-site-main:before {
     background-image: url(../../../../../../core/misc/icons/73b355/globe.svg);
 }
+
+
+/**
+ * Reusable colors.
+ */
+/** Info **/
+.state--1,
+.color-info
+{
+    color: #1B2D52 !important;
+    background-color: #d4e3ff !important;
+}
+
+/** OK **/
+.state-0,
+.color-success {
+    color: #325e1c !important;
+    background-color: #f3faef !important;
+}
+/** WARNING **/
+.state-1,
+.color-warning {
+    color: #734c00 !important;
+    background-color: #fdf8ed !important;
+}
+/** ERROR **/
+.state-2,
+.color-error {
+    color: #a51b00 !important;
+    background-color: #fcf4f2 !important;
+}
+
+a.state--1:before {    height: 1em;
+    content: "";
+    width: 1em;
+    display: inline-block;
+    background-size: 100% auto;
+    background-repeat: no-repeat;
+    background-image: url(../../../../../../core/misc/icons/000000/questionmark-disc.svg);
+    float: left;
+    margin-right: 1em;
+}
+a.state-0:before {    height: 1em;
+    content: "";
+    width: 1em;
+    display: inline-block;
+    background-size: 100% auto;
+    background-repeat: no-repeat;
+    background-image: url(../../../../../../core/misc/icons/73b355/check.svg);
+    float: left;
+    margin-right: 1em;
+}
+a.state-1:before {    height: 1em;
+    content: "";
+    width: 1em;
+    display: inline-block;
+    background-size: 100% auto;
+    background-repeat: no-repeat;
+    background-image: url(../../../../../../core/misc/icons/e29700/warning.svg);
+    float: left;
+    margin-right: 1em;
+}
+a.state-2:before {    height: 1em;
+    content: "";
+    width: 1em;
+    display: inline-block;
+    background-size: 100% auto;
+    background-repeat: no-repeat;
+    background-image: url(../../../../../../core/misc/icons/ee0000/ex.svg);
+    float: left;
+    margin-right: 1em;
+}
+
+.views-field-label a.button {
+    white-space: nowrap;
+}
+.views-field-label a:hover {
+    text-decoration: underline;
+}
+.view-sites.view-display-id-page_2 .views-row {
+    display: inline-block;
+}
+.view-sites.view-display-id-page_2 .views-row .views-field-label a.button {
+    margin:0;
+}
+
+a.table-button,
+a.table-button-state
+{
+    display: inline-block;
+    margin: 0;
+    vertical-align: middle;
+    align-content: center;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-width: 15em;
+    min-width: 5em;
+    overflow: hidden;
+}
+
+a.table-button-state {
+    width: 100%;
+}
+
+.site-display > legend {
+    display: inline-block;
+}
+
+.site-display > legend.fieldset__legend {
+    display: inline-block;
+    width: auto;
+    margin: 0;
+}
+
+.site-display .fieldset__wrapper {
+    margin-top: 0;
+}
+
+.site-timestamp .field--name-revision-timestamp {
+    display: inline-block;
+}
+.site-timestamp legend {
+    display: inline-block;
+    width: auto;
+    margin: 0;
+}
+
+.site-timestamp .timestamp-ago {
+    float: right;
+    padding: 1rem;
+    line-height: 1rem;
+    margin: 0;
+}
+.site-timestamp blockquote {
+    clear: both;
+    font-size: 1rem;
+    font-style: italic;
+}
+
+fieldset.site-display details,
+fieldset.site-display fieldset,
+
+fieldset.site-timestamp details,
+fieldset.site-timestamp fieldset
+{
+    clear: both;
+    /*margin: 0 -1.5rem -1.75rem;*/
+    border-left: none;
+    border-right: none;
+    border-bottom: none;
+    box-shadow: none;
+    position: relative;
+}
+
+fieldset.site-display fieldset .fieldset__wrapper {
+    margin-bottom: 0;
+}
+
+.site-urls fieldset .fieldset__wrapper {
+    margin-left: 0;
+}
+.site-state details {
+}
+.site-state summary,
+.site-state fieldset .fieldset__label {
+    padding-left: 3rem;
+    position: relative;
+}
+.site-state .icon::before {
+    position: absolute;
+    top: 1em;
+    left: 1rem;
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    margin-right: 0.625rem; /* LTR */
+    content: "x";
+    text-indent: -100000px;
+    vertical-align: top;
+    background-repeat: no-repeat;
+    background-position: top center;
+    background-size: Show contain;
+}
+.site-state details .icon::before {
+  left: 2rem;
+}
+
+.site-state details summary {
+    padding-left: 3.5rem;
+}
+
+.site-state .state-error .icon::before {
+    background-image: url(../../../../../../core/misc/icons/ee0000/ex.svg);
+}
+.site-state .state-warning .icon::before {
+    background-image: url(../../../../../../core/misc/icons/e29700/warning.svg);
+}
+.site-state .state-success .icon::before {
+    background-image: url(../../../../../../core/misc/icons/73b355/check.svg);
+}
+
+.site-display {
+    position: relative;
+}
+
+.site-display fieldset,
+.site-display details
+{
+    margin: 0;
+}
+
+.site-display .fieldset__wrapper {
+    margin: 0;
+    min-height: 100%;
+}
+.site-display > .fieldset__wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.site-display .site-header,
+.site-display .site-header * {
+  background-color: whitesmoke !important;
+}
+.site-display .site-header .site-operations,
+.site-display .site-header .site-operations .dropbutton-wrapper,
+.site-display .site-header .site-operations .dropbutton-toggle button,
+.site-display .site-header .site-operations .dropbutton-widget,
+.site-display .site-header .site-operations .dropbutton,
+.site-display .site-header .site-operations .dropbutton__item {
+  background-color: transparent !important;
+}
+.site-display .site-header .site-operations .dropbutton .edit a {
+    padding-right: 2rem !important;
+}
+
+.site-display .site-title {
+    float: left;
+}
+
+.site-display .site-operations {
+}
+
+.site-display .site-content {
+    white-space: normal;
+    display: inline-block;
+}
+
+.site-display .site-title,
+.site-display .site-content,
+.site-display .site-operations
+{
+    line-height: 1.0rem;
+    margin: 0;
+}
+
+.site-display .site-content .field {
+    padding: 0.5rem 1rem;
+    line-height: 1.0rem;
+    margin: 0;
+    display: inline-grid;
+}
+
+.site-display .site-header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    padding: 0;
+    line-height: 1.5rem;
+}
+
+.site-display .site-header .site-title {
+    align-self: flex-start;
+    flex-grow: 3;
+}
+.site-display .site-header .site-title a {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.site-display .site-header .site-operations {
+    align-self: flex-end;
+    position: absolute;
+}
+.site-display .site-content
+{
+    flex-grow: 8;
+}
+.site-display .site-title
+{
+    padding: 0;
+}
+.site-display .site-title a {
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+}
+
+.site-display .site-state {
+}
+
+.site-display .site-content .field__label {
+    display: inline-block;
+    font-weight: normal;
+    text-transform: uppercase;
+    font-size: .7em;
+}
+.site-display .site-content .field__item {
+
+    font-family: monospace;
+
+}
+.site-urls {
+    overflow: hidden;
+}
+.site-urls .item-list ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.site-urls .item-list ul li {
+  display: inline-block;
+    margin: 0;
+}
+
+.site-urls .item-list ul li a {
+    font-size: 0.7rem;
+    padding: 0.5rem 1rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.site-operations {
+    float: right;
+    margin-right: -1rem;
+}
+
+.site-display .site-urls fieldset.form-item {
+    margin: 0;
+}
+
+.site-display .site-content fieldset {
+    padding: 1rem;
+}
+
+.site-operations .dropbutton-wrapper,
+.site-operations .dropbutton-widget {
+    border: none !important;
+    box-shadow: none !important;
+}
+.site-operations ul.dropbutton,
+.site-operations button.dropbutton__toggle {
+    height: 3rem !important;
+}
+.site-operations .dropbutton a,
+.site-operations .dropbutton button {
+    display: inline-block;
+    padding: 0.75rem 1rem !important;
+    cursor: pointer;
+    text-decoration: none;
+    color: #55565b;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    background-color: #fff;
+    font-size: 1rem !important;
+    font-weight: 700;
+    line-height: 1.5rem !important;
+    text-align: right;
+}
+
+.site-operations .dropbutton .dropbutton-toggle {
+
+}
+
+.view-sites .view-content {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    gap: 1rem;
+}
+
+
+@media screen and (max-width: 768px) {
+    .view-sites .view-content {
+        grid-template-columns: auto auto;
+    }
+}
+@media screen and (max-width: 425px) {
+    .view-sites .view-content {
+        grid-template-columns: auto;
+    }
+}
+@media screen and (min-width: 1900px) {
+    .view-sites .view-content {
+        grid-template-columns: auto auto auto auto;
+    }
+}
+
+
+@media screen and (min-width: 2500px) {
+    .view-sites .view-content {
+        grid-template-columns: auto auto auto auto auto;
+    }
+}
+
+
+.site-state .site-changed {
+    display: inline;
+    font-weight: normal;
+    font-style: italic;
+    font-size: .8em;
+    margin-left: 1rem;
+}
+
+.site-display .site-state {
+    width: 100%;
+}
+
+.site-display .site-subheader {
+    background: #eee;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    display: flex;
+    justify-content: space-between;
+}
+
+.site-display .site-subheader span,
+.site-display .site-subheader em,
+.site-display .site-subheader a,
+.site-display .site-subheader .field > div
+
+{
+    color: #555;
+    padding: .5rem;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.site-display .site-subheader a:hover {
+    text-decoration: underline;
+}
+
+.site-display .site-subheader div
+{
+    display: inline-block;
+}
+.site-display .site-manager {
+    align-self: flex-start;
+}
+
+.site-display .site-self {
+    align-self: flex-end;
+}
+

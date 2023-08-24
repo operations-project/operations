@@ -26,6 +26,13 @@ class SiteProperty extends Plugin {
   public $name;
 
   /**
+   * If true, property will be loaded for remote sites.
+   *
+   * @var bool
+   */
+  public $remote;
+
+  /**
    * If true, hide the property on view pages.
    *
    * @var bool
@@ -38,6 +45,13 @@ class SiteProperty extends Plugin {
    * @var string
    */
   public $default_value;
+
+  /**
+   * A list of bundle classes to attach this property to.
+   *
+   * @var string
+   */
+  public $site_bundles;
 
   /**
    * The human-readable name of the plugin.

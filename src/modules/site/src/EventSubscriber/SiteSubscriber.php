@@ -4,8 +4,11 @@ namespace Drupal\site\EventSubscriber;
 
 use Drupal\Core\Config\ConfigCrudEvent;
 use Drupal\Core\Config\ConfigEvents;
+use Drupal\Core\Link;
 use Drupal\site\Entity\SiteDefinition;
 use Drupal\site\Entity\SiteEntity;
+use Drupal\site\Event\SitePreSaveEvent;
+use Drupal\site\SiteSelf;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
@@ -17,18 +20,40 @@ use Symfony\Component\HttpKernel\KernelEvents;
 class SiteSubscriber implements EventSubscriberInterface {
 
   /**
-   * @var SiteEntity
+   * @var SiteSelf
    */
   protected $site;
+
+  /**
+   * @var array
+   */
+  protected $config_changes;
 
   /**
    * {@inheritdoc}
    */
   public static function getSubscribedEvents() {
     return [
+      SitePreSaveEvent::SITE_PRESAVE => ['sitePresave'],
       KernelEvents::RESPONSE => ['onKernelResponse'],
       ConfigEvents::SAVE => ['onConfigSave'],
     ];
+  }
+
+  /**
+   * In Entity::presave(), if site is self, load properties, state, and reason.
+   *
+   * @param SitePreSaveEvent $event
+   * @return void
+   */
+  public function sitePresave(SitePreSaveEvent $event) {
+    if ($event->site_entity->isSelf()) {
+      $site = \Drupal::service('site.self')->prepareEntity($event->site_entity);
+    }
+    else {
+      $site = \Drupal::service('site.remote')->prepareEntity($event->site_entity);
+    }
+    $event->site_entity = $site;
   }
 
   /**
@@ -38,35 +63,38 @@ class SiteSubscriber implements EventSubscriberInterface {
    *   Response event.
    */
   public function onConfigSave(ConfigCrudEvent $event) {
-    $site = $this->site ?? SiteDefinition::load('self');
-    if ($site && !\Drupal::state()->get('site_config_events_disable')  && !empty($site->get('settings')['save_on_config'])) {
-      $data = $site->get('data');
-      $data['config_changes'][$event->getConfig()->getName()] = [
+    if (!\Drupal::state()->get('site_config_events_disable')  && \Drupal::config('site.settings')->get('save_on_config')) {
+      $this->config_changes[$event->getConfig()->getName()] = [
         'original' => $event->getConfig()->getOriginal(),
         'new' => $event->getConfig()->get(),
         'user' => \Drupal::currentUser()->getDisplayName(),
         'ip' => \Drupal::request()->getClientIp(),
         'url' => \Drupal::request()->getUri(),
       ];
-      $site->set('data', $data);
     }
-    $this->site = $site;
   }
 
   public function onKernelResponse(ResponseEvent $event) {
-    if ($this->site) {
-      if (!empty($this->site->get('data')['config_changes'])) {
-        $entity = $this->site->saveEntity(t('Configs :config updated at :url by ":user" (:ip)', [
-          ':config' => implode(', ', array_keys($this->site->get('data')['config_changes'])),
+    if ($this->config_changes) {
+      try {
+
+        $entity = \Drupal::service('site.self')->saveEntity(t('Configs :config updated at :url by ":user" (:ip)', [
+          ':config' => implode(', ', array_keys($this->config_changes)),
           ':user' => \Drupal::currentUser()->getDisplayName(),
           ':url' => \Drupal::request()->getUri(),
           ':ip' => \Drupal::request()->getClientIp(),
         ]));
-
-        \Drupal::messenger()->addStatus(t('Site report saved: @link', [
-          '@link' => $entity->toLink()->toString(),
-        ]));
       }
+      catch (\Exception $e) {
+        \Drupal::messenger()->addError(t('Unable to save site report on configuration change: @message', [
+          '@message' => $e->getMessage()
+        ]));
+        return;
+      }
+
+      \Drupal::messenger()->addStatus(t('Site report saved: @link', [
+        '@link' => Link::createFromRoute( \Drupal::service('site.self')->getEntity()->label(), 'site.history')->toString(),
+      ]));
     }
   }
 }

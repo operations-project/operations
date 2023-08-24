@@ -5,5 +5,8 @@ package: Operations
 core_version_requirement: ">=8"
 dependencies:
   - admin_toolbar_tools
+  - eva
   - key_auth
   - serialization
+  - rest
+  - jsonapi

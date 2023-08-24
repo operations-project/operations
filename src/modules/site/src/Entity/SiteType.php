@@ -34,7 +34,6 @@ use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
  *   entity_keys = {
  *     "id" = "id",
  *     "label" = "label",
- *     "uuid" = "uuid"
  *   },
  *   links = {
  *     "add-form" = "/admin/structure/site_types/add",
@@ -45,7 +44,13 @@ use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
  *   config_export = {
  *     "id",
  *     "label",
- *     "uuid",
+ *     "label_collection",
+ *     "label_singular",
+ *     "label_plural",
+ *     "label_count_singular",
+ *     "label_count_plural",
+ *     "description",
+ *     "help",
  *   }
  * )
  */
@@ -64,5 +69,37 @@ class SiteType extends ConfigEntityBundleBase {
    * @var string
    */
   protected $label;
+  protected $label_collection = 'Sites';
+  protected $label_singular = 'site';
+  protected $label_plural = 'sites';
+  protected $label_count_singular = '@count site';
+  protected $label_count_plural = '@count sites';
 
+  /**
+   * A brief description of this node type.
+   *
+   * @var string
+   */
+  protected $description;
+
+  /**
+   * Help information shown to the user when creating a Node of this type.
+   *
+   * @var string
+   */
+  protected $help;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getHelp() {
+    return $this->help;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getDescription() {
+    return $this->description;
+  }
 }

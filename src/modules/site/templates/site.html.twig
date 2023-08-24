@@ -13,7 +13,7 @@
  * @see template_preprocess_site()
  */
 #}
-<article{{ attributes }}>
+{#<article{{ attributes }}>#}
   {% if view_mode != 'full' %}
     {{ title_prefix }}
     {{ title_suffix }}
@@ -21,4 +21,5 @@
   {% if content %}
     {{- content -}}
   {% endif %}
-</article>
+
+{#</article>#}

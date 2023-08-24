@@ -1,0 +1,25 @@
+state_factors:
+  system: system
+
+configs_load: |
+  system.site
+
+states_load: |
+  install_time
+  system.cron_last
+  system.maintenance_mode
+
+save_on_config: true
+save_interval: 86400
+
+
+site_manager:
+  api_url: ''
+  api_key: ''
+  send_on_save: false
+  fields_allow_override: ""
+  configs_allow_override: ""
+  states_allow_override: ""
+  send_destinations: ""
+  suggested_api_name: Sites.Watch
+  suggested_api_url: https://sites.watch?utm_source=site_module

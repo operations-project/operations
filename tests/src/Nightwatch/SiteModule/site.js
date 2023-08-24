@@ -11,7 +11,7 @@ module.exports = {
     'Visit the site status page': (browser) => {
         browser
             .drupalLoginAsAdmin()
-            .drupalRelativeURL('/admin/about/site')
+            .drupalRelativeURL('/admin/site/about')
             .waitForElementVisible('body', 1000)
             .assert.containsText('body', 'About this site')
             .click('#button--action')

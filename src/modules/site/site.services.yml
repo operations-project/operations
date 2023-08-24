@@ -7,3 +7,20 @@ services:
     class: Drupal\site\EventSubscriber\SiteSubscriber
     tags:
       - { name: event_subscriber }
+
+  site.redirect_subscriber:
+    class: Drupal\site\EventSubscriber\SiteRedirectSubscriber
+    tags:
+      - { name: event_subscriber }
+
+  site.self:
+    class: Drupal\site\SiteSelf
+    arguments: ['@config.factory', '@logger.factory', '@plugin.manager.site_property']
+
+  site.remote:
+    class: Drupal\site\SiteRemote
+    arguments: ['@config.factory', '@logger.factory', '@plugin.manager.site_property']
+
+  plugin.manager.site_action:
+    class: Drupal\site\SiteActionPluginManager
+    parent: default_plugin_manager

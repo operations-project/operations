@@ -56,12 +56,43 @@ function site_manager_entity_type_build(array &$entity_types) {
   /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
 
   // Enable the site collection page.
-  $entity_types['site']->setLinkTemplate('add-page', '/admin/content/sites/add');
-  $entity_types['site']->setLinkTemplate('collection', '/admin/content/sites');
-  $entity_types['site_type']->setLinkTemplate('collection', '/admin/structure/site_types');
+  if (!empty($entity_types['site'])) {
+//    $entity_types['site_definition']->setLinkTemplate('add-page', '/sites/add');
+//    $entity_types['site_definition']->setLinkTemplate('add-form', '/sites/add');
+//    $entity_types['site_definition']->setLinkTemplate('collection', '/admin/content/site_definitions');
 
+//    // Add to Siteentity
+//    $entity_types['site']->setLinkTemplate('add-page', '/site/add');
+//    $entity_types['site']->setLinkTemplate('collection', '/admin/content/sites');
+//
+//    $entity_types['site_type']->setLinkTemplate('collection', '/admin/structure/site_types');
+
+  }
 }
 
-function site_manager_form_site_default_edit_form_alter(array $form, $form_state) {
-//  dsm($form);
+/**
+ * Alter site entity form to pout API key and URL in a fieldset.
+ *
+ * @param array $form
+ * @param $form_state
+ * @return void
+ */
+function site_manager_form_site_form_alter(array &$form, $form_state) {
+    // Remote Site Connection fields.
+    $form['api'] = [
+      '#type' => 'details',
+      '#title' => t('Site API'),
+      '#group' => 'advanced',
+      '#attributes' => [
+        'class' => ['site-form-api'],
+      ],
+      '#attached' => [
+//        'library' => ['node/drupal.node'],
+      ],
+      '#weight' => -80,
+      '#optional' => TRUE,
+    ];
+
+    $form['api_key']['#group'] = 'api';
+    $form['api_url']['#group'] = 'api';
 }

@@ -1,0 +1,80 @@
+site.settings:
+  type: config_object
+  label: 'Site Entity Settings'
+  mapping:
+
+    state_factors:
+      type: sequence
+      label: 'List of enabled state factors.'
+      sequence:
+        type: string
+
+    configs_load:
+      type: string
+      label: 'List of configuration objects to save in the site entity.'
+
+    states_load:
+      type: string
+      label: 'List of state values to save in the site entity.'
+
+    save_on_config:
+      type: boolean
+      label: 'Save site revision when configuration is updated.'
+
+    save_interval:
+      type: integer
+      label: 'Send site reports after this many seconds.'
+
+    send_destinations:
+      type: string
+      label: 'List of URLs to post site entity data to.'
+
+    site_manager:
+      type: mapping
+      mapping:
+        api_url:
+          type: uri
+          label: 'Site Manager API URL'
+
+        api_key:
+          type: string
+          label: 'Site Manager API Key'
+
+        send_on_save:
+          type: boolean
+          label: 'Send a site report every time one is saved.'
+
+        fields_allow_override:
+          type: string
+          label: 'Fields that will be updated with data received from site manager.'
+
+        configs_allow_override:
+          type: string
+          label: 'Configuration objects that will be updated with data received from site manager.'
+
+        state_allow_override:
+          type: string
+          label: 'State values will be updated with data received from site manager.'
+
+        suggested_api_url:
+          type: string
+          default:
+
+        suggested_api_name:
+          type: string
+
+field.formatter.settings.site_state:
+  type: mapping
+  label: State formatter settings
+  mapping:
+    show_reason:
+      type: string
+      label: Show reasons
+
+    reason_collapsible:
+      type: string
+      label: Collapsible fieldset
+
+    reason_open:
+      type: string
+      label: Fieldset is open or closed.

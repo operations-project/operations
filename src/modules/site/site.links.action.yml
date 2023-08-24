@@ -1,39 +1,47 @@
-#site.type_add:
-#  title: 'Add site type'
-#  route_name: entity.site_type.add_form
-#  appears_on:
-#    - entity.site_type.collection
-#
-#site.add_page:
-#  title: 'Add site'
-#  route_name: 'entity.site.add_form'
-#  appears_on:
-#    - entity.site.collection
-
-# @TODO: Move to Operations Manager module.
-#entity.site_definition.add_form:
-#  route_name: 'entity.site_definition.add_form'
-#  title: 'Add site definition'
-#  appears_on:
-#    - entity.site_definition.collection
-
-#site_environment.add_form:
-#  title: 'Add environment'
-#  route_name: entity.site_environment.add_form
-#  appears_on:
-#    - entity.site_environment.collection
 site.field_add:
   title: 'Add field'
   route_name: field_ui.field_storage_config_add_site
   route_parameters:
-    site_type: default
+    site_type: drupal
   appears_on:
     - site.fields
 
 site.save:
-  title: 'Save report'
+  title: 'Refresh data'
   route_name: site.save
   appears_on:
-    - site.status
+    - site.about
     - site.history
     - site.settings
+
+site.add_page:
+  title: 'Add site'
+  route_name: entity.site.add_page
+  appears_on:
+    - entity.site.collection
+    - entity.site.collection.types
+    - view.sites.page_1
+
+site.type_add:
+  title: 'Add site type'
+  route_name: entity.site_type.add_form
+  appears_on:
+    - entity.site_type.collection
+
+entity.site.refresh:
+  title: 'Refresh data'
+  route_name: entity.site.refresh
+  appears_on:
+    - entity.site.canonical
+
+drupal_project.type_add:
+  title: 'Add drupal project type'
+  route_name: entity.drupal_project_type.add_form
+  appears_on:
+    - entity.drupal_project_type.collection
+
+drupal_project.add_page:
+  title: 'Add drupal project'
+  route_name: entity.drupal_project.add_page
+  appears_on:
+    - entity.drupal_project.collection

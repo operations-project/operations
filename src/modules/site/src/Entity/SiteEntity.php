@@ -5,26 +5,44 @@ namespace Drupal\site\Entity;
 use _PHPStan_978789531\Nette\PhpGenerator\Parameter;
 use _PHPStan_978789531\Symfony\Contracts\Service\Attribute\Required;
 use Drupal\backup_migrate\Core\Plugin\PluginCallerTrait;
+use Drupal\Component\Plugin\Exception\ContextException;
 use Drupal\Component\Serialization\Json;
+use Drupal\Component\Utility\UrlHelper;
+use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityChangedInterface;
 use Drupal\Core\Entity\EntityChangedTrait;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Entity\EntityTypeBundleInfo;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\RevisionableContentEntityBase;
 use Drupal\Core\Entity\RevisionableEntityBundleInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Field\Plugin\Field\FieldType\MapItem;
+use Drupal\Core\Link;
+use Drupal\Core\Routing\RedirectDestinationTrait;
+use Drupal\Core\Routing\RouteMatch;
 use Drupal\Core\Serialization\Yaml;
 use Drupal\Core\Url;
+use Drupal\jsonapi\JsonApiResource\ResourceObject;
+use Drupal\jsonapi\Normalizer\ResourceObjectNormalizer;
+use Drupal\site\Entity\Bundle\SiteManangerSiteBundle;
+use Drupal\site\Event\SitePreSaveEvent;
 use Drupal\site\SiteEntityTrait;
+use Drupal\site\SitePropertyBundleFieldDefinitionsTrait;
+use Drupal\site\SiteSelf;
 use Drupal\user\EntityOwnerInterface;
 use Drupal\user\EntityOwnerTrait;
 use Drupal\site\SiteEntityInterface;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Psr7\Response;
+use Symfony\Component\HttpFoundation\HeaderBag;
 
 /**
  * Defines the site entity class.
@@ -45,6 +63,7 @@ use GuzzleHttp\Psr7\Response;
  *     "views_data" = "Drupal\views\EntityViewsData",
  *     "access" = "Drupal\site\SiteAccessControlHandler",
  *     "form" = {
+ *       "default" = "Drupal\site\Form\SiteForm",
  *       "add" = "Drupal\site\Form\SiteForm",
  *       "edit" = "Drupal\site\Form\SiteForm",
  *       "delete" = "Drupal\Core\Entity\ContentEntityDeleteForm",
@@ -60,18 +79,23 @@ use GuzzleHttp\Psr7\Response;
  *   show_revision_ui = TRUE,
  *   admin_permission = "administer sites",
  *   entity_keys = {
- *     "id" = "site_uuid",
- *     "bundle" = "type",
+ *     "id" = "sid",
+ *     "uuid" = "uuid",
+ *     "bundle" = "site_type",
  *     "revision" = "vid",
- *     "label" = "site_title",
+ *     "label" = "label",
  *     "owner" = "uid",
  *   },
  *   links = {
- *     "canonical" = "/admin/reports/site/{site}",
- *     "edit-form" = "/admin/reports/site/{site}/edit",
- *     "delete-form" = "/admin/reports/site/{site}/delete",
- *     "version_history" = "/admin/reports/site/{site}/history",
- *     "revision" = "/admin/reports/site/{site}/history/{site_revision}/view",
+ *     "collection" = "/admin/content/site",
+ *     "add-form" = "/site/add/{site_type}",
+ *     "add-page" = "/site/add",
+ *     "canonical" = "/site/{site}",
+ *     "edit-form" = "/site/{site}/edit",
+ *     "refresh" = "/site/{site}/refresh",
+ *     "delete-form" = "/site/{site}/delete",
+ *     "version_history" = "/site/{site}/history",
+ *     "revision" = "/site/{site}/history/{site_revision}/view",
  *   },
  *   revision_metadata_keys = {
  *     "revision_user" = "revision_uid",
@@ -81,54 +105,181 @@ use GuzzleHttp\Psr7\Response;
  *   bundle_entity_type = "site_type",
  *   field_ui_base_route = "entity.site_type.edit_form",
  *   common_reference_target = TRUE,
+ *   constraints = {
+ *     "SiteUniqueUrl" = {},
+ *     "SiteDrupalProjectExists" = {}
+ *   }
  * )
+ *
+ * The "SiteDrupalProjectExists" only affects DrupalSiteBundles. Can we apply a
+ * constraint to a bundle?
+ *
  */
 class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInterface {
 
   use EntityChangedTrait;
   use EntityOwnerTrait;
+  use SiteEntityTrait;
+  use RedirectDestinationTrait;
+  use SitePropertyBundleFieldDefinitionsTrait;
+
+  protected HeaderBag $headers;
+
+  protected bool $is_live = false;
 
   protected array $property_plugins;
+
+  /**
+   * @var bool True if the site was sent successfully.
+   */
+  public bool $sent = false;
 
   /**
    * @param $id string Site UUID. If not supplied, will load this site.
    * @inheritdoc
    */
-  static public function load($id = null) {
-    // If ID is not supplied, use site UUID.
-    $site = parent::load($id ?: self::getSiteUuid());
+  static public function load($id) {
+    $site = parent::load($id);
 
-    if ($site) {
+    // If loading itself, load live plugin data.
+    // NOTE: This function does NOT get called on the site's canonical page /site/X or revisions
+    // Not sure why.
+//    if ($site->isSelf()) {
       // Load plugin data.
-      // See https://www.drupal.org/docs/drupal-apis/plugin-api/creating-your-own-plugin-manager
-      $type = \Drupal::service('plugin.manager.site_property');
-      $plugin_definitions = $type->getDefinitions();
-      foreach ($plugin_definitions as $name => $plugin_definition) {
-        $plugin = $type->createInstance($plugin_definition['id']);
-        $data = $site->get('data')->getValue();
-        $data['plugins'][$name] = $plugin->value();
-        $site->set('data', $data);
-        if ($site->hasField($name)) {
-          $site->set($name, $plugin->value());
-        }
-      }
-    }
+//      $plugin_data = static::getPluginData();
+//      $site->set('state', $plugin_data['state']);
+//      $site->set('reason', $plugin_data['reason']);
+//      foreach ($plugin_data['properties'] as $name => $property) {
+//        if ($site->hasField($name)) {
+//          $site->set($name, $property['value']);
+//        }
+//      }
+//      $site->is_live = true;
+//    }
     return $site;
   }
 
-  public static function create(array $values = []) {
+  /**
+   * Load all site managers for this site. Just a list of all 'site_manager' sites.
+   *
+   * @return array|SiteManangerSiteBundle
+   */
+  public function loadSiteManagers() {
+    $site_managers = [];
+    $site_manager_settings = \Drupal::configFactory()->get('site.settings')->get('site_manager');
+    if (!empty($site_manager_settings['api_url'])) {
+      $site_managers[] = SiteEntity::create([
+        'site_type' => 'site_manager',
+        'site_uri' => $site_manager_settings['api_url'],
+        'api_url' => $site_manager_settings['api_url'],
+        'hostname' => $site_manager_settings['api_url'],
+        'api_key' => $site_manager_settings['api_key'],
+      ]);
+    }
+    $site_manager_ids = \Drupal::entityQuery('site')
+      ->condition('site_type', 'site_manager')
+      ->condition('status', 1)
+      ->execute() ?? [];
 
-    // Load plugin data.
-    // See https://www.drupal.org/docs/drupal-apis/plugin-api/creating-your-own-plugin-manager
+    foreach ($site_manager_ids as $site_manager_id) {
+      $site_managers[] = SiteEntity::load($site_manager_id);
+    }
+    return $site_managers;
+  }
+
+  /**
+   * If the entity is showing live data. (only on self.)
+   * @return bool
+   */
+  public function isLive() {
+    return $this->is_live;
+  }
+
+  static public function getPluginData() {
+    $site_definition = SiteDefinition::load('self');
     $type = \Drupal::service('plugin.manager.site_property');
     $plugin_definitions = $type->getDefinitions();
+    $worst_plugin_state = self::SITE_OK;
+    $plugin_data = [];
     foreach ($plugin_definitions as $name => $plugin_definition) {
       $plugin = $type->createInstance($plugin_definition['id']);
-      $values['data']['properties'][$plugin->name()] = $plugin->value();
-      $values[$plugin->name()] = $plugin->value();
 
+      $plugin_data['properties'][$name] = [
+        'value' => $plugin->value(),
+      ];
+
+      if (method_exists($plugin, 'state')) {
+        $plugin_state = $plugin->state($site_definition);
+        $plugin_data['properties'][$name]['state'] = $plugin_state;
+
+        if ($plugin_state > $worst_plugin_state) {
+          $worst_plugin_state = $plugin_state;
+        }
+      }
     }
+    $plugin_data['state'] = $worst_plugin_state;
+    $plugin_data['reason'] = $site_definition->get('reason');
+    return $plugin_data;
+  }
 
+  /**
+   * Add item to the state reason build array.
+   * @param array $build
+   * @return void
+   */
+  public function addReason($value) {
+    $reasons = $this->reason->getValue();
+    $reasons[] = $value;
+    $this->reason->setValue($reasons);
+  }
+
+  /**
+   * Add item to the data property.
+   * @param array $build
+   * @return void
+   */
+  public function addData($key, $value) {
+    $data = $this->data->value;
+    $data[$key] = $value;
+    $this->set('data', $data);
+  }
+
+  /**
+   * Load the site entity for the current site.
+   * @return SiteEntity
+   */
+  public static function loadSelf() {
+    return self::loadBySiteUrl(static::getUri());
+  }
+
+  /**
+   * @param $id string Site UUID. If not supplied, will load this site.
+   * @inheritdoc
+   */
+  static public function loadBySiteUrl($site_url) {
+
+    $url_host = parse_url($site_url, PHP_URL_HOST);
+    $sites = \Drupal::entityTypeManager()
+      ->getStorage('site')
+      ->loadByProperties([
+        'hostname' => [$url_host],
+      ])
+    ;
+    $site = array_shift($sites);
+    if ($site) {
+      return static::load($site->id());
+    }
+  }
+
+  public static function create(array $values = []) {
+//
+//    // Load plugin data.
+//    $plugin_data = static::getPluginData();
+//    $values['state'] = $plugin_data['state'];
+//    $values['reason'] = $plugin_data['reason'];
+//
+//    $values['data']['properties'] = $plugin_data['properties'];
+//    $values += $plugin_data['properties'];
     return parent::create($values);
   }
 
@@ -136,9 +287,9 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
    * Return the view array of the site entity.
    * @return array
    */
-  public function view() {
+  public function view($mode = 'full') {
     $view_builder = \Drupal::entityTypeManager()->getViewBuilder('site');
-    $build = $view_builder->view($this);
+    $build = $view_builder->view($this, $mode);
     return $build;
   }
 
@@ -151,6 +302,19 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
       // If no owner has been set explicitly, make the anonymous user the owner.
       $this->setOwnerId(0);
     }
+
+    if ($this->isSelf()) {
+      \Drupal::service('site.self')->prepareEntity($this);
+    }
+    else {
+      $this->getRemote();
+    }
+//
+//    // Dispatch site presave event.
+//    $event = new SitePreSaveEvent($this);
+//    $event_dispatcher = \Drupal::service('event_dispatcher');
+//    $event_dispatcher->dispatch($event, SitePreSaveEvent::SITE_PRESAVE);
+
   }
 
   /**
@@ -158,37 +322,114 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
    */
   public function save()
   {
-    // @TODO: Only send when site is self, or site_manager can POST back (if we have API key).
+
+    // Always set a new revision with create timestamp set to Now. (After property generation/retrieval)
+    $this->setNewRevision();
+    $this->setRevisionCreationTime(\Drupal::time()->getCurrentTime());
+
+    // Normalize URL.
+    if (!empty($this->site_uri->getValue())) {
+      $url = parse_url($this->site_uri->value);
+      $url_host = $url['host'];
+
+      // If no hostname, set from URI.
+      if (empty($this->hostname->getValue())) {
+        $this->hostname->setValue($url_host);
+      }
+
+      // If no label, parse URL.
+      if (empty($this->label->getValue())) {
+        $this->label->setValue($url_host);
+      }
+    }
+
     /** @var MapItem $settings */
-    $settings = SiteDefinition::load('self')->get('settings');
-    if (!empty($settings['send_on_save']) && !$this->no_send) {
+    $settings = \Drupal::config('site.settings');
+    if ($this->isSelf() && !empty($settings->get('site_manager')['send_on_save']) && !$this->no_send) {
       // send() triggers this function again with "no_send", so we don't need to call saveConfig().
-      $this->send();
+      try {
+        $this->send();
+      }
+      catch (\Exception $e) {
+        throw new EntityStorageException($e->getMessage());
+      }
     }
     else {
 
       // SaveConfig and state, THEN save entity so it stores the new values.
-      $this->saveConfig();
-      $this->saveState();
+      if ($this->isSelf()) {
+        $this->saveConfig();
+        $this->saveState();
+      }
+
+      // Set changed as well.
+      $this->changed = time();
 
       // @TODO: Reload and save again so new config and states are included in the report.
 
       parent::save();
+      \Drupal::logger('site')->info('Site entity saved from {url}: {entity}', [
+        'url' => \Drupal::request()->getUri(),
+        'entity' => $this->toUrl('canonical', ['absolute' => true])->toString(),
+      ]);
     }
+  }
+
+  /**
+   * Saves the current site's entity with new parameters.
+   *
+   * @param $revision_log
+   * @param $no_send
+   * @return void
+   */
+  static public function saveRevision($revision_log = '', $no_send = false) {
+//    $site_entity = SiteEntity::loadSelf();
+//    if (!$site_entity) {
+//      $site_entity = SiteEntity::create();
+//    }
+//    else {
+//
+//      // Load plugin data.
+//      $plugin_data = static::getPluginData();
+//      $site_entity->set('state', $plugin_data['state']);
+//      $site_entity->set('reason', $plugin_data['reason']);
+//      foreach ($plugin_data['properties'] as $name => $property) {
+//        if ($site_entity->hasField($name)) {
+//          $site_entity->set($name, $property['value']);
+//        }
+//      }
+//    }
+//
+//    $site_entity->setRevisionLogMessage($revision_log);
+//    $site_entity->setNewRevision();
+//    $site_entity->setRevisionCreationTime(\Drupal::time()->getRequestTime());
+//    $site_entity->no_send = $no_send;
+//    $site_entity->save();
+//    return $site_entity;
   }
 
   /**
    * Save drupal config items that are listed in self::config_overrides.
    */
   public function saveConfig() {
-    if (!$this->isSelf()) {
+
+    // If this is not the site we are saving the entity for, or if there are
+    // no overrides, do nothing.
+    if (!$this->isSelf() || empty($site_entity->config_overrides)) {
       return;
     }
+
     $site_entity = $this;
-    $site_config = SiteDefinition::load('self');
+    $site_config = \Drupal::service('config.factory')->get('site.settings');
     $allowed_configs = $site_config->get('configs_allow_override');
     $config_overrides = $site_entity->config_overrides->getValue();
-    $revision_url = $this->toUrl('canonical', ['absolute'=>true])->toString() . '/revisions/' . $site_entity->vid->value . '/view';
+
+    if (!empty($this->id())) {
+      $revision_url = $this->toUrl('canonical', ['absolute'=>true])->toString() . '/revisions/' . $site_entity->vid->value . '/view';
+    }
+    else {
+      $revision_url = Url::fromRoute('site.history');
+    }
 
     $config_factory = \Drupal::configFactory();
     if (!empty($config_overrides[0])) {
@@ -248,7 +489,10 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
    * Save drupal state items that are listed in self::config_overrides.
    */
   public function saveState() {
-    if (!$this->isSelf()) {
+
+    // If this is not the site we are saving the entity for, or if there are
+    // no overrides, do nothing.
+    if (!$this->isSelf() || empty($site_entity->state_overrides)) {
       return;
     }
 
@@ -256,7 +500,14 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
     $site_config = SiteDefinition::load('self');
     $allowed_states = $site_config->get('states_allow_override');
     $state_overrides = $site_entity->state_overrides->first()->value ?? [];
-    $revision_url = $this->toUrl('canonical', ['absolute'=>true])->toString() . '/revisions/' . $site_entity->vid->value . '/view';
+
+    if (!empty($this->id())) {
+      $revision_url = $this->toUrl('canonical', ['absolute'=>true])->toString() . '/revisions/' . $site_entity->vid->value . '/view';
+    }
+    else {
+      $revision_url = Url::fromRoute('site.history');
+    }
+
     if (!empty($state_overrides)) {
       foreach ($allowed_states as $state_name) {
 
@@ -278,52 +529,60 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
 
     $fields = parent::baseFieldDefinitions($entity_type);
+    $fields += static::revisionLogBaseFieldDefinitions($entity_type);
 
-    $fields['site_title'] = BaseFieldDefinition::create('string')
-      ->setLabel(t('Site Title'))
-      ->setDescription(t('The title of this Drupal site.'))
-      ->setRequired(true)
-      ->setRevisionable(TRUE)
-      ->setDefaultValueCallback(static::class . '::getDefaultSiteTitle')
-//      ->setDisplayOptions('form', [
-//        'type' => 'string_textfield',
-//      ])
-//      ->setDisplayConfigurable('form', TRUE)
-      ->setDisplayOptions('view', [
-        'label' => 'inline',
-        'type' => 'string',
+    $fields['label'] = BaseFieldDefinition::create('string')
+      ->setLabel(t('Label'))
+      ->setDescription(t('A short string to display in links to this site, such as "dev" or "live".'))
+      ->setSetting('max_length', 255)
+      ->setDisplayOptions('form', [
+        'type' => 'string_textfield',
+        'weight' => 100,
       ])
+      ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
-    $fields['site_uuid'] = BaseFieldDefinition::create('string')
-      ->setLabel(t('Site UUID'))
-      ->setDescription(t('The Drupal site UUID.'))
+    $fields['hostname'] = BaseFieldDefinition::create('string')
+      ->setLabel(t('Primary Hostname'))
+      ->setDescription(t('The primary hostname for this website, without a scheme or path.'))
       ->setRequired(true)
-      ->setReadOnly(true)
-      ->setDefaultValueCallback(static::class . '::getSiteUuid')
-//      ->setDisplayOptions('form', [
-//        'type' => 'string_textfield',
-//      ])
-//      ->setDisplayConfigurable('form', TRUE)
-      ->setDisplayOptions('view', [
-        'label' => 'inline',
-        'type' => 'string',
+      ->addConstraint('UniqueField')
+      ->setDisplayOptions('form', [
+        'type' => 'string_textfield',
+        'weight' => -100,
       ])
-      ->setDisplayConfigurable('view', TRUE);
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayConfigurable('view', TRUE)
+      ->setDisplayOptions('view', [
+        'type' => 'text_default',
+        'label' => 'above',
+        'weight' => -100,
+      ])
+    ;
+
+    // @TODO Replace when content entity is ready.
+//    $fields['site_definition'] = BaseFieldDefinition::create('entity_reference')
+//      ->setLabel(t('Site Definition'))
+//      ->setSetting('target_type', 'site_definition')
+//      ->setRequired(true)
+//      ->setDefaultValue(['self'])
+//      ->setDisplayConfigurable('view', TRUE);
 
     $fields['site_uri'] = BaseFieldDefinition::create('uri')
+      ->setCardinality(FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED)
       ->setRevisionable(TRUE)
-      ->setLabel(t('Site URI'))
-      ->setDescription(t('The URI of the site this report was generated for.'))
       ->setRequired(TRUE)
+      ->setLabel(t('Site URLs'))
+      ->setDescription(t('The URLs used for this site.'))
+      ->addConstraint('SiteUniqueUrl')
+
+      // @TODO: I'm going to do this in the SiteForm::addform() for now. Should
+      // This should probably be done at the entity API level?
       ->setDefaultValueCallback(static::class . '::getDefaultUri')
       ->setDisplayConfigurable('form', TRUE)
-//      ->setDisplayOptions('form', [
-//        'type' => 'string_textfield',
-//      ])
-      ->setDisplayOptions('view', [
-        'label' => 'above',
-        'type' => 'uri_link',
+      ->setDisplayOptions('form', [
+        'type' => 'string_textfield',
+        'weight' => -90,
       ])
       ->setDisplayConfigurable('view', TRUE);
     ;
@@ -331,7 +590,7 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
     $fields['state'] = BaseFieldDefinition::create('list_integer')
       ->setSetting('allowed_values', [
         static::SITE_OK => t('OK'),
-        static::SITE_INFO => t('Information Available'),
+        static::SITE_INFO => t('OK (Info)'),
         static::SITE_WARN => t('Warning'),
         static::SITE_ERROR => t('Error'),
       ])
@@ -346,28 +605,33 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
 //        'weight' => -1,
 //      ])
       ->setDisplayConfigurable('view', TRUE)
-      ->setDisplayOptions('view', [
-        'type' => 'number_integer',
-        'label' => 'inline',
-        'weight' => 0,
-        'settings' => [
-          'format' => 'enabled-disabled',
-        ],
-      ])
     ;
 
      $fields['reason'] = BaseFieldDefinition::create('map')
         ->setLabel(t('State Reason'))
         ->setRevisionable(TRUE)
-        ->setDisplayOptions('view', [
-            'type' => 'text_default',
-            'label' => 'above',
-            'weight' => 10,
-        ])
         ->setDisplayConfigurable('view', TRUE);
+
+    $fields['site_title'] = BaseFieldDefinition::create('string')
+      ->setLabel(t('Site Title'))
+      ->setDescription(t('The title of this website.'))
+      ->setRevisionable(TRUE)
+      ->setDisplayOptions('form', [
+        'type' => 'string_textfield',
+        'weight' => 10,
+      ])
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayConfigurable('view', TRUE)
+      ->setDisplayOptions('view', [
+        'type' => 'text_default',
+        'label' => 'above',
+        'weight' => -100,
+      ])
+    ;
 
     $fields['status'] = BaseFieldDefinition::create('boolean')
       ->setLabel(t('Status'))
+      ->setDescription(t('Show this site in Site Manager.'))
       ->setDefaultValue(TRUE)
       ->setSetting('on_label', 'Enabled')
       ->setDisplayOptions('form', [
@@ -375,17 +639,9 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
         'settings' => [
           'display_label' => FALSE,
         ],
-        'weight' => 0,
+        'weight' => 100,
       ])
       ->setDisplayConfigurable('form', TRUE)
-      ->setDisplayOptions('view', [
-        'type' => 'boolean',
-        'label' => 'above',
-        'weight' => 0,
-        'settings' => [
-          'format' => 'enabled-disabled',
-        ],
-      ])
       ->setDisplayConfigurable('view', TRUE);
 
     $fields['description'] = BaseFieldDefinition::create('text_long')
@@ -393,14 +649,9 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
       ->setRevisionable(TRUE)
       ->setDisplayOptions('form', [
         'type' => 'string_textarea',
-        'weight' => 10,
+        'weight' => 30,
       ])
       ->setDisplayConfigurable('form', TRUE)
-      ->setDisplayOptions('view', [
-        'type' => 'text_default',
-        'label' => 'above',
-        'weight' => 10,
-      ])
       ->setDisplayConfigurable('view', TRUE);
 
     $fields['uid'] = BaseFieldDefinition::create('entity_reference')
@@ -417,21 +668,11 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
         'weight' => 15,
       ])
       ->setDisplayConfigurable('form', TRUE)
-      ->setDisplayOptions('view', [
-        'label' => 'above',
-        'type' => 'author',
-        'weight' => 15,
-      ])
       ->setDisplayConfigurable('view', TRUE);
 
     $fields['created'] = BaseFieldDefinition::create('created')
       ->setLabel(t('Authored on'))
       ->setDescription(t('The time that the site entity was created.'))
-      ->setDisplayOptions('view', [
-        'label' => 'above',
-        'type' => 'timestamp',
-        'weight' => 20,
-      ])
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayOptions('form', [
         'type' => 'datetime_timestamp',
@@ -457,30 +698,6 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
       ->setRequired(FALSE)
       ->setDisplayConfigurable('view', TRUE)
     ;
-    $fields['config_overrides'] = BaseFieldDefinition::create('map')
-      ->setRevisionable(TRUE)
-      ->setLabel(t('Site Config Overrides'))
-      ->setDescription(t('A Yaml map of Drupal configuration to apply to this site.'))
-      ->setRequired(FALSE)
-    ;
-    $fields['state_overrides'] = BaseFieldDefinition::create('map')
-      ->setRevisionable(TRUE)
-      ->setLabel(t('Site State Overrides'))
-      ->setDescription(t('A Yaml map of Drupal states to apply to this site. See https://www.drupal.org/docs/8/api/state-api/overview'))
-      ->setRequired(FALSE)
-    ;
-
-    // See https://www.drupal.org/docs/drupal-apis/plugin-api/creating-your-own-plugin-manager
-    $type = \Drupal::service('plugin.manager.site_property');
-    $plugin_definitions = $type->getDefinitions();
-    foreach ($plugin_definitions as $name => $plugin_definition) {
-      $plugin = $type->createInstance($plugin_definition['id']);
-
-      if (method_exists(get_class($plugin), 'baseFieldDefinitions')) {
-        $plugin->baseFieldDefinitions($entity_type, $fields);
-      }
-    }
-
     return $fields;
   }
 
@@ -491,17 +708,43 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
    *   The site's hostname.
    */
   public static function getDefaultUri() {
-    return \Drupal::request()->getSchemeAndHttpHost();
+    // Only set default if no other entity with this uri exists.
+    if (empty(SiteEntity::loadBySiteUrl(self::getUri()))) {
+      return \Drupal::request()->getSchemeAndHttpHost();
+    };
   }
 
   /**
    * Returns the default value for site audit report entity uri base field.
    *
    * @return string
-   *   The site's title.
+   *   The site's hostname.
    */
-  public static function getDefaultSiteTitle() {
-    return \Drupal::config('system.site')->get('name');
+  public static function getUri() {
+    return \Drupal::request()->getSchemeAndHttpHost();
+  }
+
+  /**
+   * @return string
+   *   The site's hostname, not including https:// or trailing paths.
+   */
+  public static function getHostname() {
+    return \Drupal::request()->getHost();
+  }
+
+
+
+  /**
+   * Returns the default value for site audit report entity uri base field.
+   *
+   * @return string
+   *   The site's hostname.
+   */
+  public static function getDefaultHostname() {
+    // Only set default if no other entity with this uri exists.
+    if (empty(SiteEntity::loadBySiteUrl(self::getUri()))) {
+      return \Drupal::request()->getHost();
+    };
   }
 
   /**
@@ -515,19 +758,24 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
   }
 
   /**
-   * Load the site entity with the same UUID as this site.
+   * Returns the site's title.
+   *
+   * @return string
+   *   The site's uuid.
    */
-  public function isSelf() {
-    return static::getSiteUuid() == $this->site_uuid->value;
+  public static function getSiteTitle() {
+    return \Drupal::config('system.site')->get('name');
   }
 
   /**
-   * Load the site entity for the current site.
-   * @return SiteEntity
+   * Load the site entity with the same UUID as this site.
    */
-  public static function loadSelf() {
-    return self::load();
+  public function isSelf() {
+    $url_host = parse_url(static::getUri(), PHP_URL_HOST);
+    return $this->hostname->value == $url_host;
+
   }
+
 
   /**
    * {@inheritdoc}
@@ -539,8 +787,8 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
     }
 
     return \Drupal::database()->query(
-        'SELECT [vid] FROM {' . $this->getEntityType()->getRevisionTable() . '} WHERE [site_uuid] = :site_uuid ORDER BY [vid]',
-        [':site_uuid' => $site->id()]
+        'SELECT [vid] FROM {' . $this->getEntityType()->getRevisionTable() . '} WHERE [sid] = :sid ORDER BY [vid] DESC',
+        [':sid' => $site->id()]
     )->fetchCol();
   }
 
@@ -550,115 +798,258 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
    */
   public function send() {
 
-    $site_definition = SiteDefinition::load('self');
-    $site_entity = SiteEntity::loadSelf();
-    $settings = $site_definition->get('settings');
+    // Prepare JSONAPI Entity
+    $data = $this->toJsonApiArray();
 
-    if (empty($settings['send_destinations'])) {
-      \Drupal::messenger()->addError('There are no send destinations configured. Unable to send Site data.');
-      return;
-    }
+    // Remove data that won't align with remote server.
+    // I don't know why, but I am getting an error when api_url is sent:
+    // There was a problem when saving the site: Unprocessable Entity 422: The attribute api_url does not exist on the site--drupal resource type..
+    unset($data['attributes']['api_url']);
+    unset($data['relationships']);
+    unset($data['attributes']['changed']);
+    unset($data['attributes']['drupal_internal__sid']);
+//    unset($data['relationships']);
 
-    // Validate URLs
-    $urls = explode("\n", $settings['send_destinations']);
-    foreach (array_filter($urls) as $url) {
-      $url = trim($url);
+    // Load all Site Manager nodes.
+    $managers = $this->loadSiteManagers();
+    foreach ($managers as $site_manager) {
 
+      if (empty($site_manager->api_url->value)) {
+        throw new \Exception(t("No API URL found for site :@site.", [
+          '@site' => $site_manager->site_uri->value,
+        ]));
+      }
+      $base_url = trim($site_manager->api_url->value, '/');
+
+      // Send this entity to that site_manager.
+      $site_api_url = $base_url . $this->toJsonApiUrl()->toString();
+      $site_api_key = $site_manager->api_key->value ?? '';
+
+      $client = new Client([
+        'allow_redirects' => TRUE,
+      ]);
+      $options = [
+        'headers' => [
+          'Accept' => 'application/vnd.api+json',
+          'Content-type' => 'application/vnd.api+json',
+          'api-key' => $site_api_key,
+          'requester' => \Drupal::request()->getHost(),
+        ],
+        'json' => [
+          'data' => $data,
+        ]
+      ];
+
+      // Confirm site manager and site UUID via GET
+      $remote_site_exists = false;
       try {
-        $client = new Client([
-          'base_url' => $url,
-          'allow_redirects' => TRUE,
-        ]);
+        $site_api_get_uri = $base_url . Url::fromRoute('site.api')->toString();
+        $response = $client->get($site_api_get_uri, $options);
+        $site_api_data = Json::decode($response->getBody()->getContents());
 
-        $payload = [];
-        foreach ($this->getFields() as $field_id => $field) {
-
-          $first = $field->first();
-          if ($first) {
-            $field_data = $first->getValue();
-            $field_key = $first->getDataDefinition()->getMainPropertyName();
-
-            // If field is in remote fields, don't send it so we don't alter it.
-            $remote_fields = $site_definition->get('fields_allow_override');
-            if (in_array($field_id, $remote_fields)) {
-              continue;
-            }
-
-            // If there is no main property name, pass the entire thing.
-            // ie. for the data field.
-            if (empty($field_key)) {
-              $payload[$field_id] = $field_data;
-            } else {
-              $payload[$field_id] = $field_data[$field_key];
-            }
-          }
-        }
-
-        \Drupal::moduleHandler()->alter('site_audit_remote_payload', $payload);
-        $payload['sent_from'] = $_SERVER['HTTP_HOST'];
-
-        $response = $client->post($url, [
-          'headers' => [
-            'Accept' => 'application/json',
-          ],
-          'json' => $payload
-        ]);
-
-        $response_entity_data = Json::decode($response->getBody()->getContents());
-        if (!is_array($response_entity_data) || empty($response_entity_data['site_uuid'][0]['value'])) {
-          throw new \Exception(t('Response from server was empty: ' . print_r($response_entity_data, 1)));
-        }
-        elseif ($response_entity_data['site_uuid'][0]['value'] != $site_entity->id()) {
-          throw new \Exception(t('Site report is unable to be saved because the received site UUID does not match this site. Received: :response_uuid. Expected: :self_uuid. To allow saving reports locally, disable "Send on Save" or fix the problem with the server.', [
-            ':response_uuid' => $response_entity_data['site_uuid'][0]['value'],
-            ':self_uuid' => $site_entity->id(),
+        // If remote site entity exists, set the local uuid.
+        $remote_site_exists = !empty($site_api_data['requester']['site_entity']['id']);
+        if (!empty($site_api_data['requester']['site_entity']['id']) && $site_api_data['requester']['site_entity']['id'] != $this->uuid()) {
+          $this->setRevisionLogMessage(t('Updated site UUID from :orig to :new.', [
+            ':orig' => $this->uuid(),
+            ':new' => $site_api_data['requester']['site_entity']['id'],
           ]));
+          $this->set('uuid', $site_api_data['requester']['site_entity']['id']);
+          $site_api_url = $site_api_data['requester']['site_entity']['links']['self']['href'];
+
+          // Reload JSON API data.
+          $data = $this->toJsonApiArray();
+          unset($data['attributes']['changed']);
+          unset($data['attributes']['drupal_internal__sid']);
+          unset($data['relationships']);
+
+          // I don't know why, but I am getting an error when api_url is sent:
+          // There was a problem when saving the site: Unprocessable Entity 422: The attribute api_url does not exist on the site--drupal resource type..
+          unset($data['attributes']['api_url']);
+
+          $options['json']['data'] = $data;
+        }
+      }
+      catch (ClientException $e) {
+        throw $e;
+      }
+      catch (\Exception $e) {
+        throw new \Exception(t('Something else happened:') . $e->getMessage());
+      }
+
+      // If site exists, patch. If not, post.
+      try {
+        if ($remote_site_exists) {
+          $site_api_url = $base_url . $this->toJsonApiUrl('individual')->toString();
+          $response = $client->patch($site_api_url, $options);
         }
         else {
-          \Drupal::messenger()->addStatus('Site report was sent successfully.');
+          $site_api_url = $base_url . $this->toJsonApiUrl('collection.post')->toString();
+          $response = $client->post($site_api_url, $options);
         }
-
-        foreach ($response_entity_data as $field => $value) {
-          if ($this->hasField($field) && $field != 'site_uuid') {
-            $this->set($field, $value);
-          }
-        }
-
-        // Save, but block sending again.
-        $this->setNewRevision();
-        $this->vid = null;
-        $this->revision_timestamp = \Drupal::time()->getCurrentTime();
-        $this->revision_log = $this->revision_log->value . ' - ' . t('Site data returned from :url', [
-          ':url' => $url,
-        ]);
-        $this->no_send = true;
-        $this->save();
-
-        return $this;
-
-      } catch (GuzzleException $e) {
-        if ($e->hasResponse()) {
-          \Drupal::messenger()->addError(t('There was an error when posting to the remote server: :message', [
-            ':message' => $e->getMessage(),
-          ]));
-
-          return $e->getResponse();
-        } else {
-          \Drupal::messenger()->addError(t('Could not connect to server: :message', [
-            ':message' => $e->getMessage(),
-          ]));
-          return null;
-        }
-      } catch (\Exception $e) {
-          \Drupal::messenger()->addError($e->getMessage());
-          return null;
       }
+      catch (ClientException $e) {
+        $response_data = Json::decode($e->getResponse()->getBody()->getContents());
+        $messages = SiteEntity::formatJsonApiErrors($response_data);
+        throw new \Exception(implode(PHP_EOL, $messages));
+      }
+      catch (\Exception $e) {
+        throw new \Exception(t('An unknown exception occurred when posting/patching the site entity @site to @url. The error was: @error', [
+          '@site' => $this->toUrl('canonical', ['absolute' => true])->toString(),
+          '@url' => $site_api_url,
+          '@error' => $e->getMessage(),
+        ]));
+      }
+      $response_entity_data = Json::decode($response->getBody()->getContents());
+      \Drupal::logger('site')->info('Site Entity sent from {url}.', [
+        'url' => $site_api_url,
+      ]);
+
+      $this->sent = true;
+      foreach ($this->getFields() as $field_id => $field) {
+        if (!empty($response_data['data']['attributes'][$field_id])) {
+
+          // If JSONAPI worked, this wouldn't be needed.
+          switch ($field_id) {
+            case 'sid':
+            case 'revision_timestamp':
+            case 'revision_log':
+            case 'reason':
+            case 'state':
+              continue(2);
+
+            case 'created':
+            case 'changed':
+              $value = strtotime($response_data['data']['attributes'][$field_id]);
+              break;
+            default:
+              $value = $response_data['data']['attributes'][$field_id];
+
+          }
+          $this->set($field_id, $value);
+        }
+      }
+
+      $this->setRevisionLogMessage(t('Saving after receiving from :url', [
+        ':url' => $site_api_url,
+      ]));
+      $this->no_send = true;
+      $this->save();
+
+
+      $api_url = $response_entity_data['data']['links']['self']['href'] ?? '';
+//      \Drupal::messenger()->addStatus(t('The site was successfully connected. Data available at @link.', [
+//        '@link' => Link::fromTextAndUrl($api_url, Url::fromUri($api_url))->toString(),
+//      ]));
+
+      // @TODO: Save managed_fields.
+
     }
+
+    /****
+     * @TODO: re-implement generic "send_destinations"
+     */
+
   }
 
+  /**
+   * @return SiteEntityInterface
+   */
+  public function getRemote() {
 
-  public function getStateClass() {
-    return SiteDefinition::getStateClass($this->state->value);
+    // Zero out reasons.
+    $reasons = [];
+    $this->reason->setValue($reasons);
+
+    $worst_code = 0;
+    $site_uri_data = [];
+    foreach ($this->site_uri as $i => $site_uri_field) {
+      $i = $site_uri_field->value;
+      $site_uri_data[$i] = [
+        'code' => 0,
+        'headers' => [],
+        'content' => '',
+      ];
+      $this_site_link = Link::fromTextAndUrl(SiteEntity::getUri(), Url::fromUri(SiteEntity::getUri()))->toString();
+      try {
+        $site_uri = $site_uri_field->value;
+        $response = \Drupal::httpClient()->get($site_uri);
+
+        // We know it was successful, otherwise there's an exception.
+        $reason = [
+          '#title' => t('HTTP Request for @url was successful.', [
+            '@url' => Link::fromTextAndUrl($site_uri, Url::fromUri($site_uri))->toString(),
+          ]),
+          '#type' => 'item',
+          '#markup' => t('The URL @url responded with @code @message when requested from @site.', [
+            '@site' => $this_site_link,
+            '@url' => Link::fromTextAndUrl($site_uri, Url::fromUri($site_uri))->toString(),
+            '@code' => $response->getStatusCode(),
+            '@message' => $response->getReasonPhrase(),
+          ])
+        ];
+      } catch (ClientException $e) {
+        $response = $e->getResponse();
+        $reason = [
+          '#title' => t('HTTP Request for @url failed with @code when requested from @site.', [
+            '@site' => $this_site_link,
+            '@url' => Link::fromTextAndUrl($site_uri, Url::fromUri($site_uri))->toString(),
+            '@code' => $response->getStatusCode(),
+          ]),
+          '#type' => 'item',
+          '#markup' => $e->getMessage(),
+        ];
+      } catch (\Exception $e) {
+        $reason = [
+          '#title' => t('HTTP Request for @url from @site failed for an unknown reason.', [
+            '@url' => Link::fromTextAndUrl($site_uri, Url::fromUri($site_uri))->toString(),
+            '@site' => $this_site_link,
+          ]),
+          '#type' => 'item',
+          '#markup' => t('Request for URL @url failed: @message.', [
+            '@message' => $e->getMessage(),
+          ])
+        ];
+        $reasons[] = $reason;
+        continue;
+      }
+
+      if ($response->getStatusCode() > $worst_code) {
+        $worst_code = $response->getStatusCode();
+      }
+
+      $site_uri_data[$i] = [
+        'code' => $response->getStatusCode(),
+        'headers' => $response->getHeaders(),
+        'content' => $response->getBody()->getContents(),
+      ];
+      $reasons[] = $reason;
+    }
+
+    $this->addData('site_uri', [
+      'sites' => $site_uri_data,
+      'worst_code' => $worst_code,
+    ]);
+    $this->get('reason')->set(0, $reasons);
+
+//    $this->reason->setValue($reasons);
+
+    switch ($worst_code) {
+      case 200:
+        $state = SiteEntity::SITE_OK;
+        break;
+      case 403:
+        $state = SiteEntity::SITE_WARN;
+        break;
+      default:
+        $state = SiteEntity::SITE_ERROR;
+        break;
+    }
+
+    $this->state->setValue($state);
+    $this->headers = new HeaderBag($site_uri_data[$this->site_uri->value]['headers']);
+
+    return $this;
   }
 
   /**
@@ -668,7 +1059,7 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
   public function getSiteApiLink() {
 
     if (!empty($this->api_key)) {
-      $uri = $this->api_uri->value ?: $this->site_uri->value;
+      $uri = $this->api_url->value ?: $this->site_uri->value;
 
       // @TODO: Find out how to get the SiteAPIResource URI.
       $url = Url::fromUri($uri . '/api/site/data')
@@ -679,5 +1070,161 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
       ;
       return $url;
     }
+  }
+
+  /**
+   * Retrieve a property plugin directly.
+   *
+   * @param $plugin_name
+   * @return mixed
+   */
+  static public function getPropertyPlugin($plugin_name) {
+    $type = \Drupal::service('plugin.manager.site_property');
+    $plugin = $type->createInstance($plugin_name);
+    return $plugin;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getOperations() {
+    $entity = $this;
+
+    if (!$entity->id()) {
+      return [];
+    }
+    $operations = [];
+    $operations['blank'] = ['title' => '', 'weight' => -100];
+    $operations += $this->getDefaultOperations($entity);
+    $operations += \Drupal::moduleHandler()->invokeAll('entity_operation', [$entity]);
+    \Drupal::moduleHandler()->alter('entity_operation', $operations, $entity);
+    uasort($operations, '\Drupal\Component\Utility\SortArray::sortByWeightElement');
+
+    return $operations;
+  }
+
+  /**
+   * Gets this list's default operations.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity the operations are for.
+   *
+   * @return array
+   *   The array structure is identical to the return value of
+   *   self::getOperations().
+   */
+  protected function getDefaultOperations() {
+    $entity = $this;
+    $operations = [];
+    if ($entity->access('update') && $entity->hasLinkTemplate('edit-form')) {
+      $operations['edit'] = [
+        'title' => t('Edit'),
+        'weight' => 10,
+        'url' => $this->ensureDestination($entity->toUrl('edit-form')),
+      ];
+    }
+    if ($entity->access('update') && $entity->hasLinkTemplate('refresh')) {
+      $operations['refresh'] = [
+        'title' => t('Refresh data'),
+        'weight' => 10,
+        'url' => $this->ensureDestination($entity->toUrl('refresh')),
+      ];
+    }
+    if ($entity->access('delete') && $entity->hasLinkTemplate('delete-form')) {
+      $operations['delete'] = [
+        'title' => t('Delete'),
+        'weight' => 100,
+        'url' => $this->ensureDestination($entity->toUrl('delete-form')),
+      ];
+    }
+
+    // Load all SiteAction plugins.
+    foreach (\Drupal::service('plugin.manager.site_action')->getDefinitions() as $plugin_definition) {
+      $plugin = \Drupal::service('plugin.manager.site_action')->createInstance($plugin_definition['id'], [
+        'site' => $this,
+      ]);
+      $operation = "action_" . $plugin->getPluginId();
+      $url = Url::fromRoute('entity.site.site_actions', [
+        'site' => $this->id(),
+        'plugin_id' => $plugin->getPluginId(),
+      ]);
+      if ($plugin->isOperation() && $plugin->access()) {
+        $operations[$operation] = [
+          'title' => $plugin->label(),
+          'url' => $this->ensureDestination($url),
+          'weight' => 20,
+        ];
+      }
+    }
+    return $operations;
+  }
+
+  /**
+   * Ensures that a destination is present on the given URL.
+   *
+   * @param \Drupal\Core\Url $url
+   *   The URL object to which the destination should be added.
+   *
+   * @return \Drupal\Core\Url
+   *   The updated URL object.
+   */
+  protected function ensureDestination(Url $url) {
+    return $url->mergeOptions(['query' => $this->getRedirectDestination()->getAsArray()]);
+  }
+
+  /**
+   * Return the JSON API URL for this entity.
+   * @param $options
+   * @return Url
+   */
+  public function toJsonApiUrl($route_item = 'individual') {
+    $url = Url::fromRoute("jsonapi.{$this->entityTypeId}--{$this->bundle()}.{$route_item}");
+    if ($route_item == 'individual') {
+      $url->setRouteParameter('entity', $this->uuid());
+    }
+    return $url;
+  }
+
+  /**
+   * Generate a JSON:API object.
+   *
+   * @return array
+   */
+  public function toJsonApiArray() {
+    # @see EntityResource
+    $resource_object = $this->toResourceObject();
+    $serializer = \Drupal::service('jsonapi.serializer');
+    $cacher =  \Drupal::service('jsonapi.normalization_cacher');
+    $normalizer = new ResourceObjectNormalizer($cacher);
+    $normalizer->setSerializer($serializer);
+    $data = $normalizer->normalize($resource_object, 'api_json', [
+      'account' => \Drupal::currentUser()->getAccount(),
+    ]);
+    return $data->getNormalization();
+  }
+
+  public function toResourceObject() {
+    $resource_type = \Drupal::service('jsonapi.resource_type.repository')->get($this->getEntityTypeId(), $this->bundle());
+    return ResourceObject::createFromEntity($resource_type, $this);
+  }
+
+  /**
+   * Turn JSONAPI "errors" response into an array of strings.
+   *
+   * @param array $jsonapi_response_data
+   * @return array
+   */
+  static public function formatJsonApiErrors(array $jsonapi_response_data) {
+    $items = [];
+    if (!empty($jsonapi_response_data['errors'])) {
+      foreach ($jsonapi_response_data['errors'] as $error) {
+        $items[] = strtr('@title @status: !detail.', [
+          '@title' => $error['title'],
+          '@status' => $error['status'],
+          '!detail' => $error['detail'],
+        ]);
+      }
+    }
+    return $items;
   }
 }

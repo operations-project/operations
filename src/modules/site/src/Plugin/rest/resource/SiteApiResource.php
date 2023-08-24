@@ -2,7 +2,9 @@
 
 namespace Drupal\site\Plugin\rest\resource;
 
+use Drupal\Component\Serialization\Json;
 use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
+use Drupal\jsonapi\Serializer\Serializer;
 use Drupal\rest\ModifiedResourceResponse;
 use Drupal\rest\Plugin\ResourceBase;
 use Drupal\rest\ResourceResponse;
@@ -71,34 +73,43 @@ class SiteApiResource extends ResourceBase {
    * @param array $data
    *   Data to write into the database.
    *
-   * @return \Drupal\rest\ModifiedResourceResponse
+   * @return ResourceResponse
    *   The HTTP response object.
    */
-  public function post(array $data) {
+  public function post($data) {
+
+    if (!empty($data['test'])) {
+      return new JsonResponse(["message" => t("Successfully connected to :title at :url.", [
+        ':title' => SiteEntity::getSitetitle(),
+        ':url' =>  SiteEntity::getUri(),
+      ])]);
+    }
+
+    unset($data['sid']);
 
     // Check for action requests
     \Drupal::logger('site_api')->warning('POST received:' . print_r($data,1));
-    if ($data['action']) {
-      $site = SiteDefinition::load('self');
-      $site_entity = $site->saveEntity(t('Action requested (:action) via API from :from', [
+    if (!empty($data['action'])) {
+      $site_entity = SiteEntity::saveRevision(t('Action requested (:action) via API from :from', [
           ':from' => \Drupal::request()->getClientIP(),
           ':action' => $data['action'],
         ]), false);
-      return new ModifiedResourceResponse($site, 201);
+      return new ModifiedResourceResponse($site_entity, 201);
     }
 
+    $site_entity = SiteEntity::loadBySiteUrl($data['site_uri']);
     $data['data']['site_manager_response']['received_data'] = $data;
     $data['data']['site_manager_response']['received_from'] = \Drupal::request()->getClientIP();
 
-    $site_entity = SiteEntity::load($data['site_uuid']);
     if ($site_entity) {
+      $data['data']['site_manager_site_url'] = $site_entity->toUrl('canonical', ['absolute' => true])->toString();
       $site_entity->setNewRevision();
       $site_entity->revision_log = t('Received via API from :from'. [
         ':from' => \Drupal::request()->getClientIP(),
       ]);
       $site_entity->revision_timestamp = \Drupal::time()->getRequestTime();
       foreach ($data as $property => $value) {
-        if ($site_entity->hasField($property)) {
+        if ($site_entity->hasField($property) && $property != 'sid') {
           $site_entity->set($property, $value);
         }
       }
@@ -127,6 +138,12 @@ class SiteApiResource extends ResourceBase {
    *   The response containing the record.
    */
   public function get() {
-    return new JsonResponse(SiteDefinition::load('self')->toArray());
+    $site = \Drupal::service('site.self')->getEntity();
+    \Drupal::service('site.self')->prepareEntity($site);
+
+    /** @var Serializer $serializer */
+//    $serializer =  \Drupal::service('serializer');
+//    $data = $serializer->serialize($site, 'json');
+    return new JsonResponse($site->toArray(), 201);
   }
 }

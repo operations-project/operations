@@ -2,4 +2,11 @@ langcode: en
 status: true
 dependencies: {  }
 id: default
-label: Default
+label: Website
+description: 'A generic website.'
+help: ''
+label_collection: Sites
+label_singular: site
+label_plural: sites
+label_count_singular: '@count site'
+label_count_plural: '@count sites'

@@ -18,7 +18,10 @@ class SiteTypeListBuilder extends ConfigEntityListBuilder {
    */
   public function buildHeader() {
     $header['title'] = $this->t('Label');
-
+    $header['description'] = [
+      'data' => t('Description'),
+      'class' => [RESPONSIVE_PRIORITY_MEDIUM],
+    ];
     return $header + parent::buildHeader();
   }
 
@@ -30,7 +33,7 @@ class SiteTypeListBuilder extends ConfigEntityListBuilder {
       'data' => $entity->label(),
       'class' => ['menu-label'],
     ];
-
+    $row['description']['data'] = ['#markup' => $entity->getDescription()];
     return $row + parent::buildRow($entity);
   }
 

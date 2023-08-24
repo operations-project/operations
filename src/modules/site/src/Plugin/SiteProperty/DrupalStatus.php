@@ -6,6 +6,7 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Url;
 use Drupal\site\Entity\SiteDefinition;
+use Drupal\site\Entity\SiteEntity;
 use Drupal\site\SitePropertyPluginBase;
 
 /**
@@ -14,6 +15,9 @@ use Drupal\site\SitePropertyPluginBase;
  * @SiteProperty(
  *   id = "drupal_status",
  *   name = "drupal_status",
+ *   site_bundles = {
+ *     "Drupal\site\Entity\Bundle\DrupalSiteBundle"
+ *   },
  *   hidden = true,
  *   label = @Translation("Drupal Status Report"),
  *   description = @Translation("The state of the Drupal Status Report.")
@@ -21,9 +25,9 @@ use Drupal\site\SitePropertyPluginBase;
  */
 class DrupalStatus extends SitePropertyPluginBase {
 
-  public function state(SiteDefinition $site) {
-
-    if (in_array('system', $site->get('state_factors'))) {
+  public function state() {
+    $state_factors = \Drupal::config('site.settings')->get('state_factors');
+    if (in_array('system', $state_factors)) {
 
       // If site.settings.state_factors, load the report data and set the state.
 
@@ -95,7 +99,7 @@ class DrupalStatus extends SitePropertyPluginBase {
           }
         }
       }
-      $site->addReason($reasons);
+      $this->addReason($reasons);
       return $worst_severity;
     }
   }

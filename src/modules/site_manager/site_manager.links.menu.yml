@@ -5,20 +5,7 @@
 #  parent: operations.admin
 #  description: 'Configure sites.'
 
-# /admin/content/sites
-entity.site.collection:
-  title: 'Sites'
-  description: 'List all site entities.'
-  route_name: entity.site.collection
-  parent: system.admin_content
-  weight: 10
 
-site_manager.admin_structure:
-  title: 'Site Entity Structure'
-  description: 'Manage fields and display configuration for sites.'
-  parent: system.admin_structure
-  route_name: entity.site_type.collection
-  weight: 20
 #entity.site_type.collection:
 #  title: 'Site Types'
 #  description: 'Manage fields and display configuration for sites.'

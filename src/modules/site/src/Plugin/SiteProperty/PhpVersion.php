@@ -13,6 +13,9 @@ use Drupal\site\SitePropertyPluginBase;
  *   id = "php_version",
  *   name = "php_version",
  *   label = @Translation("PHP Version"),
+ *   site_bundles = {
+ *     "Drupal\site\Entity\Bundle\PhpSiteBundle"
+ *   },
  *   description = @Translation("The version of PHP the site is running.")
  * )
  */
@@ -27,15 +30,16 @@ class PhpVersion extends SitePropertyPluginBase {
    * @return static
    *   A new field definition object.
    */
-  public function baseFieldDefinitions(EntityTypeInterface $entity_type, &$fields) {
-    $fields[$this->name()] = BaseFieldDefinition::create('string')
-      ->setLabel($this->label())
+  static public function bundleFieldDefinitions(EntityTypeInterface $entity_type, $bundle, array $base_field_definitions) {
+    $fields['php_version'] = BaseFieldDefinition::create('string')
+      ->setLabel(t('PHP Version'))
       ->setRevisionable(TRUE)
+      ->setDisplayConfigurable('view', TRUE)
       ->setDisplayOptions('view', [
+        'label' => 'above',
         'type' => 'string',
-        'label' => 'inline',
-        'weight' => 10,
       ])
-      ->setDisplayConfigurable('view', TRUE);
+    ;
+    return $fields;
   }
 }

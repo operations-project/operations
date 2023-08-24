@@ -1,0 +1,10 @@
+uuid: 22727808-d83d-46db-81d9-a95f4c01c046
+langcode: en
+status: true
+dependencies:
+  module:
+    - site
+id: site.full
+label: Full
+targetEntityType: site
+cache: true

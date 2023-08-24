@@ -4,6 +4,7 @@ config:
   webroot: web
   php: '8.1'
   drush: ^10
+  xdebug: 'develop,debug'
 
   # See https://github.com/lando/lando/issues/2948#issuecomment-1003484299
   database: mysql:8.0
@@ -13,13 +14,17 @@ config:
 proxy:
   appserver:
     - operations.lndo.site
-  mercury_web:
-    - mercury.lndo.site
+#
+#  mercury_web:
+#    - mercury.lndo.site
+#
+#  mars_web:
+#    - mars.lndo.site
 
   venus_web:
     - venus.lndo.site
-  mars_web:
     - mars.lndo.site
+    - mercury.lndo.site
 
 services:
   appserver:
@@ -30,24 +35,31 @@ services:
 #    overrides:
 #      environment:
 #        DRUSH_OPTIONS_URI: "https://ox.lndo.site"
-
+#
   mercury_web:
     type: php:8.1
     webroot: web
+    xdebug: true
 
   mars_web:
     type: php:8.1
     webroot: web
+    xdebug: true
 
   venus_web:
     type: php:8.1
     webroot: web
-
+    xdebug: true
+#
+#  operations:
+#    type: mysql:8.0
+#    portforward: 33067
+##    config:
+##      confd: lando/mysql/conf.d
+#
   operations:
     type: mysql:8.0
     portforward: 33067
-#    config:
-#      confd: lando/mysql/conf.d
 
   mercury:
     type: mysql:8.0
@@ -66,7 +78,7 @@ services:
     portforward: 33070
 #    config:
 #      confd: .lando/mysql/conf.d
-
+#
 
 tooling:
   sync:

@@ -65,10 +65,10 @@
         "drupal/operations_ui-operations_ui": "*",
         "drupal/ox_stock-ox_stock": "*",
         "drupal/restui": "^1.21",
-        "drupal/site-site": "*",
+        "drupal/site": "*",
         "drupal/site_audit": "4.x-dev",
         "drupal/site_audit_server": "^4.0@dev",
-        "drupal/site_manager-site_manager": "*",
+        "drupal/site_manager": "*",
         "drush/drush": "^11.4.0",
         "mouf/nodejs-installer": "1.0.x-dev",
         "symfony/http-client": "5.4.x-dev",
@@ -129,12 +129,8 @@
           "@ox:sites:uli"
         ],
         "ox:install": [
-          "drush si ox_stock --yes",
-          "drush uli",
-          "# OX Stock install wont work to set default theme.",
-          "drush cset system.theme default claro -y",
-          "# OX Stock profile wont work when site module is in dependencies.",
-          "drush en site_manager operations_ui devel devel_entity_updates admin_toolbar key_auth restui rest -y"
+          "drush @operations si ox_stock --site-name=Operations.Local --yes",
+          "drush @operations  uli"
         ],
         "ox:sites:install": [
           "drush @mercury si standard --yes",
@@ -178,6 +174,9 @@
             "drupal/core": "-p2"
         },
         "patches": {
+            "drupal/core": {
+                "EntityViewsData for bundle fields": "https://www.drupal.org/files/issues/2021-11-09/2898635-48.patch"
+            }
         }
     }
 }

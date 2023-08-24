@@ -1,0 +1,43 @@
+uuid: 4c0b2731-22fe-4ee7-8f27-979e74714e3c
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.drupal_project.teaser
+    - site.drupal_project_type.default
+id: drupal_project.default.teaser
+targetEntityType: drupal_project
+bundle: default
+mode: teaser
+content:
+  drupal_site_name:
+    type: string
+    label: inline
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  drupal_site_uuid:
+    type: string
+    label: inline
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  git_remote:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  changed: true
+  created: true
+  drupal_project_environments_drupal_project_environments: true
+  drupal_site_environments_drupal_site_environments: true
+  status: true
+  uid: true

@@ -1,0 +1,105 @@
+uuid: 100e861f-2246-4c6a-beec-8ff9b19658ff
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.site.teaser
+    - site.site_type.drupal
+  module:
+    - text
+id: site.drupal.teaser
+targetEntityType: site
+bundle: drupal
+mode: teaser
+content:
+  drupal_project:
+    label: above
+    type: string
+    region: content
+    weight: 20
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+  drupal_site_name:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 12
+    region: content
+  drupal_site_uuid:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 13
+    region: content
+  drupal_version:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 18
+    region: content
+  git_reference:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 14
+    region: content
+  git_remote:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 16
+    region: content
+  host_provider:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 15
+    region: content
+  hostname:
+    type: text_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: -100
+    region: content
+  http_status:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 17
+    region: content
+  php_version:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 11
+    region: content
+hidden:
+  created: true
+  data: true
+  description: true
+  label: true
+  reason: true
+  settings: true
+  site_title: true
+  site_uri: true
+  state: true
+  status: true
+  uid: true
