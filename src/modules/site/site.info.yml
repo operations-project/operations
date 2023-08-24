@@ -9,4 +9,4 @@ dependencies:
   - key_auth
   - serialization
   - rest
-  - jsonapi
+  - drupal:jsonapi
