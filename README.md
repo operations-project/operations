@@ -59,9 +59,7 @@ Issue management takes place in the Operations project issue queues: https://www
 
 ## Development
 
-The primary branch of development is `1.x`. 
-
-The release branch is currently `1.10.x`. 
+The primary branch of development is `2.x`.
 
 Everything needed to develop Operations is in this repository, including a Lando development environment with multiple sites for testing Site Manager connections:
 
