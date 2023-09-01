@@ -50,9 +50,6 @@ class SiteSubscriber implements EventSubscriberInterface {
     if ($event->site_entity->isSelf()) {
       $site = \Drupal::service('site.self')->prepareEntity($event->site_entity);
     }
-    else {
-      $site = \Drupal::service('site.remote')->prepareEntity($event->site_entity);
-    }
     $event->site_entity = $site;
   }
 

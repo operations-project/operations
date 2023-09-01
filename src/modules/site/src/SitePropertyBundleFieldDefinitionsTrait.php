@@ -61,8 +61,7 @@ trait SitePropertyBundleFieldDefinitionsTrait {
       return $fields;
     }
 
-    $bundle = $bundles[$bundle];
-    $this_bundle_class = $bundle['class'] ?? static::class;
+    $this_bundle_class = $bundles[$bundle]['class'] ?? static::class;
 
     // Load all plugins.
     $type = \Drupal::service('plugin.manager.site_property');

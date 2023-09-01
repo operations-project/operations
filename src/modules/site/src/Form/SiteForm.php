@@ -91,10 +91,10 @@ class SiteForm extends ContentEntityForm
     // Don't show API fields when editing self.
     $site_managers = $this->entity->loadSiteManagers();
     if ($this->entity->isSelf() && count($site_managers)) {
-      $form['site_api']['#description'] = t('When connected to a Site Manager, this site sends data to the Site Manager. For additional features, Site Manager can connect back if it has a valid API key. Enter an API key from <em>this site</em> to send to Site Manager so it can connect back. View your API keys under <em>My Account > Key Authentication</em>.');
+//      $form['site_api']['#description'] = t('When connected to a Site Manager, this site sends data to the Site Manager. For additional features, Site Manager can connect back if it has a valid API key. Enter an API key from <em>this site</em> to send to Site Manager so it can connect back. View your API keys under <em>My Account > Key Authentication</em>.');
 //
-//      $form['api_url']['#access'] = false;
-//      $form['api_key']['#access'] = false;
+      $form['api_url']['#access'] = false;
+      $form['api_key']['#access'] = false;
     }
     // If not self, but is site manager...
     elseif ($this->entity->bundle() == 'site_manager') {

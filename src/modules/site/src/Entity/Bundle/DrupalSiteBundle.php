@@ -35,14 +35,17 @@ class DrupalSiteBundle extends PhpSiteBundle {
    * @return void
    */
   public function getRemote() {
-    if (empty($this->api_url->value)) {
+    if (empty($this->api_url->value) || empty($this->api_key->value)) {
+      parent::getRemote();
       return;
     }
 
     // Load Drupal Site API info.
     $api_url = $this->api_url->value;
     $api_url .= "/jsonapi/self";
-    $api_key = $this->api_key->value ?? '';
+    $api_key = $this->api_key->value;
+
+    $state = SiteEntity::SITE_OK;
 
     $payload['request'] = 'site';
     $options = [
@@ -53,7 +56,17 @@ class DrupalSiteBundle extends PhpSiteBundle {
       'json' => $payload,
     ];
     try {
+
       $response = \Drupal::httpClient()->get($api_url, $options);
+
+      // If this entity is being saved from a JSONAPI POST/PATCH, don't
+      // save fields again, because we just received remote data.
+      // Run the SiteBundle::retRemote() only.
+      if (\Drupal::request()->getMethod() == 'PATCH' || \Drupal::request()->getMethod() == 'POST') {
+        parent::getRemote();
+        return;
+      }
+
       $received_content = $response->getBody()->getContents();
       $response_data = Json::decode($received_content);
       foreach ($this->getFields() as $field_id => $field) {
@@ -71,6 +84,10 @@ class DrupalSiteBundle extends PhpSiteBundle {
 
             case 'created':
             case 'changed':
+
+            // @TODO: ?
+            case 'drupal_cron_last':
+            case 'drupal_install_time':
               $value = strtotime($response_data['data']['attributes'][$field_id]);
               break;
             default:
@@ -105,9 +122,11 @@ class DrupalSiteBundle extends PhpSiteBundle {
           $reason = [
             '#type' => 'item',
             '#title' => t('Site API Access Denied.'),
-            '#markup' => t('Check your API key and try again.'),
+            '#markup' => t('Unable to connect to Site API. @link', [
+              '@link' => $this->toLink(t('Check API key in site settings'), 'edit-form')->toString(),
+            ]),
           ];
-          $this->state = SiteEntity::SITE_ERROR;
+          $state = SiteEntity::SITE_ERROR;
           break;
       }
     }
@@ -118,12 +137,18 @@ class DrupalSiteBundle extends PhpSiteBundle {
           '@api' => Link::fromTextAndUrl($api_url, \Drupal\Core\Url::fromUri($api_url))->toString(),
         ])
       ];
-      $this->state = SiteEntity::SITE_ERROR;
+      $state = SiteEntity::SITE_ERROR;
     }
 
     // @TODO: Running parent::getRemote() obliterates the received reasons data.
 
+    // Load parent class properties like http_status.
     parent::getRemote();
+
+    // Set state.
+    if ($this->state->value < $state) {
+      $this->state->setValue($state);
+    }
 
     // Append this reason.
     if (!empty($reason)) {

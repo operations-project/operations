@@ -44,6 +44,9 @@ class HttpStatus extends SitePropertyPluginBase {
     elseif ($this->value >= 500) {
       return SiteInterface::SITE_ERROR;
     }
+    elseif (!$this->value) {
+      return SiteInterface::SITE_OK;
+    }
     else {
       return SiteInterface::SITE_WARN;
     }

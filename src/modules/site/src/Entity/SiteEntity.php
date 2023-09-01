@@ -28,6 +28,7 @@ use Drupal\Core\Routing\RedirectDestinationTrait;
 use Drupal\Core\Routing\RouteMatch;
 use Drupal\Core\Serialization\Yaml;
 use Drupal\Core\Url;
+use Drupal\jsonapi\Controller\EntityResource;
 use Drupal\jsonapi\JsonApiResource\ResourceObject;
 use Drupal\jsonapi\Normalizer\ResourceObjectNormalizer;
 use Drupal\site\Entity\Bundle\SiteManangerSiteBundle;
@@ -345,7 +346,10 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
 
     /** @var MapItem $settings */
     $settings = \Drupal::config('site.settings');
-    if ($this->isSelf() && !empty($settings->get('site_manager')['send_on_save']) && !$this->no_send) {
+    $caller = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS,2)[1];
+
+    // Don't send if saving frmo JSON API.
+    if ($caller['class'] != EntityResource::class && $this->isSelf() && !empty($settings->get('site_manager')['send_on_save']) && !$this->no_send) {
       // send() triggers this function again with "no_send", so we don't need to call saveConfig().
       try {
         $this->send();
@@ -804,11 +808,13 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
     // Remove data that won't align with remote server.
     // I don't know why, but I am getting an error when api_url is sent:
     // There was a problem when saving the site: Unprocessable Entity 422: The attribute api_url does not exist on the site--drupal resource type..
-    unset($data['attributes']['api_url']);
     unset($data['relationships']);
     unset($data['attributes']['changed']);
     unset($data['attributes']['drupal_internal__sid']);
-//    unset($data['relationships']);
+
+    // Don't PATCH these so the site manager sites don't lose it.
+    unset($data['attributes']['api_key']);
+    unset($data['attributes']['api_url']);
 
     // Load all Site Manager nodes.
     $managers = $this->loadSiteManagers();
@@ -907,7 +913,7 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
 
       $this->sent = true;
       foreach ($this->getFields() as $field_id => $field) {
-        if (!empty($response_data['data']['attributes'][$field_id])) {
+        if (isset($response_entity_data['data']['attributes'][$field_id])) {
 
           // If JSONAPI worked, this wouldn't be needed.
           switch ($field_id) {
@@ -920,10 +926,10 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
 
             case 'created':
             case 'changed':
-              $value = strtotime($response_data['data']['attributes'][$field_id]);
+              $value = strtotime($response_entity_data['data']['attributes'][$field_id]);
               break;
             default:
-              $value = $response_data['data']['attributes'][$field_id];
+              $value = $response_entity_data['data']['attributes'][$field_id];
 
           }
           $this->set($field_id, $value);
@@ -957,9 +963,8 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
    */
   public function getRemote() {
 
-    // Zero out reasons.
-    $reasons = [];
-    $this->reason->setValue($reasons);
+    // Append reasons.
+    $reasons = $this->get('reason')->get(0) ? $this->get('reason')->get(0)->getValue(): [];
 
     $worst_code = 0;
     $site_uri_data = [];
@@ -1046,7 +1051,11 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
         break;
     }
 
-    $this->state->setValue($state);
+    // Set state if higher.
+    if ($this->state->value < $state) {
+      $this->state->setValue($state);
+    }
+
     $this->headers = new HeaderBag($site_uri_data[$this->site_uri->value]['headers']);
 
     return $this;

@@ -7,8 +7,23 @@ use Symfony\Component\Validator\ConstraintValidator;
 
 /**
  * Validates the UniqueUrl constraint.
+ *
+ * Site entities do not always need to have a unique URL.
+ * The only time the URL is used to strictly identify a site is when
+ * accessed via the Site API.
+ *
+ * When client sites post, they try to GET /jsonapi/self from the site manager
+ * first to see if there is already a site entity with it's hostname.
+ *
+ * The Site Manager responds by looking up a site entity with that URL.
+ * If there is more than one SiteEntity with that URL, Site Manager can lookup
+ * using the API key as well.
+ *
+ * With that in mind, SiteEntities only need unique URLs for sites with API_URL
  */
 class UniqueUrlConstraintValidator extends ConstraintValidator {
+
+  const URI_EXISTS = 1;
 
   /**
    * {@inheritdoc}
@@ -35,6 +50,7 @@ class UniqueUrlConstraintValidator extends ConstraintValidator {
                 "@name" => $site->toLink($uri)->toString()
               ]))
                 ->atPath('site_uri.' . $i)
+                ->setCode(self::URI_EXISTS)
                 ->addViolation();
             }
             else {

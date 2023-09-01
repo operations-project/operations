@@ -21,6 +21,7 @@ use Drupal\jsonapi\Normalizer\ResourceObjectNormalizer;
 use Drupal\jsonapi\ResourceResponse;
 use Drupal\jsonapi\Serializer\Serializer;
 use Drupal\site\Entity\SiteEntity;
+use Drupal\site\Plugin\Validation\Constraint\UniqueUrlConstraintValidator;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 
@@ -232,6 +233,13 @@ class SiteSettingsForm extends ConfigFormBase {
       ]);
 
       $violations = $site_manager->validate();
+
+      // Unset URL constraint violation.
+      foreach ($violations as $i => $violation) {
+        if ($violation->getCode() == UniqueUrlConstraintValidator::URI_EXISTS) {
+          $violations->remove($i);
+        }
+      }
 
       if (count($violations)) {
         $messages = [];

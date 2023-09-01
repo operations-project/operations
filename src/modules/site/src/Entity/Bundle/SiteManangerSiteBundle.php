@@ -21,13 +21,6 @@ use Symfony\Component\Validator\ConstraintViolation;
  */
 class SiteManangerSiteBundle extends DrupalSiteBundle {
 
-  public static function bundleFieldDefinitions(EntityTypeInterface $entity_type, $bundle, array $base_field_definitions)
-  {
-    $fields = parent::bundleFieldDefinitions($entity_type, $bundle, $base_field_definitions);
-    $fields += DrupalSiteBundle::bundleFieldDefinitions($entity_type, $bundle, $base_field_definitions);
-    return $fields;
-  }
-
   public function save()
   {
     // If this a site manager and $_GET['manager_of'] is set, update site entity to match uuid.

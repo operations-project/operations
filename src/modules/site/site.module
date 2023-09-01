@@ -536,6 +536,9 @@ function site_entity_bundle_field_info(\Drupal\Core\Entity\EntityTypeInterface $
   $entity_class = $entity_type->getClass();
   if (method_exists($entity_class, 'propertyFieldDefinitions')) {
     $fields = $entity_class::propertyFieldDefinitions($entity_type, $bundle, $base_field_definitions);
+    foreach ($fields as $field) {
+      \Drupal::service('field_definition.listener')->onFieldDefinitionCreate($field);
+    }
   }
   return $fields;
 

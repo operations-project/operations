@@ -28,8 +28,7 @@ class SiteActionsController extends ControllerBase {
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
    */
-  public function __construct(SiteSelf $self, ConfigFactoryInterface $config_factory) {
-    $this->self = $self;
+  public function __construct(ConfigFactoryInterface $config_factory) {
     $this->configFactory = $config_factory;
   }
 
@@ -38,7 +37,6 @@ class SiteActionsController extends ControllerBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('site.remote'),
       $container->get('config.factory')
     );
   }
