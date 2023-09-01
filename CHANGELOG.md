@@ -4,6 +4,15 @@ Drupal Operations
 Changelog
 ---------
 
+# Operations 2.0.0-beta23
+## September 1, 2023
+
+- Fix Site Manager Receive data, update bundle field metadata.
+- Fix timestamp display on site manager when requesting data.
+- Provide a link to edit Site API key if access denied.
+- Fix field, state, reasons sending & overriding.
+- Fix perpetual warning.
+- Remove SiteRemote service.
 
 ### 2.x 
 
