@@ -13,6 +13,14 @@ Entity over via REST.
 
 Site Manager can control the config, state, and fields of connected sites.
 
+Site Manager can remotely sign into Drupal sites, allowing admins to connect directly to client sites without needing a password or Drush.
+
+## Drupal Operations Experience Platform
+
+This project is a part of the [Drupal Operations Platform](https://www.drupal.org/project/operations), the Ops Dashboard built in Drupal.
+
+For all issues, development, and more information, see https://www.drupal.org/project/operations
+
 ## Usage
 
 Site Manager provides a content entity called "Site". It is basically a CMS 
@@ -24,31 +32,17 @@ The list of sites is under Admin > Content > Sites.
 
 ### Add Site
 
-Not Yet Implemented.
+A site entity can be any website. Visit Admin > Content > Sites to view the list of sites.
 
-Currently, the only way to add a site is to install Site.module on the 
-client site and configure it to start sending it to Site Manager.
+Press "Add site" to create a new site.
 
-Adding a Site Entity directly using this form is challenging because we need 
-an ID: The Site UUID.
+### Site Types
 
-@TODO:
+There are 3 basic site types by default:
 
-1. Create the "Add site" route to show 2 options for adding sites: instructions 
-   for adding `drupal/site` to a client site, and the "Add Site" form. 
-2. Generate a site UUID by default, but allow a user to override it if they 
-   know it.
-2. Once saved, on the site entity, show the user how to connect a remote 
-   site by setting the UUID and adding `drupal/site`.
-
-
-### Admin > Structure > Site Types
-
-The list of site types. There is only one site type right now: "default". 
-
-This is where you can manage the fields of Site Entities.
-
-Site Types are not yet implenented.
+1. Basic website. Use to add any generic URL.
+2. Drupal website. Use for Drupal websites that might implement Site API for extra information. Also allows site actions to be taken like User login link.
+3. Site Manager. Use for Site Manager instances that you want to send site data to.
 
 ### Remote Control
 
@@ -89,11 +83,13 @@ with field data received from Site Manager.
 
 ## Site Actions
 
-### Get Login Link
+### Sign In
 
 Site Manager can connect to client sites and request one-time login links.
 
 To set up remote login, there are a few steps:
 
-1. On the client site, get an API key for the user you wish to login with
-
+1. On the client site, visit "My Account" > "Key Authentication" for the user you wish to allow signing in as.
+2. Generate and copy an API key.
+3. On site manager, edit the Site entity and add the API key.
+4. Click the "^" menu on the site and click "Sign in" to view the "request a login link" form.

@@ -1,8 +1,12 @@
 # Site Entity Module
 
-The **Site.Module** provides a new way to view and store data about your Drupal site. When enabled, a *Site Entity* is created that includes data on Drupal & PHP versions, Git information, and more. 
+The **Site.Module** provides an entity to represent any website.
+
+Site Module can view, store, and send data about your Drupal site. When enabled, a *Site Entity* is created that includes data on Drupal & PHP versions, Git information, and more. 
 
 The *Site Entity* has a "Site State" property indicating the overall health of your site using the core "Status report", [Site Audit module](https://www.drupal.org/project/site_audit) reports, or write your own SiteState plugin. The "Reason" property stores text describing why the site is in a certain state.
+
+The HTTP status code for the site affects state, making Site module a lightweight monitoring solution.
 
 The *Site Entity* is revisionable, providing a detailed history of the state of your site, including changes to configuration with a log of who changed what, where.
 
@@ -13,18 +17,18 @@ The *Site Entity* has a REST API, allowing you to POST or GET site entities from
 
 ## Drupal Operations Experience Platform
 
-This project is a part of the [Drupal OX Platform](https://www.drupal.org/project/ox), the Ops Dashboard built in Drupal.
+This project is a part of the [Drupal Operations Platform](https://www.drupal.org/project/operations), the Ops Dashboard built in Drupal.
 
-For all issues, development, and more information, see https://www.drupal.org/project/ox
+For all issues, development, and more information, see https://www.drupal.org/project/operations
 
 ## How to use
 
 Install site.module with composer & drush:
 
-        composer require drupal/site-site
+        composer require drupal/site
         drush en site
 
-*NOTE:* The package name is "site-site" due to a mistake in Drupal packagist packing.
+*NOTE:* If you are upgrading from Site Module 1.x, the package name is `drupal/site-site`. You MUST uninstall site module before removing the old version and adding the new. See [upgrading from 1.x](./) 
 
 ### Site Status Widget
 

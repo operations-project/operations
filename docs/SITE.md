@@ -34,6 +34,16 @@ This information is saved over time in *Site Reports*. Press the *Save Report*
 button 
 saves this information as a snapshot, viewable on the *History* tab.
 
+### Site Information 
+#### "Drupal Project" entity
+
+This display is a "Drupal Project" entity. It is the same across all environments of your Drupal website. Use it for fields you wish to make available to all instances of this site.
+
+### Current Environment
+#### "Site" Entity
+
+This display is for the "Site" entity, unique to the environment you are running in. When loading this page in a new environment, you will see a "Create Site Record" button instead of this display. Click it to create the site entity with all properties gathered.
+
 ### Site State
 
 *Site State* is a single value that represents the overall state of your 
@@ -90,7 +100,6 @@ page.
 ![Site History](site-history.png)
 
 ## Site History Reports
-
 <img src="site-report.png" alt="Site State Settings" width="50%" align="right"/>
 
 Each entry in the Site History page is a snapshot in time.
@@ -144,25 +153,24 @@ small changes to their site using SiteEntity fields.
 
 <br clear="both">
 
-### Retrieving Site Entity Fields
+### Retrieving Site Entity & Drupal Project Fields
 
-Loading the Site Entity to get it's fields is almost the same as any other 
-entity.
+Loading the Site Entity or Drupal Project entity to get it's fields is almost the same as any other entity.
 
 Instead of loading it by ID, you can just get the site entity for the 
-current site with `SiteEntity::getSelf()`
+current site with `SiteEntity::getSelf()` or `DrupalProject::getSelf()`.
 
 For example, to load a field and present a message, you can use this code. 
 ```php
 <?php 
-  use \Drupal\site\Entity\SiteEntity;
+  use \Drupal\site\Entity\DrupalProject;
   
   // Load the entity just like any other, but with loadSelf().
-  /** @var SiteEntity $site_entity */
-  $site_entity = SiteEntity::loadSelf();
+  /** @var DrupalProject $drupal_project */
+  $drupal_project = SiteEntity::loadSelf();
   
   // Load the field value just like any field.
-  $welcome_message = $site_entity->get('field_welcome_message')->value;
+  $welcome_message = $drupal_project->get('field_welcome_message')->value;
   
   // Do something with the value.
   \Drupal::messenger()->addStatus($welcome_message);
@@ -175,6 +183,12 @@ For example, to load a field and present a message, you can use this code.
 
 <br clear="both">
 
+### Site vs Project
+
+Remember: anything unique to that environment is saved to `SiteEntity` objects. This means URLs, PHP Version, etc. 
+
+Data that is saved across environments is saved into `DrupalProject` entities. If you wish to use fields for your site with the same entity in every environment, use the `DrupalProject` entity. The only properties included by default are Site UUID, git URL, and Canonical URL.
+
 ## Site Settings
 The Site Settings page controls how Site Status and Reports are handled.
 
@@ -183,8 +197,7 @@ The Site Settings page controls how Site Status and Reports are handled.
 ## State
 
 The factors that affect Site State can be configured. Currently supported 
-factors are Drupal Core Status report page, and [Site Audit](https://drupal.
-org/project/site_audit) module.
+factors are Drupal Core Status report page, and [Site Audit](https://drupal.org/project/site_audit) module.
 
 Choose the factors that make the most sense for your site.
 <br clear="both">
@@ -233,24 +246,40 @@ site and Manage Display and Form just like any other Drupal site.
 
 See [SiteEntity Class](../src/modules/site/src/Entity/SiteEntity.php).
 
-### Site Definition
+### Site Entity Bundles
 
-A "Site Definition" is a Config Entity that has special methods for loading
-realtime information into the `SiteDefinition` class.
+Site Entity bundles are for different types of sites. Each bundle type contains the fields that make sense for that type.
 
-Each site gets a single `SiteDefinition` config item called `site.
-site_definition.self`. The config is managed on the [Site Settings](#site-settings)
-page.
+1. `SiteEntity`: Top object. All site entities have these fields: hostname, site_uri, state, reason, site_title, data, settings.
+2. `DefaultSiteBundle` 
+   - `getRemote()` method loads HTTP status and content from site_uri fields.
+   - `getPageTitle()` method parses the HTML and loads the <title> field. 
+   - 
+4. `WebAppBundle` > `PhpSiteBundle`: Placeholders. Could be used in the future for non PHP, non Drupal websites.
+4. `DrupalSiteBundle`: 
+   - `getRemote()` method accesses SiteAPI to gather data, if it exists.
+5. `SiteManagerSiteBundle`: Used to connect to a remote Site Manager instance. Validates the API key works.
 
-The `SiteDefinition` entity represents real-time values for state and
-properties.
+`SiteProperty` fields can define what bundles they appear on, allowing fields to attach to different site types depending on what they are.
 
-To save these properties for use later, `SiteDefinition::saveEntity()` is
-used to create and store a new revision of the Site's `SiteEntity`.
+For example, the PHP Version property is attached to `PhpSiteBundles`, and every bundle that extends it (Such as `DrupalSiteBundle`.)
 
-See [SiteDefinition Class](../src/modules/site/src/Entity/SiteDefinition.php).
+      /*
+      * @SiteProperty(
+      *   id = "php_version",
+      *   name = "php_version",
+      *   label = @Translation("PHP Version"),
+      *   site_bundles = {
+      *     "Drupal\site\Entity\Bundle\PhpSiteBundle"
+      *   },
+      *   description = @Translation("The version of PHP the site is running.")
+      */
 
-### Site Property
+### Drupal Project
+
+A "Drupal Project" entity is stored once per installed Drupal site. The ID of the project is the Drupal Site UUID. This entity gets copied along with your content to other environments. Use it to store field data that needs to be available in all environments.
+
+### Site Properties
 
 The `SiteProperty` Plugin type is a simple class that defines a data point
 about the site.
@@ -263,3 +292,18 @@ for later use.
 
 See [Plugins\SiteProperty folder](../src/modules/site/src/Plugin/SiteProperty)
 in the Site module for examples. 
+
+
+### Site Actions
+
+The `SiteAction` plugin types provide simple user interface for taking specific actions on sites.
+
+Site Actions get automatically added to the "Operations" widget of site entities. Look for the ^ dropdown button on site entity teasers.
+
+For example, the `UserLogin.php` site action adds a "Sign in" link to this menu:
+
+![Site Actions menu](./site-actions.png)
+
+See [Plugins\SiteAction folder](../src/modules/site/src/Plugin/SiteAction)
+in the Site module for examples. 
+

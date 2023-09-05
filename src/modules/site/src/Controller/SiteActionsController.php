@@ -46,7 +46,25 @@ class SiteActionsController extends ControllerBase {
    * @return \Symfony\Component\HttpFoundation\RedirectResponse
    */
   public function refresh(SiteEntity $site) {
-    $site->getRemote()->save();
+    // Get remote data...
+    $site = $site->getRemote();
+    $violations = $site->validate();
+
+    // Save the site if there are no violations.
+    // @TODO: getRemote() triggers a EntityChangedConstraintValidator to fail.
+    // This code ignores it.
+    if ($violations->count() == 0 || ($violations->count() == 1 && $violations->get(0)->getMessageTemplate() == "The content has either been modified by another user, or you have already submitted modifications. As a result, your changes cannot be saved.")) {
+      $site->save();
+      \Drupal::messenger()->addStatus(t('Site data has been updated.'));
+    }
+    else {
+
+      \Drupal::messenger()->addStatus(t('The site could not validate:'));
+      foreach ($violations as $violation) {
+        \Drupal::messenger()->addError($violation->getMessage());
+      }
+    }
+
     return $this->redirect('entity.site.canonical', [
       'site' => $site->id(),
     ]);

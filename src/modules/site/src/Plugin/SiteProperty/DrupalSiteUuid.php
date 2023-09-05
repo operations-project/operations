@@ -48,6 +48,10 @@ class DrupalSiteUuid extends SitePropertyPluginBase {
         'type' => 'string',
       ])
       ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayOptions('form', [
+        'type' => 'string_textfield',
+        'weight' => -90,
+      ])
     ;
 
     return $fields;

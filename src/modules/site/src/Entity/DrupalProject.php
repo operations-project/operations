@@ -7,6 +7,7 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\RevisionableContentEntityBase;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Routing\RedirectDestinationTrait;
 use Drupal\Core\Url;
 use Drupal\site\DrupalProjectInterface;
@@ -382,7 +383,21 @@ class DrupalProject extends RevisionableContentEntityBase implements DrupalProje
       ->setDisplayConfigurable('view', TRUE);
     ;
 
-
+    $fields['canonical_url'] = BaseFieldDefinition::create('uri')
+      ->setRevisionable(TRUE)
+      ->setRequired(FALSE)
+      ->setLabel(t('Canonical URL'))
+      ->setDescription(t('The main URL that this site is hosted under.'))
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayOptions('form', [
+        'type' => 'string_textfield',
+      ])
+      ->setDisplayConfigurable('view', TRUE)
+      ->setDisplayOptions('view', [
+        'label' => 'inline',
+        'type' => 'link',
+      ])
+    ;
 
     return $fields;
   }
