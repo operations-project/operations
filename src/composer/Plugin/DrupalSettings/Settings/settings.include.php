@@ -114,6 +114,13 @@ if (empty($settings['config_sync_directory'])) {
 }
 
 /**
+ * Set hash salt.
+ */
+if (empty($settings['hash_salt'])) {
+  $settings['hash_salt'] = md5(getenv('SERVER_ADDR'));
+}
+
+/**
  * Set 'rebuild_access' to false, by default.
  */
 $settings['rebuild_access'] = FALSE;
