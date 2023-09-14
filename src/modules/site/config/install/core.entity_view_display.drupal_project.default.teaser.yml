@@ -10,34 +10,33 @@ targetEntityType: drupal_project
 bundle: default
 mode: teaser
 content:
+  drupal_project_environments_entity_view_1:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 2
+    region: content
   drupal_site_name:
     type: string
-    label: inline
+    label: hidden
+    settings:
+      link_to_entity: true
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  git_remote:
+    type: string
+    label: hidden
     settings:
       link_to_entity: false
     third_party_settings: {  }
     weight: 1
     region: content
-  drupal_site_uuid:
-    type: string
-    label: inline
-    settings:
-      link_to_entity: false
-    third_party_settings: {  }
-    weight: 2
-    region: content
-  git_remote:
-    type: string
-    label: above
-    settings:
-      link_to_entity: false
-    third_party_settings: {  }
-    weight: 0
-    region: content
 hidden:
+  canonical_url: true
   changed: true
   created: true
   drupal_project_environments_drupal_project_environments: true
   drupal_site_environments_drupal_site_environments: true
+  drupal_site_uuid: true
   status: true
   uid: true

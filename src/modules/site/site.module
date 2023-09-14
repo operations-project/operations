@@ -6,9 +6,11 @@
  */
 
 use Drupal\Component\Utility\Xss;
+use Drupal\Core\Link;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Serialization\Yaml;
+use Drupal\Core\Url;
 use Drupal\site\Entity\Site;
 use Drupal\site\Entity\SiteEntity;
 use Drupal\site\Entity\SiteType;
@@ -56,6 +58,9 @@ function site_theme() {
     'site' => [
       'render element' => 'elements',
     ],
+    'drupal_project' => [
+      'render element' => 'elements',
+    ],
     'site_definition' => [
       'render element' => 'elements',
     ],
@@ -93,7 +98,7 @@ function site_toolbar() {
       'tab' => [
         '#type' => 'link',
         '#title' => $site->stateName(),
-        '#url' => \Drupal\Core\Url::fromRoute('site.about'),
+        '#url' => Url::fromRoute('site.about'),
         '#attributes' => [
           'title' => t(':state', [
             ':state' => $site->stateName(),
@@ -138,12 +143,13 @@ function template_preprocess_site(array &$variables) {
     '#weight' => -1000,
     '#attributes' => [
       'class' => [
-        'site-display'
+        'site-display',
+        'site-full'
       ]
     ]
   ];
 
-  if (!$site->isLive() && \Drupal::routeMatch()->getRouteName() == 'entity.site.canonical' || \Drupal::routeMatch()->getRouteName() == 'entity.site.revision') {
+  if (\Drupal::routeMatch()->getRouteName() == 'entity.site.canonical' || \Drupal::routeMatch()->getRouteName() == 'entity.site.revision') {
     $date_time = $site->revision_timestamp->view([
       'label' => 'hidden',
       'settings' => [
@@ -222,7 +228,7 @@ function template_preprocess_site(array &$variables) {
     '#tag' => 'div',
     '#attributes' => [
       'class' => [
-        'site-header'
+        'site-entity-header'
       ]
     ],
   ];
@@ -235,7 +241,7 @@ function template_preprocess_site(array &$variables) {
       ]
     ],
   ];
-  $build['header']['title']['link'] = $site->id() ? $site->toLink()->toRenderable() : \Drupal\Core\Link::createFromRoute(SiteEntity::getUri(), 'site.about')->toRenderable();
+  $build['header']['title']['link'] = $site->id() ? $site->toLink()->toRenderable() : Link::createFromRoute(SiteEntity::getUri(), 'site.about')->toRenderable();
   $build['header']['title']['link']['#attributes']['class'][] = 'action-link';
 
   $build['header']['actions'] = [
@@ -290,6 +296,37 @@ function template_preprocess_site(array &$variables) {
     ];
   }
 
+  if ($site->isCanonical()) {
+    $note = t('This is the canonical environment for Drupal project :project.', [
+      ':project' => $site->drupal_project->entity->label(),
+    ]);
+    $build['header']['title']['link']['#attributes']['title'] = $note;
+    $build['header']['title']['link']['#attributes']['class'][] = 'canonical-site';
+
+    if ($variables['view_mode'] != 'teaser') {
+      $build['header']['title']['link']['#attributes']['class'][] = 'action-link--icon-show';
+    }
+
+    $build['site_subheader']['canonical'] = [
+      '#type' => 'html_tag',
+      '#tag' => 'em',
+      '#attributes' => [
+        'class' => [
+          'site-canonical'
+        ],
+        'title' => $note,
+      ],
+      '#value' => t('Canonical'),
+    ];
+  }
+
+  if (!empty($site->drupal_project->entity)) {
+    $build['site_subheader']['drupal_project'] =  $site->drupal_project->view([
+      'label' => 'hidden',
+    ]);
+    $build['site_subheader']['drupal_project'][0]['#attributes']['title'] = t('Drupal Project');
+  }
+
   $build['urls'] = [
     '#type' => 'html_tag',
     '#tag' => 'div',
@@ -327,7 +364,72 @@ function template_preprocess_site(array &$variables) {
       ]
     ],
   ];
-  $build['content'] += $variables['content'];
+  $build['content'] += $variables['content'] ?? [];
+
+  // Composer Info
+  if ($site->composer_json->get(0) && $variables['view_mode'] != 'teaser') {
+    $build['composer'] = [
+      '#description' => t('Loaded from composer.json'),
+      '#type' => 'details',
+    ];
+    $build['composer']['#title']['label'] = [
+      '#markup' => t('Site Information'),
+    ];
+
+    $composer = $site->composer_json->get(0)->getValue();
+    $build['composer']['#title']['project'] = [
+      '#type' => 'html_tag',
+      '#tag' => 'div',
+      '#attributes' => [
+        'class' => [
+          'composer-info-name'
+        ],
+        'title' => t('Data read from composer.json'),
+      ]
+    ];
+    $build['composer']['#title']['project']['composer'] = [
+      '#type' => 'item',
+      '#title' => $composer['name'],
+      '#markup' => $composer['description'],
+      '#attributes' => [
+        'class' => ['composer-info-name'],
+      ],
+    ];
+    $link = Link::fromTextAndUrl($composer['homepage'], Url::fromUri($composer['homepage']))->toRenderable();
+    $link['#attributes']['target'] = '_blank';
+    $build['composer']['homepage'] = [
+      '#type' => 'item',
+      '#title' => t('Homepage'),
+      'site_link' => $link,
+    ];
+    foreach ($composer['support'] as $name => $url) {
+      $link = Link::fromTextAndUrl($name, Url::fromUri($url))->toRenderable();
+      $link['#attributes']['target'] = '_blank';
+      $support_links[] = $link;
+    }
+    $build['composer']['support'] = [
+      '#type' => 'html_tag',
+      '#tag' => 'div',
+      '#attributes' => [
+        'class' => [
+          'composer-info-name'
+        ],
+        'title' => t('Data read from composer.json'),
+      ]
+    ];
+    $build['composer']['support'] = [
+      '#title' => t('Support'),
+      '#type' => 'item',
+      '#attributes' => [
+        'class' => ['composer-info-support'],
+      ],
+      'links' => [
+        '#theme' => 'item_list',
+        '#items' => $support_links,
+      ],
+    ];
+  }
+
 
   if ($variables['view_mode'] == 'about') {
 
@@ -345,10 +447,70 @@ function template_preprocess_site(array &$variables) {
     $build['state_widget']['#attributes']['class'][] = 'color-' . $site->stateClass();
   }
   $variables['content'] = [
-    $build
+    'build' => $build
   ];
+
+  if ($variables['view_mode'] == 'teaser') {
+    template_preprocess_site_widget($variables);
+  }
 }
 
+/**
+ * Alters the site build array for "teaser" display.
+ *
+ * This should probably be a single directory component or whatever.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - elements: An associative array containing the site information and any
+ *     fields attached to the entity.
+ *   - attributes: HTML attributes for the containing element.
+ */
+function template_preprocess_site_widget(array &$variables)
+{
+  $build = &$variables['content']['build'];
+  $site = $variables['elements']['#site'];
+
+
+  $build['#attributes']['class'] = ['site-display', 'site-widget'];
+  $build['header']['title']['#attributes']['class'][] = 'color-' . $site->stateClass();
+  $build['header']['title']['link']['#prefix'] = "<em class='icon'></em>";
+
+
+  unset($build['site_subheader']);
+  unset($build['content']);
+  unset($build['urls']);
+  unset($build['state_widget']);
+}
+
+/**
+ * Prepares variables for site templates.
+ *
+ * Default template: site.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - elements: An associative array containing the site information and any
+ *     fields attached to the entity.
+ *   - attributes: HTML attributes for the containing element.
+ */
+function template_preprocess_drupal_project(array &$variables)
+{
+  /** @var DrupalProject $project */
+  $project = $variables['elements']['#drupal_project'];
+  $variables['view_mode'] = $variables['elements']['#view_mode'];
+  foreach (Element::children($variables['elements']) as $key) {
+    $variables['content'][$key] = $variables['elements'][$key];
+  }
+
+  $variables['content']['drupal_site_name'][0]['url'] = $project->canonical_url->view([
+    'label' => 'hidden',
+  ]);
+
+  $variables['attributes']['class'][] = 'drupal-project';
+  $variables['attributes']['class'][] = $variables['view_mode'];
+
+}
 /**
  * Widget for config diff.
  * @param $entity
@@ -418,7 +580,7 @@ function site_config_changes_build($entity) {
       '@user' => $account ? $account->toLink()->toString() :
         $config_changes['user'] . ' (no user found)',
       ':ip' => $config_changes['ip'],
-      '@url' => \Drupal\Core\Link::fromTextAndUrl($config_changes['url'], \Drupal\Core\Url::fromUri($config_changes['url']))->toString(),
+      '@url' => Link::fromTextAndUrl($config_changes['url'], Url::fromUri($config_changes['url']))->toString(),
       '@date' => $date
     ]);
   }

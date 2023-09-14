@@ -31,6 +31,31 @@ class DrupalSiteBundle extends PhpSiteBundle {
   }
 
   /**
+   * Determine if this site is the canonical site for this project.
+   *
+   * @param string $url If specified, will only check for the specific url instead of .
+   * @return bool
+   */
+  public function isCanonical($url = null)
+  {
+    $canonical_url = $this->drupal_project->entity->canonical_url->value ?? null;
+    if (empty($canonical_url)) {
+      return false;
+    }
+
+    if ($url) {
+      return $canonical_url == $url;
+    }
+
+    foreach ($this->site_uri->getValue() as $site_uri) {
+      if ($site_uri['value'] == $canonical_url) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
    * Add a check for Drupal Site API.
    * @return void
    */

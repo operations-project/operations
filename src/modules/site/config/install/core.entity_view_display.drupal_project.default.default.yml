@@ -9,7 +9,14 @@ targetEntityType: drupal_project
 bundle: default
 mode: default
 content:
-  created:
+  canonical_url:
+    type: uri_link
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  changed:
     type: timestamp
     label: above
     settings:
@@ -17,12 +24,12 @@ content:
       custom_date_format: ''
       timezone: ''
     third_party_settings: {  }
-    weight: 3
+    weight: 4
     region: content
   drupal_project_environments_drupal_project_environments:
     settings: {  }
     third_party_settings: {  }
-    weight: 4
+    weight: 3
     region: content
   drupal_site_environments_drupal_site_environments:
     settings: {  }
@@ -31,15 +38,7 @@ content:
     region: content
   drupal_site_name:
     type: string
-    label: inline
-    settings:
-      link_to_entity: false
-    third_party_settings: {  }
-    weight: 1
-    region: content
-  drupal_site_uuid:
-    type: string
-    label: inline
+    label: hidden
     settings:
       link_to_entity: false
     third_party_settings: {  }
@@ -47,13 +46,15 @@ content:
     region: content
   git_remote:
     type: string
-    label: above
+    label: hidden
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    weight: 0
+    weight: 1
     region: content
 hidden:
-  changed: true
+  created: true
+  drupal_project_environments_entity_view_1: true
+  drupal_site_uuid: true
   status: true
   uid: true

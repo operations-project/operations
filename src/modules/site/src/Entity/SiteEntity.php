@@ -4,6 +4,7 @@ namespace Drupal\site\Entity;
 
 use _PHPStan_978789531\Nette\PhpGenerator\Parameter;
 use _PHPStan_978789531\Symfony\Contracts\Service\Attribute\Required;
+use Composer\Autoload\ClassLoader;
 use Drupal\backup_migrate\Core\Plugin\PluginCallerTrait;
 use Drupal\Component\Plugin\Exception\ContextException;
 use Drupal\Component\Serialization\Json;
@@ -126,8 +127,6 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
 
   protected HeaderBag $headers;
 
-  protected bool $is_live = false;
-
   protected array $property_plugins;
 
   /**
@@ -142,22 +141,23 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
   static public function load($id) {
     $site = parent::load($id);
 
-    // If loading itself, load live plugin data.
-    // NOTE: This function does NOT get called on the site's canonical page /site/X or revisions
-    // Not sure why.
-//    if ($site->isSelf()) {
-      // Load plugin data.
-//      $plugin_data = static::getPluginData();
-//      $site->set('state', $plugin_data['state']);
-//      $site->set('reason', $plugin_data['reason']);
-//      foreach ($plugin_data['properties'] as $name => $property) {
-//        if ($site->hasField($name)) {
-//          $site->set($name, $property['value']);
-//        }
-//      }
-//      $site->is_live = true;
-//    }
     return $site;
+  }
+
+  /**
+   * Determine if this is a live site.
+   *
+   * @TODO: Implement this for non-drupal sites.
+   *
+   * Right now, only Drupal sites have a way to determine the canonical URL of a site
+   * because they have the Drupal Project reference.
+   *
+   * Once we create Site Groups and SiteGroup Types we can have a "WebApp" Site Group Type that has canonical URL field as well.
+   *
+   * @return bool
+   */
+  public function isCanonical($url = null) {
+    return false;
   }
 
   /**
@@ -186,14 +186,6 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
       $site_managers[] = SiteEntity::load($site_manager_id);
     }
     return $site_managers;
-  }
-
-  /**
-   * If the entity is showing live data. (only on self.)
-   * @return bool
-   */
-  public function isLive() {
-    return $this->is_live;
   }
 
   static public function getPluginData() {
@@ -769,6 +761,17 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
    */
   public static function getSiteTitle() {
     return \Drupal::config('system.site')->get('name');
+  }
+
+  /**
+   * Return the root path of the site codebase.
+   *
+   * @return string
+   */
+  public static function getSiteRoot() {
+    $reflection = new \ReflectionClass(ClassLoader::class);
+    $vendorDir = dirname(dirname($reflection->getFileName()));
+    return dirname($vendorDir);
   }
 
   /**

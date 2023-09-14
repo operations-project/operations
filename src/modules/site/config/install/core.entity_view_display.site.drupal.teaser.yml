@@ -12,90 +12,32 @@ targetEntityType: site
 bundle: drupal
 mode: teaser
 content:
-  drupal_project:
-    label: above
-    type: string
-    region: content
-    weight: 20
-    settings:
-      link_to_entity: false
-    third_party_settings: {  }
-  drupal_site_name:
-    type: string
-    label: above
-    settings:
-      link_to_entity: false
-    third_party_settings: {  }
-    weight: 12
-    region: content
-  drupal_site_uuid:
-    type: string
-    label: above
-    settings:
-      link_to_entity: false
-    third_party_settings: {  }
-    weight: 13
-    region: content
-  drupal_version:
-    type: string
-    label: above
-    settings:
-      link_to_entity: false
-    third_party_settings: {  }
-    weight: 18
-    region: content
-  git_reference:
-    type: string
-    label: above
-    settings:
-      link_to_entity: false
-    third_party_settings: {  }
-    weight: 14
-    region: content
-  git_remote:
-    type: string
-    label: above
-    settings:
-      link_to_entity: false
-    third_party_settings: {  }
-    weight: 16
-    region: content
-  host_provider:
-    type: string
-    label: above
-    settings:
-      link_to_entity: false
-    third_party_settings: {  }
-    weight: 15
-    region: content
-  hostname:
-    type: text_default
+  api_uri:
+    type: uri_link
     label: above
     settings: {  }
     third_party_settings: {  }
-    weight: -100
-    region: content
-  http_status:
-    type: string
-    label: above
-    settings:
-      link_to_entity: false
-    third_party_settings: {  }
-    weight: 17
-    region: content
-  php_version:
-    type: string
-    label: above
-    settings:
-      link_to_entity: false
-    third_party_settings: {  }
-    weight: 11
+    weight: 19
     region: content
 hidden:
+  api_url: true
   created: true
   data: true
   description: true
+  drupal_cron_last: true
+  drupal_install_profile: true
+  drupal_install_time: true
+  drupal_project: true
+  drupal_site_name: true
+  drupal_site_uuid: true
+  drupal_version: true
+  git_reference: true
+  git_remote: true
+  host_provider: true
+  hostname: true
+  http_status: true
   label: true
+  php_version: true
   reason: true
   settings: true
   site_title: true

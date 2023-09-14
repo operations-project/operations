@@ -36,7 +36,33 @@ class DrupalProjectForm extends ContentEntityForm {
     $form['created']['#group'] = 'author';
     $form['uid']['#group'] = 'author';
     $form['status']['#group'] = 'author';
+
+    // Add help
+    $items = [];
+    $items[] = t('The Drupal Site UUID uniquely identifies each site across environments.');
+    $items[] = t('If your site already exists, you can retrieve the site UUID by running the command  <code>drush config:get system.site uuid</code>.');
+    $items[] = t('Leave blank to generate a new site UUID.');
+
+    $form['drupal_site_uuid']['widget'][0]['value']['#required'] = false;
+    $form['drupal_site_uuid']['widget'][0]['value']['#description'] = [
+      '#theme' => 'item_list',
+      '#items' => $items,
+    ];
     return $form;
+  }
+
+  /**
+   * Generates UUID for you.
+   * @inheritdoc
+   */
+  public function validateForm(array &$form, FormStateInterface $form_state)
+  {
+    if (empty($form_state->getValue('drupal_site_uuid')[0]['value'])) {
+      $form_state->setValue('drupal_site_uuid', [[
+        'value' => \Drupal::service('uuid')->generate()
+      ]]);
+    }
+    return parent::validateForm($form, $form_state);
   }
 
   /**

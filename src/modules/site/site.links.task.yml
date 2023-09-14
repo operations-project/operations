@@ -1,5 +1,5 @@
 entity.site.view:
-  title: 'Site Information'
+  title: 'Site Dashboard'
   route_name: entity.site.canonical
   base_route: entity.site.canonical
 
@@ -92,7 +92,7 @@ entity.site.collection:
   weight: 10
 
 entity.drupal_project.view:
-  title: 'View'
+  title: 'Project Dashboard'
   route_name: entity.drupal_project.canonical
   base_route: entity.drupal_project.canonical
 entity.drupal_project.edit_form:
@@ -104,6 +104,7 @@ entity.drupal_project.delete_form:
   route_name: entity.drupal_project.delete_form
   base_route: entity.drupal_project.canonical
   weight: 10
+
 entity.drupal_project.collection:
   title: 'Drupal Projects'
   route_name: entity.drupal_project.collection

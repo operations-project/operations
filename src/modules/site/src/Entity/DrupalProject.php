@@ -145,88 +145,7 @@ class DrupalProject extends RevisionableContentEntityBase implements DrupalProje
    * @return array
    */
   public function view($mode = 'full') {
-
-    $build['header'] =[
-      '#type' => 'html_tag',
-      '#tag' => 'div',
-      '#attributes' => [
-        'class' => [
-          'site-header'
-        ]
-      ],
-    ];
-    $build['header']['title'] = [
-      '#type' => 'html_tag',
-      '#tag' => 'div',
-      '#attributes' => [
-        'class' => [
-          'site-title'
-        ]
-      ],
-    ];
-    $build['header']['title']['link'] = $this->toLink()->toRenderable();
-    $build['header']['title']['link']['#attributes']['class'][] = 'action-link';
-
-    $build['header']['actions'] = [
-      '#type' => 'html_tag',
-      '#tag' => 'div',
-      '#attributes' => [
-        'class' => [
-          'site-operations'
-        ]
-      ]
-    ];
-    $build['header']['actions']['operations'] = [
-      '#type' => 'operations',
-      '#links' => $this->getOperations(),
-    ];
-
-    $build['site_subheader'] = [
-      '#type' => 'html_tag',
-      '#tag' => 'div',
-      '#attributes' => [
-        'class' => [
-          'site-subheader'
-        ]
-      ],
-    ];
-
-    $build['site_subheader']['uuid'] = [
-      '#type' => 'html_tag',
-      '#tag' => 'div',
-      '#attributes' => [
-        'class' => [
-          'site-type'
-        ]
-      ],
-      'type' => $this->drupal_site_uuid->view([
-        'label' => 'inline',
-      ]),
-    ];
-
-    $build['content'] = [
-      '#type' => 'html_tag',
-      '#tag' => 'div',
-      '#attributes' => [
-        'class' => [
-          'site-content'
-        ]
-      ],
-    ];
-
-    $build['content']['view'] =  $this->entityTypeManager()->getViewBuilder($this->getEntityTypeId())->view($this, $mode);
-
-    $build['content']['view']['drupal_project_name']['#rendered'] = true;
-    $build['content']['view']['drupal_site_uuid']['#rendered'] = true;
-
-    return [
-      '#type' => 'fieldset',
-      '#attributes' => [
-        'class' => ['site-display'],
-      ],
-      'build' => $build,
-    ];
-    return $build;
+    return  $this->entityTypeManager()->getViewBuilder($this->getEntityTypeId())->view($this, $mode);;
   }
 
   /**
@@ -302,7 +221,6 @@ class DrupalProject extends RevisionableContentEntityBase implements DrupalProje
       ->setDescription(t('The Drupal site UUID.'))
       ->setRequired(true)
       ->setReadOnly(true)
-      ->setDefaultValueCallback(static::class . '::getSiteUuid')
       ->setDisplayOptions('form', [
         'type' => 'string_textfield',
       ])
@@ -317,8 +235,8 @@ class DrupalProject extends RevisionableContentEntityBase implements DrupalProje
       ->setRevisionable(TRUE)
       ->setTranslatable(TRUE)
       ->setLabel(t('Drupal Site Name'))
+      ->setDescription(t('Enter the name of this Drupal Site.'))
       ->setRequired(TRUE)
-      ->setDefaultValueCallback(static::class . '::getSiteName')
       ->setDisplayOptions('form', [
         'type' => 'string_textfield',
         'weight' => -5,
@@ -387,7 +305,7 @@ class DrupalProject extends RevisionableContentEntityBase implements DrupalProje
       ->setRevisionable(TRUE)
       ->setRequired(FALSE)
       ->setLabel(t('Canonical URL'))
-      ->setDescription(t('The main URL that this site is hosted under.'))
+      ->setDescription(t('The primary live URL for this site.'))
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayOptions('form', [
         'type' => 'string_textfield',

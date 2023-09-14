@@ -59,7 +59,6 @@ class SiteForm extends ContentEntityForm
     ];
     $form['hostname']['#group'] = 'site_info';
     $form['description']['#group'] = 'site_info';
-    $form['label']['#group'] = 'site_info';
     $form['site_title']['#group'] = 'site_info';
 
     $form['git_remote']['#group'] = 'site_info';

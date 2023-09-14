@@ -1,0 +1,53 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - site.site_type.default
+  module:
+    - text
+id: site.default.default
+targetEntityType: site
+bundle: default
+mode: default
+content:
+  host_provider:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: -99
+    region: content
+  hostname:
+    type: text_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: -100
+    region: content
+  http_status:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: -98
+    region: content
+  site_title:
+    type: text_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: -100
+    region: content
+hidden:
+  created: true
+  data: true
+  description: true
+  label: true
+  reason: true
+  settings: true
+  site_uri: true
+  state: true
+  status: true
+  uid: true

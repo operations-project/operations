@@ -45,3 +45,16 @@ drupal_project.add_page:
   route_name: entity.drupal_project.add_page
   appears_on:
     - entity.drupal_project.collection
+
+site.add_project:
+  title: 'Add project'
+  route_name: entity.drupal_project.add_page
+  appears_on:
+    - entity.drupal_project.collection
+    - view.drupal_projects.page_1
+
+entity.drupal_project.add_site:
+  title: 'Add site'
+  route_name: entity.drupal_project.add_site
+  appears_on:
+    - entity.drupal_project.canonical

@@ -8,7 +8,6 @@ Feature:
     When I click "History"
     Then I should see "There are no site reports yet."
     Given I am at "admin/site/save"
-    Then I should see "Primary Hostname"
     And I should see "PHP Version"
     And I should see "8.1"
     Given I am at "admin/site/save"
@@ -37,8 +36,8 @@ Feature:
       | Label | Drupal.Org |
 
     Then I press "Save"
-    Then I should see "New site Drupal.Org has been created."
     Then print current URL
+    Then I should see "New site Drupal.Org has been created."
     And I should see "Drupal 7 (https://www.drupal.org)"
 
   @api

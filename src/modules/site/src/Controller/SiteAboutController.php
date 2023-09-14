@@ -72,11 +72,7 @@ class SiteAboutController extends ControllerBase {
     else {
 
       // Drupal Site entity information: all environments have this same entity.
-      $build['info'] = [
-        '#type' => 'fieldgroup',
-        '#title' => t('Site Information'),
-      ];
-      $build['info']['site'] = $drupal_project_entity->view('teaser');
+      $build['project'] = $drupal_project_entity->view('teaser');
     }
 
     if (!empty($drupal_project_entity) && empty($site_entity)) {
@@ -109,8 +105,10 @@ class SiteAboutController extends ControllerBase {
     }
     elseif (!empty($site_entity)) {
 
-      // State
-      $build['state_widget'] = $site_entity->state->view([
+      // Drupal environment information.
+      $build['environment'] = [];
+
+      $build['environment']['state_widget'] = $site_entity->state->view([
         'label' => 'hidden',
         'type' => 'site_state',
         'settings' => [
@@ -119,14 +117,8 @@ class SiteAboutController extends ControllerBase {
           'collapsible' => false,
         ]
       ]);
-      $build['state_widget']['#weight'] = -100;
-
-      // Drupal environment information.
-      $build['environment'] = [
-        '#type' => 'fieldgroup',
-        '#title' => t('Current Environment'),
-      ];
       $build['environment']['current'] = $site_entity->view('about');
+
     }
     return $build;
   }

@@ -24,3 +24,8 @@ services:
   plugin.manager.site_action:
     class: Drupal\site\SiteActionPluginManager
     parent: default_plugin_manager
+
+  site.breadcrumb:
+    class: Drupal\site\SiteBreadcrumbBuilder
+    tags:
+      - { name: breadcrumb_builder, priority: 1000 }

@@ -1,21 +1,13 @@
-uuid: 68858448-e299-439d-83ec-e1b34a0e172e
 langcode: en
 status: true
 dependencies:
   config:
-    - site.site_type.drupal
-id: site.drupal.default
+    - site.site_type.site_manager
+id: site.site_manager.default
 targetEntityType: site
-bundle: drupal
+bundle: site_manager
 mode: default
 content:
-  api_uri:
-    type: uri_link
-    label: above
-    settings: {  }
-    third_party_settings: {  }
-    weight: 19
-    region: content
   drupal_cron_last:
     type: timestamp_ago
     label: above

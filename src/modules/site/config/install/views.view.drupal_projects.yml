@@ -1,19 +1,18 @@
-uuid: 7d89e11e-ccd7-4c75-9b90-73ea9af38454
+uuid: b0862431-46e6-44af-93ab-fc5c8cac48e4
 langcode: en
 status: true
 dependencies:
+  config:
+    - core.entity_view_mode.drupal_project.teaser
   module:
     - site
-    - user
-_core:
-  default_config_hash: IkdhtWfOmm41WTYihWr-mx_xnOdjAFv-_q-rbSd4RJw
-id: sites
-label: Sites
+id: drupal_projects
+label: 'Drupal Projects'
 module: views
 description: ''
 tag: ''
-base_table: operations_site
-base_field: sid
+base_table: operations_site_drupal_project_fields
+base_field: revision_id
 display:
   default:
     id: default
@@ -21,17 +20,18 @@ display:
     display_plugin: default
     position: 0
     display_options:
-      title: Sites
+      title: 'Drupal Projects'
       fields:
-        rendered_entity:
-          id: rendered_entity
-          table: operations_site
-          field: rendered_entity
+        drupal_site_uuid:
+          id: drupal_site_uuid
+          table: operations_site_drupal_project_fields
+          field: drupal_site_uuid
           relationship: none
           group_type: group
           admin_label: ''
-          entity_type: site
-          plugin_id: rendered_entity
+          entity_type: null
+          entity_field: drupal_site_uuid
+          plugin_id: field
           label: ''
           exclude: false
           alter:
@@ -65,7 +65,7 @@ display:
           element_class: ''
           element_label_type: ''
           element_label_class: ''
-          element_label_colon: false
+          element_label_colon: true
           element_wrapper_type: ''
           element_wrapper_class: ''
           element_default_classes: true
@@ -73,11 +73,37 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          view_mode: default
+          click_sort_column: value
+          type: string
+          settings: {  }
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
       pager:
-        type: none
+        type: mini
         options:
           offset: 0
+          items_per_page: 10
+          total_pages: null
+          id: 0
+          tags:
+            next: ››
+            previous: ‹‹
+          expose:
+            items_per_page: false
+            items_per_page_label: 'Items per page'
+            items_per_page_options: '5, 10, 25, 50'
+            items_per_page_options_all: false
+            items_per_page_options_all_label: '- All -'
+            offset: false
+            offset_label: Offset
       exposed_form:
         type: basic
         options:
@@ -89,79 +115,53 @@ display:
           sort_asc_label: Asc
           sort_desc_label: Desc
       access:
-        type: perm
-        options:
-          perm: 'view site'
+        type: none
+        options: {  }
       cache:
         type: tag
         options: {  }
       empty: {  }
       sorts:
-        changed:
-          id: changed
-          table: operations_site
-          field: changed
+        drupal_site_name:
+          id: drupal_site_name
+          table: operations_site_drupal_project_fields
+          field: drupal_site_name
           relationship: none
           group_type: group
           admin_label: ''
-          entity_type: site
-          entity_field: changed
+          entity_type: drupal_project
+          entity_field: drupal_site_name
+          plugin_id: standard
+          order: ASC
+          expose:
+            label: 'Drupal Site Name'
+            field_identifier: drupal_site_name
+          exposed: true
+        revision_timestamp:
+          id: revision_timestamp
+          table: operations_site_drupal_project_revision
+          field: revision_timestamp
+          relationship: none
+          group_type: group
+          admin_label: ''
+          entity_type: drupal_project
+          entity_field: revision_timestamp
           plugin_id: date
           order: DESC
           expose:
-            label: Changed
-            field_identifier: changed
+            label: 'Last Update'
+            field_identifier: revision_timestamp
           exposed: true
           granularity: second
-        label:
-          id: label
-          table: operations_site
-          field: label
-          relationship: none
-          group_type: group
-          admin_label: ''
-          entity_type: site
-          entity_field: label
-          plugin_id: standard
-          order: ASC
-          expose:
-            label: Label
-            field_identifier: label
-          exposed: true
-        state:
-          id: state
-          table: operations_site
-          field: state
-          relationship: none
-          group_type: group
-          admin_label: ''
-          entity_type: site
-          entity_field: state
-          plugin_id: standard
-          order: ASC
-          expose:
-            label: 'Site State'
-            field_identifier: state
-          exposed: true
       arguments: {  }
       filters: {  }
       style:
         type: default
-        options:
-          grouping:
-            -
-              field: drupal_project
-              rendered: true
-              rendered_strip: false
-          row_class: drupal-project
-          default_row_class: false
       row:
-        type: fields
+        type: 'entity:drupal_project'
         options:
-          default_field_elements: false
-          inline: {  }
-          separator: ''
-          hide_empty: false
+          relationship: none
+          view_mode: teaser
       query:
         type: views_query
         options:
@@ -171,52 +171,46 @@ display:
           replica: false
           query_tags: {  }
       relationships: {  }
-      group_by: false
       header: {  }
       footer: {  }
       display_extenders: {  }
     cache_metadata:
       max-age: -1
       contexts:
+        - 'languages:language_content'
         - 'languages:language_interface'
+        - url.query_args
         - 'url.query_args:sort_by'
         - 'url.query_args:sort_order'
-        - user.permissions
-      tags:
-        - 'config:core.entity_view_display.site.default.default'
-        - 'config:core.entity_view_display.site.drupal.default'
-        - 'config:core.entity_view_display.site.drupal.teaser'
+      tags: {  }
   page_1:
     id: page_1
-    display_title: 'Page: Admin / Content / Sites'
+    display_title: Page
     display_plugin: page
     position: 1
     display_options:
-      display_description: ''
       display_extenders: {  }
-      path: projects/sites
+      path: projects/list
       menu:
-        type: tab
-        title: Sites
+        type: 'default tab'
+        title: Projects
         description: ''
         weight: 0
         expanded: false
         menu_name: main
-        parent: 'views_view:views.drupal_projects.page_1'
+        parent: ''
         context: '0'
       tab_options:
         type: normal
-        title: Sites
+        title: Projects
         description: ''
         weight: 0
     cache_metadata:
       max-age: -1
       contexts:
+        - 'languages:language_content'
         - 'languages:language_interface'
+        - url.query_args
         - 'url.query_args:sort_by'
         - 'url.query_args:sort_order'
-        - user.permissions
-      tags:
-        - 'config:core.entity_view_display.site.default.default'
-        - 'config:core.entity_view_display.site.drupal.default'
-        - 'config:core.entity_view_display.site.drupal.teaser'
+      tags: {  }

@@ -1,4 +1,3 @@
-s
 .toolbar-icon-site.error:before {
     background-image: url(../../../../../../core/misc/icons/dc2323/error.svg);
 }
@@ -204,6 +203,7 @@ fieldset.site-display fieldset .fieldset__wrapper {
     padding-left: 3rem;
     position: relative;
 }
+.site-entity-header .icon::before,
 .site-state .icon::before {
     position: absolute;
     top: 1em;
@@ -219,26 +219,56 @@ fieldset.site-display fieldset .fieldset__wrapper {
     background-position: top center;
     background-size: Show contain;
 }
+
+.site-widget .site-entity-header .icon::before,
+.site-widget .site-state .icon::before {
+
+    top: 0.3rem;
+    left: 0.4rem;
+}
 .site-state details .icon::before {
   left: 2rem;
 }
 
 .site-state details summary {
-    padding-left: 3.5rem;
+    padding-left: 3.5rem !important;
+    background: none;
+}
+.site-entity-header .icon::before {
+  /*left: 1rem;*/
+}
+.site-entity-header .site-title {
+    padding-right: 1.5rem !important;
+    background: none;
 }
 
+.site-widget .site-entity-header .site-title {
+    padding-left: 1.5rem !important;
+}
+.site-widget .site-title a {
+    font-size: .8rem;
+    padding: 0.1rem;
+}
+
+.site-entity-header .color-error .icon::before,
 .site-state .state-error .icon::before {
     background-image: url(../../../../../../core/misc/icons/ee0000/ex.svg);
 }
+.site-entity-header .color-warning .icon::before,
 .site-state .state-warning .icon::before {
     background-image: url(../../../../../../core/misc/icons/e29700/warning.svg);
 }
+.site-entity-header .color-success .icon::before,
 .site-state .state-success .icon::before {
     background-image: url(../../../../../../core/misc/icons/73b355/check.svg);
 }
 
 .site-display {
     position: relative;
+}
+
+.site-display.site-widget {
+    display: inline-block;
 }
 
 .site-display fieldset,
@@ -250,25 +280,46 @@ fieldset.site-display fieldset .fieldset__wrapper {
 .site-display .fieldset__wrapper {
     margin: 0;
     min-height: 100%;
+    padding: 0;
 }
 .site-display > .fieldset__wrapper {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    padding: 0;
 }
-.site-display .site-header,
-.site-display .site-header * {
+
+.site-display .action-link {
+    display: inline-block;
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    text-decoration: none;
+    color: #55565b;
+    border-radius: 2px;
+    background-color: #fff;
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.5rem;
+    -webkit-font-smoothing: antialiased;
+}
+.site-display.site-widget .action-link {
+    background: none;
+}
+
+.site-display.site-full .site-entity-header,
+.site-display.site-full .site-entity-header * {
   background-color: whitesmoke !important;
+
 }
-.site-display .site-header .site-operations,
-.site-display .site-header .site-operations .dropbutton-wrapper,
-.site-display .site-header .site-operations .dropbutton-toggle button,
-.site-display .site-header .site-operations .dropbutton-widget,
-.site-display .site-header .site-operations .dropbutton,
-.site-display .site-header .site-operations .dropbutton__item {
+.site-display .site-entity-header .site-operations,
+.site-display .site-entity-header .site-operations .dropbutton-wrapper,
+.site-display .site-entity-header .site-operations .dropbutton-toggle button,
+.site-display .site-entity-header .site-operations .dropbutton-widget,
+.site-display .site-entity-header .site-operations .dropbutton,
+.site-display .site-entity-header .site-operations .dropbutton__item {
   background-color: transparent !important;
 }
-.site-display .site-header .site-operations .dropbutton .edit a {
+.site-display .site-entity-header .site-operations .dropbutton .edit a {
     padding-right: 2rem !important;
 }
 
@@ -299,7 +350,7 @@ fieldset.site-display fieldset .fieldset__wrapper {
     display: inline-grid;
 }
 
-.site-display .site-header {
+.site-display .site-entity-header {
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-end;
@@ -307,18 +358,26 @@ fieldset.site-display fieldset .fieldset__wrapper {
     line-height: 1.5rem;
 }
 
-.site-display .site-header .site-title {
+.site-display .site-entity-header .site-title {
     align-self: flex-start;
     flex-grow: 3;
 }
-.site-display .site-header .site-title a {
+.site-display .site-entity-header .site-title a {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    position: relative;
+    z-index: 10;
 }
-.site-display .site-header .site-operations {
+
+.site-display .site-entity-header .site-title a:hover {
+    text-decoration: underline;
+}
+
+.site-display .site-entity-header .site-operations {
     align-self: flex-end;
     position: absolute;
+    top: .2rem;
 }
 .site-display .site-content
 {
@@ -351,22 +410,47 @@ fieldset.site-display fieldset .fieldset__wrapper {
 .site-urls {
     overflow: hidden;
 }
-.site-urls .item-list ul {
+.site-urls ul {
     list-style: none;
-    margin: 0;
+    margin: 0 !important;
     padding: 0;
 }
-.site-urls .item-list ul li {
+.site-urls ul li {
   display: inline-block;
     margin: 0;
 }
 
-.site-urls .item-list ul li a {
+.site-urls ul li a {
     font-size: 0.7rem;
     padding: 0.5rem 1rem;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+.site-urls ul li a:hover {
+  text-decoration: underline;
+}
+
+.site-urls ul li a.canonical::before {
+    background: transparent url("data:image/svg+xml,%3csvg height='24' width='96' xmlns='http://www.w3.org/2000/svg'%3e%3cg stroke='%238e929c'%3e%3cpath d='m94.46 9.667h-7.937l-2.523-8.007-2.523 8.007h-7.937l6.768 4.926-3.076 8.007 6.768-4.927 6.768 4.927-3.076-8.007zm-24 0h-7.937l-2.523-8.007-2.523 8.007h-7.937l6.768 4.926-3.076 8.007 6.768-4.927 6.768 4.927-3.076-8.007z' fill='%23ffd23f'/%3e%3cg fill='none'%3e%3cpath d='m38.42 9.327.11.35h7.934l-6.521 4.742-.31.225.138.358 2.922 7.599-6.397-4.653-.294-.214-.294.214-6.397 4.653 2.923-7.599.137-.358-.31-.225-6.521-4.742h7.934l.11-.35 2.418-7.665zm-24.002 0 .11.35h7.934l-6.521 4.742-.31.225.138.358 2.922 7.599-6.397-4.653-.294-.214-.294.214-6.397 4.653 2.923-7.599.137-.358-.31-.225-6.521-4.742h7.934l.11-.35 2.418-7.665z'/%3e%3cpath d='m42.5 1v7m-3.5-3.5h7m42 2.5 6-6m0 6-6-6' stroke-linecap='square' stroke-miterlimit='3'/%3e%3c/g%3e%3c/g%3e%3c/svg%3e") left top / 6rem 1.5rem no-repeat;
+    width: 1.5rem;
+    height: 1.5rem;
+    vertical-align: -0.2rem;
+    background-position: -3rem top;
+}
+.site-display.site-full .site-entity-header .site-title a.canonical-site::before {
+    background: transparent url("data:image/svg+xml,%3csvg height='24' width='96' xmlns='http://www.w3.org/2000/svg'%3e%3cg stroke='%238e929c'%3e%3cpath d='m94.46 9.667h-7.937l-2.523-8.007-2.523 8.007h-7.937l6.768 4.926-3.076 8.007 6.768-4.927 6.768 4.927-3.076-8.007zm-24 0h-7.937l-2.523-8.007-2.523 8.007h-7.937l6.768 4.926-3.076 8.007 6.768-4.927 6.768 4.927-3.076-8.007z' fill='%23ffd23f'/%3e%3cg fill='none'%3e%3cpath d='m38.42 9.327.11.35h7.934l-6.521 4.742-.31.225.138.358 2.922 7.599-6.397-4.653-.294-.214-.294.214-6.397 4.653 2.923-7.599.137-.358-.31-.225-6.521-4.742h7.934l.11-.35 2.418-7.665zm-24.002 0 .11.35h7.934l-6.521 4.742-.31.225.138.358 2.922 7.599-6.397-4.653-.294-.214-.294.214-6.397 4.653 2.923-7.599.137-.358-.31-.225-6.521-4.742h7.934l.11-.35 2.418-7.665z'/%3e%3cpath d='m42.5 1v7m-3.5-3.5h7m42 2.5 6-6m0 6-6-6' stroke-linecap='square' stroke-miterlimit='3'/%3e%3c/g%3e%3c/g%3e%3c/svg%3e") left top / 6rem 1.5rem no-repeat;
+    width: 1.5rem;
+    height: 1.5rem;
+    vertical-align: -0.2rem;
+    background-position: -3rem top;
+}
+
+.site-display.site-widget .site-title a {
+    font-weight: normal;
+}
+.site-display.site-widget .site-title a.canonical-site {
+    font-weight: bold;
 }
 
 .site-operations {
@@ -407,12 +491,25 @@ fieldset.site-display fieldset .fieldset__wrapper {
     line-height: 1.5rem !important;
     text-align: right;
 }
+.site-widget .site-operations .dropbutton a,
+.site-widget .site-operations .dropbutton button {
+    padding: 0.7rem !important;
+    font-size: .7rem !important;
+}
 
+.site-widget .site-operations .dropbutton-toggle a,
+.site-widget .site-operations .dropbutton-toggle button {
+
+    width: 1rem;
+    height: 1rem !important;
+}
 .site-operations .dropbutton .dropbutton-toggle {
 
 }
 
-.view-sites .view-content {
+.view-drupal-project-environments.view-display-id-drupal_project_environments ,
+.view-sites .view-content
+{
     display: grid;
     grid-template-columns: auto auto auto;
     gap: 1rem;
@@ -420,16 +517,19 @@ fieldset.site-display fieldset .fieldset__wrapper {
 
 
 @media screen and (max-width: 768px) {
+    .view-drupal-project-environments,
     .view-sites .view-content {
         grid-template-columns: auto auto;
     }
 }
 @media screen and (max-width: 425px) {
+    .view-drupal-project-environments,
     .view-sites .view-content {
         grid-template-columns: auto;
     }
 }
 @media screen and (min-width: 1900px) {
+    .view-drupal-project-environments,
     .view-sites .view-content {
         grid-template-columns: auto auto auto auto;
     }
@@ -437,6 +537,7 @@ fieldset.site-display fieldset .fieldset__wrapper {
 
 
 @media screen and (min-width: 2500px) {
+    .view-drupal-project-environments,
     .view-sites .view-content {
         grid-template-columns: auto auto auto auto auto;
     }
@@ -460,7 +561,7 @@ fieldset.site-display fieldset .fieldset__wrapper {
     font-size: 0.7rem;
     text-transform: uppercase;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
 }
 
 .site-display .site-subheader span,
@@ -491,3 +592,106 @@ fieldset.site-display fieldset .fieldset__wrapper {
     align-self: flex-end;
 }
 
+article.drupal-project.teaser {
+    display: flex;
+    margin-bottom: 2rem;
+}
+article.drupal-project.teaser > div {
+    align-self: center;
+    padding: 1rem;
+}
+
+article.drupal-project.teaser .field--name-drupal-site-name {
+    min-width: 20%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+article.drupal-project.teaser .field--name-drupal-site-name .field--name-canonical-url a {
+    color: #666;
+    font-weight: bold;
+    font-size: .7rem;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: .25rem;
+}
+article.drupal-project.teaser .field--name-drupal-site-name .field--name-canonical-url a:hover {
+  text-decoration: underline;
+}
+article.drupal-project.teaser .field--name-drupal-site-name > a {
+    font-size: 1.6rem;
+    font-weight: bold;
+}
+article.drupal-project.teaser .field--name-git-remote {
+    font-family: monospace;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 25%;
+}
+article.drupal-project.teaser .field--name-git-remote a {
+    align-self: flex-end;
+
+}
+/** @todo: set class for environments view **/
+article.drupal-project.teaser .views-element-container {
+  flex-grow: 4;
+}
+
+
+article.drupal-project.teaser .views-element-container .site-display.site-widget {
+     display: inline-block;
+     float: right;
+ }
+article.drupal-project.teaser .views-element-container .site-display.site-widget.form-item {
+    margin: 0;
+}
+
+.view-drupal-project-environments {
+
+}
+
+.region.region-content {
+    position: relative;
+}
+
+
+.region.region-content .view-drupal-projects .view-filters {
+    position: absolute;
+    top: -2rem;
+    right: 0px;
+}
+
+
+.region.region-content .view-drupal-projects .view-filters .views-exposed-form.views-exposed-form {
+    margin: 0;
+    padding: 0;
+    border: none;
+    box-shadow: none;
+}
+
+
+.site-display .composer-info-name {
+  display: inline-block;
+  vertical-align: middle;
+  font-size: .7rem;
+  font-weight: normal;
+  margin: -0.5rem 2rem;
+}
+
+.site-display .composer-info-name > div {
+  margin: 0 .5rem;
+  height: 2rem;
+}
+
+.site-display .composer-info-name label {
+  font-size: .7rem;
+  font-family: monospace;
+  font-weight: normal;
+  margin: 0;
+}
+
+.site-display .composer-info-support ul {
+  list-style: none;
+}
+.site-display .composer-info-support ul li {
+  display: inline;
+}
