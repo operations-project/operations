@@ -4,6 +4,13 @@ Drupal Operations
 Changelog
 ---------
 
+# 2.0.0-beta5
+## September 14, 2023
+
+https://www.drupal.org/project/site/releases/2.0.0-beta5
+
+- Don't break if no composer.json links are present.
+
 # 2.0.0-beta4
 ## September 14, 2023
 
@@ -86,7 +93,7 @@ This is a major change to the architecture of Operations 1, a new version is war
 - JSON:API. Site Module now uses JSON:API for posting and getting data.
 - Added "ox_stock" install profile for basic site manager install.
 
-### 2.x 
+### 2.x
 
 SiteEntity is now any website. It has a reference field to DrupalProject via it's ID, the Drupal Site UUID.
 
