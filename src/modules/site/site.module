@@ -367,7 +367,7 @@ function template_preprocess_site(array &$variables) {
   $build['content'] += $variables['content'] ?? [];
 
   // Composer Info
-  if ($site->composer_json->get(0) && $variables['view_mode'] != 'teaser') {
+  if ($site->composer_json && $site->composer_json->get(0) && $variables['view_mode'] != 'teaser') {
     $build['composer'] = [
       '#description' => t('Loaded from composer.json'),
       '#type' => 'details',
@@ -389,47 +389,50 @@ function template_preprocess_site(array &$variables) {
     ];
     $build['composer']['#title']['project']['composer'] = [
       '#type' => 'item',
-      '#title' => $composer['name'],
-      '#markup' => $composer['description'],
+      '#title' => $composer['name'] ?? t('No "name" found in composer.json.'),
+      '#markup' => $composer['description'] ?? t('No "description" found in composer.json.'),
       '#attributes' => [
         'class' => ['composer-info-name'],
       ],
     ];
-    $link = Link::fromTextAndUrl($composer['homepage'], Url::fromUri($composer['homepage']))->toRenderable();
-    $link['#attributes']['target'] = '_blank';
-    $build['composer']['homepage'] = [
-      '#type' => 'item',
-      '#title' => t('Homepage'),
-      'site_link' => $link,
-    ];
-    foreach ($composer['support'] as $name => $url) {
-      $link = Link::fromTextAndUrl($name, Url::fromUri($url))->toRenderable();
+    if (!empty($composer['homepage'])) {
+      $link = Link::fromTextAndUrl($composer['homepage'], Url::fromUri($composer['homepage']))->toRenderable();
       $link['#attributes']['target'] = '_blank';
-      $support_links[] = $link;
+      $build['composer']['homepage'] = [
+        '#type' => 'item',
+        '#title' => t('Homepage'),
+        'site_link' => $link,
+      ];
     }
-    $build['composer']['support'] = [
-      '#type' => 'html_tag',
-      '#tag' => 'div',
-      '#attributes' => [
-        'class' => [
-          'composer-info-name'
+    if (!empty($composer['support'])) {
+      foreach ($composer['support'] as $name => $url) {
+        $link = Link::fromTextAndUrl($name, Url::fromUri($url))->toRenderable();
+        $link['#attributes']['target'] = '_blank';
+        $support_links[] = $link;
+      }
+      $build['composer']['support'] = [
+        '#type' => 'html_tag',
+        '#tag' => 'div',
+        '#attributes' => [
+          'class' => [
+            'composer-info-name'
+          ],
+          'title' => t('Data read from composer.json'),
+        ]
+      ];
+      $build['composer']['support'] = [
+        '#title' => t('Support'),
+        '#type' => 'item',
+        '#attributes' => [
+          'class' => ['composer-info-support'],
         ],
-        'title' => t('Data read from composer.json'),
-      ]
-    ];
-    $build['composer']['support'] = [
-      '#title' => t('Support'),
-      '#type' => 'item',
-      '#attributes' => [
-        'class' => ['composer-info-support'],
-      ],
-      'links' => [
-        '#theme' => 'item_list',
-        '#items' => $support_links,
-      ],
-    ];
+        'links' => [
+          '#theme' => 'item_list',
+          '#items' => $support_links,
+        ],
+      ];
+    }
   }
-
 
   if ($variables['view_mode'] == 'about') {
 
