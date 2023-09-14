@@ -4,6 +4,24 @@ Drupal Operations
 Changelog
 ---------
 
+# 2.0.0-beta4
+## September 14, 2023
+
+https://www.drupal.org/project/site/releases/2.0.0-beta4
+
+- New Project UI:
+  - List page with projects and environments with "Add Project" button.
+  - Canonical Project page with environments and "Add Site" button.
+  - Added "Canonical URL" to Drupal Project entities with display on the site that matches.
+  - Project display on About this site page.
+  - Breadcrumbs from Projects to environments.
+  - Display Composer.json metadata on site widget. Links to support!
+  - "Widget" display mode for sites.
+- New Properties:
+  - Site Root: Path to git repo root.
+  - Composer Json: The entire composer.json file contents.
+  - Drupal Environment: The DRUPAL_ENV environment variable.
+
 # 2.0.0-beta3
 ## September 1, 2023
 
