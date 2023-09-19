@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface;
+use Drupal\Core\Field\BaseFieldDefinition;
 
 /**
  * Implements hook_install().
@@ -81,4 +82,39 @@ function site_install() {
  * Implements hook_uninstall().
  */
 function site_uninstall() {
+}
+
+/**
+ * Install site_root composer_json and drupal_env fields.
+ */
+function site_update_8001() {
+  $fields['drupal_env'] = BaseFieldDefinition::create('string')
+    ->setLabel(t('Drupal Environment'))
+    ->setDescription(t('The value of the DRUPAL_ENV environment variable.'))
+    ->setRevisionable(TRUE)
+    ->setDisplayConfigurable('view', TRUE)
+    ->setDisplayOptions('view', [
+      'label' => 'above',
+      'type' => 'string',
+    ])
+  ;
+  $fields['site_root'] = BaseFieldDefinition::create('string')
+    ->setLabel(t('Root path'))
+    ->setDescription(t('The root path of this site.'))
+    ->setRevisionable(TRUE)
+    ->setDisplayConfigurable('view', TRUE)
+    ->setDisplayOptions('view', [
+      'label' => 'above',
+      'type' => 'string',
+    ])
+  ;
+  $fields['composer_json'] = BaseFieldDefinition::create('map')
+    ->setLabel(t('Composer.json Data'))
+    ->setRevisionable(TRUE)
+    ->setDisplayConfigurable('view', TRUE)
+  ;
+  foreach ($fields as $name => $field) {
+    Drupal::entityDefinitionUpdateManager()
+      ->installFieldStorageDefinition($name, 'site', 'site', $field);
+  }
 }

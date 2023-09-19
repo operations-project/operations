@@ -19,7 +19,7 @@ use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
  *
  * @SiteAction(
  *   id = "user_login",
- *   label = @Translation("Sign In"),
+ *   label = @Translation("Log In"),
  *   description = @Translation("Retrieve a one-time-login link."),
  *   site_entity_operation = true,
  * )
@@ -170,12 +170,13 @@ class UserLogin extends SiteActionPluginBase {
    */
   public function access()
   {
-    // Only show this action if the site has an API key.
-    if ($this->getSite()->isSelf() || !empty($this->getSite()->api_key->value)) {
+    // Only show this action if the site or project has an API key.
+    $site = $this->getSite();
+    if (method_exists($site, 'getApiKey') && ($this->getSite()->isSelf() || !empty($this->getSite()->getApiKey()))) {
       return parent::access();
     }
   }
-  
+
   public function apiResponse(array &$response)
   {
     parent::apiResponse($response);

@@ -18,6 +18,14 @@ content:
     third_party_settings: {  }
     weight: 8
     region: content
+  drupal_env:
+    label: above
+    type: string
+    region: content
+    weight: 9
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
   drupal_install_profile:
     type: string
     label: above
@@ -84,8 +92,17 @@ content:
     third_party_settings: {  }
     weight: 3
     region: content
+  site_root:
+    label: above
+    type: string
+    region: content
+    weight: 10
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
 hidden:
   api_url: true
+  composer_json: true
   created: true
   data: true
   description: true

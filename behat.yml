@@ -5,6 +5,8 @@ default:
         - FeatureContext
         - Drupal\DrupalExtension\Context\DrupalContext
         - Drupal\DrupalExtension\Context\MinkContext
+        - Drupal\DrupalExtension\Context\MessageContext
+        - Drupal\DrupalExtension\Context\DrushContext
   extensions:
     Drupal\MinkExtension:
       goutte: ~
@@ -14,8 +16,8 @@ default:
       blackbox: ~
       api_driver: 'drupal'
       drush:
-        alias: '@self'
+        # alias: '@self'
       drupal:
-        #drupal_root: '/var/www/seven/drupal'
+        drupal_root: 'web'
       region_map:
         footer: "#footer"

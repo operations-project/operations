@@ -379,6 +379,7 @@ fieldset.site-display fieldset .fieldset__wrapper {
     position: absolute;
     top: .2rem;
 }
+
 .site-display .site-content
 {
     flex-grow: 8;
@@ -448,12 +449,15 @@ fieldset.site-display fieldset .fieldset__wrapper {
 
 .site-display.site-widget .site-title a {
     font-weight: normal;
+    max-width: 8rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .site-display.site-widget .site-title a.canonical-site {
     font-weight: bold;
 }
 
-.site-operations {
+.site .site-operations {
     float: right;
     margin-right: -1rem;
 }
@@ -468,6 +472,7 @@ fieldset.site-display fieldset .fieldset__wrapper {
 
 .site-operations .dropbutton-wrapper,
 .site-operations .dropbutton-widget {
+    background: none !important;
     border: none !important;
     box-shadow: none !important;
 }
@@ -507,6 +512,11 @@ fieldset.site-display fieldset .fieldset__wrapper {
 
 }
 
+
+.drupal-project .site-operations .dropbutton a,
+.drupal-project .site-operations .dropbutton button {
+  padding: .5rem .75rem !important;
+}
 .view-drupal-project-environments.view-display-id-drupal_project_environments ,
 .view-sites .view-content
 {
@@ -593,26 +603,60 @@ fieldset.site-display fieldset .fieldset__wrapper {
 }
 
 article.drupal-project.teaser {
-    display: flex;
-    margin-bottom: 2rem;
 }
-article.drupal-project.teaser > div {
+article.drupal-project.teaser .fieldset__wrapper
+{
+  margin: 0;
+  display: flex;
+  justify-content: space-between;
+}
+article.drupal-project.teaser .fieldset__wrapper .field
+ {
     align-self: center;
     padding: 1rem;
 }
 
-article.drupal-project.teaser .field--name-drupal-site-name {
-    min-width: 20%;
-    overflow: hidden;
-    text-overflow: ellipsis;
+article.drupal-project .field--name-drupal-site-name .site-operations {
+  position: relative;
+  width: 2rem;
+  height: 2rem;
+  left: 0.5rem;
+  top: -0.25rem;
 }
+article.drupal-project .site-operations .dropbutton-wrapper {
+  position: absolute;
+  right: 0;
+}
+article.drupal-project .site-operations .dropbutton {
+  padding-top: 3rem;
+}
+article.drupal-project .site-operations .dropbutton > .dropbutton-toggle > button {
+  background: none;
+}
+article.drupal-project.teaser .field--name-drupal-site-name {
+    text-overflow: ellipsis;
+    position: relative;
+  padding-right: 2rem;
+
+  display: grid;
+
+}
+article.drupal-project.teaser .field--name-drupal-site-name {
+  grid-template-columns: auto 3rem;
+}
+
+article.drupal-project.teaser .field--name-drupal-site-name .field--name-canonical-url {
+  padding: 0;
+}
+
 article.drupal-project.teaser .field--name-drupal-site-name .field--name-canonical-url a {
     color: #666;
     font-weight: bold;
     font-size: .7rem;
     text-transform: uppercase;
     text-decoration: none;
-    padding: .25rem;
+    padding: 0.5rem;
+    margin-left: -0.5rem;
 }
 article.drupal-project.teaser .field--name-drupal-site-name .field--name-canonical-url a:hover {
   text-decoration: underline;
@@ -620,17 +664,30 @@ article.drupal-project.teaser .field--name-drupal-site-name .field--name-canonic
 article.drupal-project.teaser .field--name-drupal-site-name > a {
     font-size: 1.6rem;
     font-weight: bold;
+    text-decoration: none;
+    position: relative;
+    z-index: 10;
+}
+article.drupal-project.teaser .field--name-drupal-site-name > a:hover {
+  text-decoration: underline;
 }
 article.drupal-project.teaser .field--name-git-remote {
     font-family: monospace;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 25%;
 }
 article.drupal-project.teaser .field--name-git-remote a {
     align-self: flex-end;
 
+
+
 }
+
+article.drupal-project .js .dropbutton-widget {
+  border-radius: 2px;
+  background: none;
+}
+
 /** @todo: set class for environments view **/
 article.drupal-project.teaser .views-element-container {
   flex-grow: 4;

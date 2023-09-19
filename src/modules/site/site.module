@@ -51,6 +51,28 @@ function site_help($route_name, RouteMatchInterface $route_match) {
 }
 
 /**
+ * Implements hook_rebuild()
+ *
+ * Similar to hook_cache_flush() but after all data is rebuilt.
+ * That way we can generate a new report with new data.
+ */
+function site_rebuild() {
+  if (\Drupal::config('site.settings')->get('save_on_cache_rebuild')) {
+    $entity = \Drupal::service('site.self')->saveEntity(t('Caches cleared at :url by ":user" (:ip)', [
+      ':user' => \Drupal::currentUser()->getDisplayName(),
+      ':url' => \Drupal::request()->getUri(),
+      ':ip' => \Drupal::request()->getClientIp(),
+    ]));
+    if ($entity) {
+      \Drupal::messenger()->addStatus(t('Site report <a href=":url">%name</a> was saved.', [
+        ':url' => $entity->toUrl()->toString(),
+        '%name' => $entity->label(),
+      ]));
+    }
+  }
+}
+
+/**
  * Implements hook_theme().
  */
 function site_theme() {
@@ -506,13 +528,49 @@ function template_preprocess_drupal_project(array &$variables)
     $variables['content'][$key] = $variables['elements'][$key];
   }
 
-  $variables['content']['drupal_site_name'][0]['url'] = $project->canonical_url->view([
-    'label' => 'hidden',
-  ]);
+
+  $variables['content']['drupal_site_name'][0]['operations'] = [
+    '#type' => 'html_tag',
+    '#tag' => 'div',
+    '#attributes' => ['class' => 'site-operations'],
+    'operations' => [
+      '#type' => 'operations',
+      '#links' => $project->getOperations(),
+    ],
+  ];
+
+  if (!empty($project->canonical_url->getValue())) {
+    $variables['content']['drupal_site_name'][0]['url'] = $project->canonical_url->view([
+      'label' => 'hidden',
+    ]);
+  }
+  else {
+    $variables['content']['drupal_site_name'][0]['url'] = [
+      '#type' => 'html_tag',
+      '#tag' => 'em',
+      '#content' => t('There is no canonical URL set for this project.'),
+    ];
+  }
 
   $variables['attributes']['class'][] = 'drupal-project';
   $variables['attributes']['class'][] = $variables['view_mode'];
 
+  // If teaser, wrap with a box.
+  if ($variables['view_mode'] == 'teaser') {
+
+    if (!empty($variables['content']['drupal_project_environments_entity_view_1'])){
+      $variables['content']['drupal_project_environments_entity_view_1'] = [
+        '#weight' => 10,
+        '#type' => 'container',
+        '#attributes' => ['class' => 'field drupal_project_environments_entity_view_1'],
+        'field' => $variables['content']['drupal_project_environments_entity_view_1'],
+      ];
+    }
+    $variables['content'] = [
+      'content' => $variables['content'],
+      '#type' => 'fieldset',
+    ];
+  }
 }
 /**
  * Widget for config diff.
@@ -611,10 +669,10 @@ function site_cron() {
     if ($interval > 0 && ($first_time || $time_since_last_cron > $interval)) {
 
       if ($action == 'save') {
-        SiteEntity::saveRevision(t('Site report saved on cron.'), true);
+        \Drupal::service('site.self')->saveEntity(t('Site report saved on cron.'));
       }
       else {
-        SiteEntity::saveRevision(t('Site report sent on cron.'), false);
+        \Drupal::service('site.self')->saveEntity(t('Site report sent on cron.'));
       }
 
       \Drupal::state()->set($state_name, $now);

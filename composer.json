@@ -123,25 +123,36 @@
         "post-update-cmd": [
             "DrupalProject\\composer\\ScriptHandler::createRequiredFiles"
          ],
-        "ox:launch": [
-          "@ox:install",
-          "@ox:sites:install",
-          "@ox:sites:uli"
+        "operations:launch": [
+          "@operations:install",
+          "@operations:sites:install",
+          "@operations:sites:uli"
         ],
-        "ox:install": [
-          "drush @operations si ox_stock --site-name=Operations.Local --yes",
+        "operations:install": [
+          "drush @operations si operations_stock --site-name=Operations.Local --yes",
           "drush @operations  uli"
         ],
-        "ox:sites:install": [
+        "operations:sites:install": [
+          "drush @operations si ox_stock --site-name=Operations.Local --yes",
           "drush @mercury si standard --yes",
           "drush @venus si standard --yes",
           "drush @mars si standard --yes"
         ],
-        "ox:sites:uli": [
-          "drush uli",
+        "operations:sites:uli": [
+          "drush @operations uli",
           "drush @mercury uli",
           "drush @venus uli",
           "drush @mars uli"
+        ],
+        "operations:test:full": [
+            "# ALERT: Your local sites are about to be destroyed and reinstalled.",
+            "# Hit CTRL-C in the next 3 seconds to abort!",
+            "sleep 3",
+            "@operations:sites:install",
+            "@operations:test:run"
+        ],
+        "operations:test:run": [
+            "drush @operations behat"
         ]
     },
     "extra": {

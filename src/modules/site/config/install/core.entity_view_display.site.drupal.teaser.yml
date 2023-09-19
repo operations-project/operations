@@ -19,8 +19,25 @@ content:
     third_party_settings: {  }
     weight: 19
     region: content
+  drupal_env:
+    label: above
+    type: string
+    region: content
+    weight: 20
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+  site_root:
+    label: above
+    type: string
+    region: content
+    weight: 21
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
 hidden:
   api_url: true
+  composer_json: true
   created: true
   data: true
   description: true

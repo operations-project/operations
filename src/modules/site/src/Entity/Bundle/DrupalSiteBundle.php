@@ -60,7 +60,7 @@ class DrupalSiteBundle extends PhpSiteBundle {
    * @return void
    */
   public function getRemote() {
-    if (empty($this->api_url->value) || empty($this->api_key->value)) {
+    if (empty($this->api_url->value) || empty($this->getApiKey())) {
       parent::getRemote();
       return;
     }
@@ -68,7 +68,7 @@ class DrupalSiteBundle extends PhpSiteBundle {
     // Load Drupal Site API info.
     $api_url = $this->api_url->value;
     $api_url .= "/jsonapi/self";
-    $api_key = $this->api_key->value;
+    $api_key = $this->getApiKey();
 
     $state = SiteEntity::SITE_OK;
 
@@ -194,5 +194,27 @@ class DrupalSiteBundle extends PhpSiteBundle {
     }
 
     return $this;
+  }
+
+  /**
+   * Return either the site->api_key or the project->api_key.
+   * @return string
+   */
+  public function getApiKey(){
+    $site = $this;
+    if (!empty($site->get('api_key')->value)) {
+      return $site->get('api_key')->value;
+    }
+    elseif (!empty($site->get('drupal_project')->first())) {
+      $project = $site
+        ->get('drupal_project')
+        ->first()
+        ->get('entity')
+        ->getTarget()
+      ;
+      if (!empty($project->get('api_key')->value)) {
+        return $project->get('api_key')->value;
+      }
+    }
   }
 }

@@ -90,10 +90,10 @@ class SiteApiResource extends ResourceBase {
     // Check for action requests
     \Drupal::logger('site_api')->warning('POST received:' . print_r($data,1));
     if (!empty($data['action'])) {
-      $site_entity = SiteEntity::saveRevision(t('Action requested (:action) via API from :from', [
+      $site_entity = Drupal::service('site.self')->saveEntity(t('Action requested (:action) via API from :from', [
           ':from' => \Drupal::request()->getClientIP(),
           ':action' => $data['action'],
-        ]), false);
+        ]));
       return new ModifiedResourceResponse($site_entity, 201);
     }
 

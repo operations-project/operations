@@ -139,28 +139,10 @@ class SiteAboutController extends ControllerBase {
    * @return \Symfony\Component\HttpFoundation\RedirectResponse
    */
   public function saveReport() {
-    $entity = $this->site->getEntity();
-
-    // If creating a new entity, and ?type= was specified, change bundle.
-    $type_request = \Drupal::request()->get('type') ?: 'drupal';
-    if (empty($entity->id()) && $type_request) {
-      $entity->set('site_type', $type_request);
-    }
-
-    $this->site->prepareEntity($entity);
     try {
-      $entity
-        ->setValidationRequired(true)
-        ->setRevisionLogMessage(t('Report saved by @user via Save Report form.', [
-          '@user' => \Drupal::currentUser()->getAccount()->getDisplayName(),
-          ]));
-      $violations = $entity->validate();
-      if (count($violations)) {
-        throw new EntityStorageException($violations);
-      }
-
-      $entity->save();
-
+      $entity = $this->site->prepareEntity()->saveEntity(t('Report saved by @user via Save Report form.', [
+        '@user' => \Drupal::currentUser()->getAccount()->getDisplayName(),
+      ]));
     }
     catch (EntityStorageException $e) {
       \Drupal::messenger()->addError(t('There was a problem when saving the site: @message', [

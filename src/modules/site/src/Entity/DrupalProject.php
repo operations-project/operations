@@ -158,6 +158,7 @@ class DrupalProject extends RevisionableContentEntityBase implements DrupalProje
       return [];
     }
     $operations = $this->getDefaultOperations($entity);
+    $operations['blank'] = ['title' => '', 'weight' => -100];
     $operations += \Drupal::moduleHandler()->invokeAll('entity_operation', [$entity]);
     \Drupal::moduleHandler()->alter('entity_operation', $operations, $entity);
     uasort($operations, '\Drupal\Component\Utility\SortArray::sortByWeightElement');
@@ -180,12 +181,12 @@ class DrupalProject extends RevisionableContentEntityBase implements DrupalProje
     $operations = [];
     if ($entity->access('update') && $entity->hasLinkTemplate('edit-form')) {
       $operations['edit'] = [
-        'title' => t('Edit Site Information'),
+        'title' => t('Edit'),
         'weight' => 10,
         'url' => $this->ensureDestination($entity->toUrl('edit-form')),
       ];
     }
-    if (!$entity->isSelf() && $entity->access('delete') && $entity->hasLinkTemplate('delete-form')) {
+    if ($entity->access('delete') && $entity->hasLinkTemplate('delete-form')) {
       $operations['delete'] = [
         'title' => t('Delete'),
         'weight' => 100,

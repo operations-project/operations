@@ -40,7 +40,7 @@ class ComposerJson extends SitePropertyPluginBase {
    */
   static public function bundleFieldDefinitions(EntityTypeInterface $entity_type, $bundle, array $base_field_definitions) {
     $fields['composer_json'] = BaseFieldDefinition::create('map')
-      ->setLabel(t('Composer.json'))
+      ->setLabel(t('Composer.json Data'))
       ->setRevisionable(TRUE)
       ->setDisplayConfigurable('view', TRUE)
       // @TODO: Create a module for viewing map fields.

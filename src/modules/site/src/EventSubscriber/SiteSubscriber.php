@@ -34,23 +34,9 @@ class SiteSubscriber implements EventSubscriberInterface {
    */
   public static function getSubscribedEvents() {
     return [
-      SitePreSaveEvent::SITE_PRESAVE => ['sitePresave'],
       KernelEvents::RESPONSE => ['onKernelResponse'],
       ConfigEvents::SAVE => ['onConfigSave'],
     ];
-  }
-
-  /**
-   * In Entity::presave(), if site is self, load properties, state, and reason.
-   *
-   * @param SitePreSaveEvent $event
-   * @return void
-   */
-  public function sitePresave(SitePreSaveEvent $event) {
-    if ($event->site_entity->isSelf()) {
-      $site = \Drupal::service('site.self')->prepareEntity($event->site_entity);
-    }
-    $event->site_entity = $site;
   }
 
   /**
@@ -74,10 +60,17 @@ class SiteSubscriber implements EventSubscriberInterface {
   public function onKernelResponse(ResponseEvent $event) {
     if ($this->config_changes) {
       try {
+        $entity = \Drupal::service('site.self')->getEntity();
 
-        $entity = \Drupal::service('site.self')->saveEntity(t('Configs :config updated at :url by ":user" (:ip)', [
+        // If entity author does not exist, an error is thrown. This happens in automated testing.
+        // See https://git.drupalcode.org/project/operations/-/jobs/92135
+        if (empty($entity->uid->entity)) {
+          $entity->set('uid', \Drupal::currentUser()->id());
+        }
+
+        \Drupal::service('site.self')->setEntity($entity)->saveEntity(t('Configs :config updated at :url by ":user" (:ip)', [
           ':config' => implode(', ', array_keys($this->config_changes)),
-          ':user' => \Drupal::currentUser()->getDisplayName(),
+          ':user' => \Drupal::currentUser() ? \Drupal::currentUser()->getDisplayName() : '(unknown)',
           ':url' => \Drupal::request()->getUri(),
           ':ip' => \Drupal::request()->getClientIp(),
         ]));

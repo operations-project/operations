@@ -103,7 +103,7 @@ abstract class SiteActionPluginBase extends PluginBase implements SiteActionInte
     // POST to Site API endpoint. Receive entity w/extra data.
     $base_url = $this->getSite()->api_url->value ?? $this->getSite()->site_uri->value;
     $site_api_url = $base_url . '/jsonapi/action/' . $this->getPluginId();
-    $site_api_key = $this->getSite()->api_key->value ?? '';
+    $site_api_key = $this->getSite()->getApiKey();
 
     $client = new Client([
       'allow_redirects' => TRUE,

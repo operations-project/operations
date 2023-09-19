@@ -13,7 +13,8 @@ use Drupal\site\SitePropertyPluginBase;
  *   id = "api_key",
  *   name = "api_key",
  *   site_bundles = {
- *     "Drupal\site\Entity\Bundle\DrupalSiteBundle"
+ *     "Drupal\site\Entity\Bundle\DrupalSiteBundle",
+ *     "Drupal\site\Entity\DrupalProject"
  *   },
  *   hidden = true,
  *   label = @Translation("API Key"),

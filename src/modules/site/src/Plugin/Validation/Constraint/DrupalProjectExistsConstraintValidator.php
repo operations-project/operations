@@ -38,6 +38,7 @@ class DrupalProjectExistsConstraintValidator extends ConstraintValidator {
           'drupal_site_uuid' => $entity->drupal_site_uuid->value,
           'drupal_site_name' => $entity->drupal_site_name->value,
           'git_remote' => $entity->git_remote->value ?? '',
+          'canonical_url' => $entity->site_uri->value ?? '',
           'uid' => $entity->uid->target_id,
           'drupal_project_type' => 'default',
           'created' => time(),

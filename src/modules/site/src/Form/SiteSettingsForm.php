@@ -185,10 +185,20 @@ class SiteSettingsForm extends ConfigFormBase {
       ],
       '#default_value' => $this->config()->get('state_factors') ?? [],
     ];
+    $form['settings']['title'] = [
+      '#type' => 'item',
+      '#title' => t('Site Report Generation'),
+    ];
+    $form['settings']['save_on_cache_rebuild'] = [
+      '#type' => 'checkbox',
+      '#title' => t('Save site report on cache rebuild'),
+      '#description' => t('If checked, site reports will be saved and sent when caches are cleared and rebuilt.'),
+      '#default_value' => $this->config()->get('save_on_cache_rebuild'),
+    ];
     $form['settings']['save_on_config'] = [
       '#type' => 'checkbox',
       '#title' => t('Save site report on config changes'),
-      '#description' => t('If checked, site reports are saved whenever configuration changes.'),
+      '#description' => t('If checked, site reports will be saved and sent whenever configuration changes.'),
       '#default_value' => $this->config()->get('save_on_config'),
     ];
     $form['settings']['save_interval'] = [

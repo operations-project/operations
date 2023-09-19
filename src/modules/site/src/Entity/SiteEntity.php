@@ -135,6 +135,21 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
   public bool $sent = false;
 
   /**
+   * @var bool If true, presave() will not load site properties.
+   */
+  protected bool $skip_prepare = false;
+
+  /**
+   * Tell the entity to skip gathering properties on preSave().
+   * @return $this
+   */
+  public function skipPrepare() {
+    $this->skip_prepare = true;
+    return $this;
+  }
+
+
+  /**
    * @param $id string Site UUID. If not supplied, will load this site.
    * @inheritdoc
    */
@@ -296,8 +311,11 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
       $this->setOwnerId(0);
     }
 
-    if ($this->isSelf()) {
-      \Drupal::service('site.self')->prepareEntity($this);
+    // This is where site data is gathered.
+    // prepareEntity() loads all discovered properties.
+    // getRemote() loads the site data remotely.
+    if ($this->isSelf() && !$this->skip_prepare) {
+      \Drupal::service('site.self')->setEntity($this)->prepareEntity();
     }
     else {
       $this->getRemote();
@@ -369,39 +387,6 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
         'entity' => $this->toUrl('canonical', ['absolute' => true])->toString(),
       ]);
     }
-  }
-
-  /**
-   * Saves the current site's entity with new parameters.
-   *
-   * @param $revision_log
-   * @param $no_send
-   * @return void
-   */
-  static public function saveRevision($revision_log = '', $no_send = false) {
-//    $site_entity = SiteEntity::loadSelf();
-//    if (!$site_entity) {
-//      $site_entity = SiteEntity::create();
-//    }
-//    else {
-//
-//      // Load plugin data.
-//      $plugin_data = static::getPluginData();
-//      $site_entity->set('state', $plugin_data['state']);
-//      $site_entity->set('reason', $plugin_data['reason']);
-//      foreach ($plugin_data['properties'] as $name => $property) {
-//        if ($site_entity->hasField($name)) {
-//          $site_entity->set($name, $property['value']);
-//        }
-//      }
-//    }
-//
-//    $site_entity->setRevisionLogMessage($revision_log);
-//    $site_entity->setNewRevision();
-//    $site_entity->setRevisionCreationTime(\Drupal::time()->getRequestTime());
-//    $site_entity->no_send = $no_send;
-//    $site_entity->save();
-//    return $site_entity;
   }
 
   /**

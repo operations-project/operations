@@ -4,6 +4,21 @@ Drupal Operations
 Changelog
 ---------
 
+# 2.0.0-beta6
+## September 19, 2023
+
+- Add update hook for new fields to help all 6 of our current users.
+- Export config for displaying drupal_env, site_root, and composer_json fields.
+- Add save_on_cache_rebuild feature.
+- Added Project "operations" links dropdown.
+- Finished refactoring for SiteSelf service: use saveEntity() not saveRevision().
+- Fix SaveEntity() to validate before save.
+- Allow DrupalProject's to store API key so it uses the same key for all sites.
+- Save canonical url from the first site entities URL.
+- Fix "Add Field" button in About this site page.
+- Fix Drush Behat Params bin dir discrepencies.
+- Gorgeous test failure output and last page output artifact saving in gitlab CI.
+
 # 2.0.0-beta5
 ## September 14, 2023
 

@@ -9,6 +9,7 @@ states_load: |
   system.cron_last
   system.maintenance_mode
 
+save_on_cache_rebuild: true
 save_on_config: true
 save_interval: 86400
 

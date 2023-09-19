@@ -5,6 +5,7 @@ namespace Drupal\site;
 use Drupal\Component\Plugin\Exception\ContextException;
 use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\migrate\Plugin\Exception\BadPluginDefinitionException;
 use Drupal\site\Annotation\SiteProperty;
@@ -91,7 +92,17 @@ class SiteSelf {
    * @return SiteEntity
    */
   public function getEntity() {
-    return SiteEntity::loadSelf() ?? $this->createEntity();
+    return $this->entity ?? SiteEntity::loadSelf() ?? $this->createEntity();
+  }
+
+  /**
+   * Set a site entity for the current site.
+   *
+   * @return SiteSelf
+   */
+  public function setEntity($entity) {
+    $this->entity = $entity;
+    return $this;
   }
 
   /**
@@ -99,23 +110,26 @@ class SiteSelf {
    * @param $entity
    * @return void
    */
-  public function prepareEntity(&$entity) {
-    $this->entity = $entity;
+  public function prepareEntity() {
+    if (empty($this->entity)) {
+      $this->entity = $this->getEntity();
+    }
 
     /** @var SiteSelf $site_service */
     $this->load();
 
-    // Set state and reason
-    $entity->set('state', $this->getState());
-    $entity->set('reason', $this->getReasons());
-    $entity->set('data', $this->getData());
+    // Set state and reason.
+    $this->entity->set('state', $this->getState());
+    $this->entity->set('reason', $this->getReasons());
+    $this->entity->set('data', $this->getData());
 
     // Set all properties from plugins.
     foreach ($this->getProperties() as $name => $value) {
-      if ($entity->hasField($name)) {
-        $entity->set($name, $value);
+      if ($this->entity->hasField($name)) {
+        $this->entity->set($name, $value);
       }
     }
+    return $this;
   }
 
   /**
@@ -230,9 +244,21 @@ class SiteSelf {
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
   public function saveEntity($log_message = '') {
-    return $this->getEntity()
+    $entity = $this->getEntity();
+
+    // Prepare entity needs to be called before save so that the properties are included in validate.
+    $this->prepareEntity($entity);
+
+    $entity
+      ->skipPrepare()
       ->setRevisionLogMessage($log_message)
-      ->save();
+      ->setValidationRequired(true);
+    $violations = $entity->validate();
+    if (count($violations)) {
+      throw new EntityStorageException($violations);
+    }
+    $entity->save();
+    return $entity;
   }
 
   public function sendEntity() {

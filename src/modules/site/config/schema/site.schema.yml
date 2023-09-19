@@ -21,6 +21,10 @@ site.settings:
       type: boolean
       label: 'Save site revision when configuration is updated.'
 
+    save_on_cache_rebuild:
+      type: boolean
+      label: 'Save site revision when caches are rebuilt.'
+
     save_interval:
       type: integer
       label: 'Send site reports after this many seconds.'

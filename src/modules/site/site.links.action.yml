@@ -1,8 +1,8 @@
 site.field_add:
   title: 'Add field'
-  route_name: field_ui.field_storage_config_add_site
+  route_name: field_ui.field_storage_config_add_drupal_project
   route_parameters:
-    site_type: drupal
+    drupal_project_type: default
   appears_on:
     - site.fields
 

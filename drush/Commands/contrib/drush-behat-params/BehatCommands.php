@@ -2,6 +2,7 @@
 
 namespace Drush\Commands\drush_behat_params;
 
+use Composer\Autoload\ClassLoader;
 use Drupal\Core\Composer\Composer;
 use Drush\Commands\DrushCommands;
 use Consolidation\SiteAlias\SiteAliasManagerAwareInterface;
@@ -9,6 +10,7 @@ use Consolidation\SiteAlias\SiteAliasManagerAwareTrait;
 
 use Consolidation\AnnotatedCommand\Events\CustomEventAwareInterface;
 use Consolidation\AnnotatedCommand\Events\CustomEventAwareTrait;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  *
@@ -41,9 +43,13 @@ class BehatCommands extends DrushCommands implements CustomEventAwareInterface, 
    *   Run bin/behat features/content
    */
   public function behat(array $arguments, $options = [
-    'behat_command' => 'bin/behat --colors',
+    'behat_command' => 'behat --colors',
   ])
   {
+    global $_composer_bin_dir;
+
+    // The BEHAT_PARAMS environment variable.
+    // Options set in behat.yml will override these.
     $behat_params = [
       "extensions" => [
         "Drupal\\MinkExtension" => [
@@ -62,19 +68,22 @@ class BehatCommands extends DrushCommands implements CustomEventAwareInterface, 
 
     $env = [
       "BEHAT_PARAMS" => json_encode($behat_params),
+      "PATH" => $_composer_bin_dir . ':' . getenv('PATH'),
     ];
 
-    // @TODO: Make configurable
-    $cwd = realpath($this->commandData->options()['root'] . '/..');
+    // Run in vendor/..
+    $reflection = new \ReflectionClass(ClassLoader::class);
+    $cwd = dirname(dirname(dirname($reflection->getFileName())));;
     $command = $this->input()->getOption('behat_command');
     $command .= ' ' . implode(' ', $arguments);
 
-    $this->logger()->notice("Detected URL and root from Drush:");
-    $this->logger()->notice($this->commandData->options()['uri']);
-    $this->logger()->notice($this->commandData->options()['root']);
-    $this->logger()->notice($this->siteAliasManager()->getSelf()->name());
-    $this->logger()->notice("Cwd: " . $cwd );
-    $this->logger()->notice("Command: " . $command );
+    $this->io()->table(['Drush Alias', 'URL', 'Root'], [[
+      $this->siteAliasManager()->getSelf()->name(),
+      $this->commandData->options()['uri'],
+      $this->commandData->options()['root'],
+    ]]);
+    $this->io()->table([],[[Yaml::dump($behat_params, 10, 2)]]);
+    $this->io()->title("Running <comment>$command</comment> in <comment>$cwd</comment> with the above BEHAT_PARAMS environment variable...");
 
     $exit = $this->processManager()->shell($command, $cwd, $env)->run(function ($type, $buffer) {
       echo $buffer;

@@ -48,6 +48,7 @@ Feature:
     When I click "Settings"
     And I check the box "Save site report on config changes"
     And I press "Save"
+    # For debugging. Then print last response
     Then I should see "Site report saved:"
     Then I click "History"
     And I should see "Configs site.settings updated at"
@@ -65,6 +66,7 @@ Feature:
     # Then I should see "Site report saved:"
 
     Then I am at "admin/site/history"
+    # For debugging. Then print last response
     Then I should see "Configs system.site updated at"
 
     # @TODO: Site title does not get shown here anymore.

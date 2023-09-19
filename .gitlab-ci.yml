@@ -161,10 +161,9 @@ nightwatch:
     expire_in: 6 mos
     expose_as: 'reports'
     when: always
-    reports:
-      junit: $CI_PROJECT_DIR/$_WEB_ROOT/core/reports/nightwatch/Nightwatch/*.xml
     paths:
-      - $_WEB_ROOT/core/reports/nightwatch
+      - $_WEB_ROOT/sites/default/files/test_artifacts
+      - $_WEB_ROOT/sites/operations/files/test_artifacts
 
 behat:
   # An include of the code above, for easy reuse. See https://docs.gitlab.com/ee/ci/yaml/#extends.
