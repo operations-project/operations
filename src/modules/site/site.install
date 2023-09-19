@@ -118,3 +118,23 @@ function site_update_8001() {
       ->installFieldStorageDefinition($name, 'site', 'site', $field);
   }
 }
+
+/**
+ * Install api_key field on Drupal Project entity.
+ */
+function site_update_8002() {
+  $fields['api_key'] = BaseFieldDefinition::create('string')
+    ->setLabel(t('API Key'))
+    ->setDescription(t('An API Key from the site. If entered, site data from here will post back to the client site when saving this form.'))
+    ->setRevisionable(TRUE)
+    ->setDisplayOptions('form', [
+      'type' => 'string_textfield',
+    ])
+    ->setDisplayConfigurable('form', TRUE)
+  ;
+  foreach ($fields as $name => $field) {
+    Drupal::entityDefinitionUpdateManager()
+      ->installFieldStorageDefinition($name, 'drupal_project', 'drupal_project', $field);
+  }
+}
+

@@ -1,0 +1,32 @@
+name: "Operations: Site Module Test"
+type: profile
+description: "Installs Site module for testing."
+core_version_requirement: '^8.8 || ^9 || ^10'
+
+# Modules to install to support the profile.
+install:
+  - admin_toolbar_tools
+  - history
+  - block
+  - breakpoint
+  - config
+  - help
+  - options
+  - path
+  - dblog
+  - shortcut
+  - toolbar
+  - field_ui
+  - views
+  - views_ui
+  - editor
+  - ckeditor
+  - rest
+
+# @TODO: I have NO idea why, but when trying to install ox_stock with site,
+# it throws an error:  The module ox_stock does not exist or is not installed.
+# - site
+
+# Required modules
+# dependencies:
+#   - operations_ui
