@@ -4,6 +4,16 @@ Drupal Operations
 Changelog
 ---------
 
+# 2.0.0-beta8
+## September 20, 2023
+
+- Fix Node editing breaking because of bad hook_help() implementation.
+
+# 2.0.0-beta7
+## September 19, 2023
+
+- Add update hook API key on Drupal Project entities.
+
 # 2.0.0-beta6
 ## September 19, 2023
 
