@@ -34,19 +34,6 @@ function site_help($route_name, RouteMatchInterface $route_match) {
       $type = SiteType::load($site->bundle());
       $help = $type->getHelp();
       return (!empty($help) ? Xss::filterAdmin($help) : '');
-
-    case 'entity.node.edit_form':
-      $node = $route_match->getParameter('node');
-      $type = NodeType::load($node->getType());
-      $help = $type->getHelp();
-      return (!empty($help) ? Xss::filterAdmin($help) : '');
-
-    case 'node.add':
-      $type = $route_match->getParameter('node_type');
-      $help = $type->getHelp();
-      return (!empty($help) ? Xss::filterAdmin($help) : '');
-
-
   }
 }
 
