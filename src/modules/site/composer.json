@@ -29,7 +29,6 @@
     "require": {
         "drupal/admin_toolbar": "^3.4",
         "drupal/key_auth": "^2.1",
-        "drupal/ip_consumer_auth": "^9.0@alpha",
         "drupal/eva": "^3.0"
     },
     "extra": {
