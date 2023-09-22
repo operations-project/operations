@@ -11,6 +11,7 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Routing\RedirectDestinationTrait;
 use Drupal\Core\Url;
 use Drupal\site\DrupalProjectInterface;
+use Drupal\site\JsonApiEntityTrait;
 use Drupal\site\SitePropertyBundleFieldDefinitionsTrait;
 use Drupal\user\EntityOwnerTrait;
 
@@ -80,6 +81,7 @@ class DrupalProject extends RevisionableContentEntityBase implements DrupalProje
   use EntityOwnerTrait;
   use RedirectDestinationTrait;
   use SitePropertyBundleFieldDefinitionsTrait;
+  use JsonApiEntityTrait;
 
   /**
    * Alter fields like git_remote to make them editable.

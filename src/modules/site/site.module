@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Utility\Xss;
+use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Link;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -45,15 +46,29 @@ function site_help($route_name, RouteMatchInterface $route_match) {
  */
 function site_rebuild() {
   if (\Drupal::config('site.settings')->get('save_on_cache_rebuild')) {
-    $entity = \Drupal::service('site.self')->saveEntity(t('Caches cleared at :url by ":user" (:ip)', [
-      ':user' => \Drupal::currentUser()->getDisplayName(),
-      ':url' => \Drupal::request()->getUri(),
-      ':ip' => \Drupal::request()->getClientIp(),
-    ]));
-    if ($entity) {
-      \Drupal::messenger()->addStatus(t('Site report <a href=":url">%name</a> was saved.', [
-        ':url' => $entity->toUrl()->toString(),
-        '%name' => $entity->label(),
+
+    try {
+      $entity = \Drupal::service('site.self')->prepareEntity()->saveEntity(t('Caches cleared at :url by ":user" (:ip)', [
+        ':user' => \Drupal::currentUser()->getDisplayName(),
+        ':url' => \Drupal::request()->getUri(),
+        ':ip' => \Drupal::request()->getClientIp(),
+      ]));
+      if ($entity) {
+        \Drupal::messenger()->addStatus(t('Site report <a href=":url">%name</a> was saved.', [
+          ':url' => $entity->toUrl()->toString(),
+          '%name' => $entity->label(),
+        ]));
+      }
+    }
+    catch (EntityStorageException $e) {
+      \Drupal::messenger()->addError(t('Access was denied when sending site data. Check the <a href=":link">:link_text</a> and try again.', [
+        ':link' => Url::fromRoute('site.advanced', [], ['fragment' => 'edit-site-manager'])->toString(),
+        ':link_text' => t('Site Manager Connection API Key'),
+      ]));
+    }
+    catch (\Exception $e) {
+      \Drupal::messenger()->addError(t('There was a problem when saving the site: @message', [
+        '@message' => $e->getMessage(),
       ]));
     }
   }

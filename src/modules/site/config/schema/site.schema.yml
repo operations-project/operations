@@ -62,10 +62,11 @@ site.settings:
 
         suggested_api_url:
           type: string
-          default:
+          default: https://sites.watch?utm_source=site_module
 
         suggested_api_name:
           type: string
+          default: Sites.Watch
 
 field.formatter.settings.site_state:
   type: mapping

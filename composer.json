@@ -109,8 +109,14 @@
             "Operations\\Composer\\": "composer"
         }
     },
+    "scripts-descriptions": {
+        "operations:install": "Reinstall operations, mercury, venus, and mars lando sites.",
+        "operations:ox-install": "Reinstall operations.lndo.site.",
+        "operations:login": "Get login links for all sites.",
+        "operations:test:full": "Reinstall everything and run tests.",
+        "operations:test:run": "Run tests without reinstalling."
+    },
     "scripts": {
-        "drush": "drush",
         "pre-install-cmd": [
             "DrupalProject\\composer\\ScriptHandler::checkComposerVersion"
         ],
@@ -123,22 +129,31 @@
         "post-update-cmd": [
             "DrupalProject\\composer\\ScriptHandler::createRequiredFiles"
          ],
-        "operations:launch": [
-          "@operations:install",
-          "@operations:sites:install",
-          "@operations:sites:uli"
+        "operations:ox-install": [
+            "drush @operations si ox_stock --site-name=Operations.Local --yes",
+            "drush @operations key:set admin 123testingkey",
+            "drush @operations  uli"
         ],
         "operations:install": [
-          "drush @operations si operations_stock --site-name=Operations.Local --yes",
-          "drush @operations  uli"
-        ],
-        "operations:sites:install": [
-          "drush @operations si ox_stock --site-name=Operations.Local --yes",
+          "@operations:ox-install",
+
           "drush @mercury si standard --yes",
+          "drush @mercury en site --yes",
+          "drush @mercury key:set admin 123testingkey",
+          "drush @mercury cache:rebuild",
+
           "drush @venus si standard --yes",
-          "drush @mars si standard --yes"
+          "drush @venus en site --yes",
+          "drush @venus key:set admin 123testingkey",
+          "drush @venus cache:rebuild",
+
+          "drush @mars si standard --yes",
+          "drush @mars en site --yes",
+          "drush @mars key:set admin 123testingkey",
+          "drush @mars cache:rebuild",
+          "@operations:sites:uli"
         ],
-        "operations:sites:uli": [
+        "operations:login": [
           "drush @operations uli",
           "drush @mercury uli",
           "drush @venus uli",
@@ -148,7 +163,7 @@
             "# ALERT: Your local sites are about to be destroyed and reinstalled.",
             "# Hit CTRL-C in the next 3 seconds to abort!",
             "sleep 3",
-            "@operations:sites:install",
+            "@operations:ox-install",
             "@operations:test:run"
         ],
         "operations:test:run": [
@@ -187,6 +202,9 @@
         "patches": {
             "drupal/core": {
                 "EntityViewsData for bundle fields": "https://www.drupal.org/files/issues/2021-11-09/2898635-48.patch"
+            },
+            "drupal/key_auth": {
+                "https://www.drupal.org/project/key_auth/issues/3320590": "https://www.drupal.org/files/issues/2023-09-21/3320590-key_auth_drush_0.patch"
             }
         }
     }

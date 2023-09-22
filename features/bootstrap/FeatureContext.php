@@ -109,7 +109,7 @@ class FeatureContext extends RawDrupalContext {
       $file_path = \Drupal::service('file_system')->realpath($failure_file_path);
 
       // Watchdog
-      $command = 'wd-show';
+      $command = 'wd-show --extended';
       $watchdogs = $this->getDriver('drush')->$command();
 
       $step = $event->getStep()->getText();

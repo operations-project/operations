@@ -14,14 +14,6 @@ site.save:
     - site.history
     - site.settings
 
-site.add_page:
-  title: 'Add site'
-  route_name: entity.site.add_page
-  appears_on:
-    - entity.site.collection
-    - entity.site.collection.types
-    - view.sites.page_1
-
 site.type_add:
   title: 'Add site type'
   route_name: entity.site_type.add_form

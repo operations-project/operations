@@ -11,6 +11,7 @@ use Drupal\site\Entity\DrupalProject;
 use Drupal\site\Entity\SiteEntity;
 use Drupal\site\SiteSelf;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Finder\Exception\AccessDeniedException;
 
 /**
  * Returns responses for Site routes.
@@ -143,17 +144,22 @@ class SiteAboutController extends ControllerBase {
       $entity = $this->site->prepareEntity()->saveEntity(t('Report saved by @user via Save Report form.', [
         '@user' => \Drupal::currentUser()->getAccount()->getDisplayName(),
       ]));
+      if ($entity->sent) {
+        \Drupal::messenger()->addStatus(t('Site data updated and sent.'));
+      }
+      else {
+        \Drupal::messenger()->addStatus(t('Site data updated.'));
+      }
     }
-    catch (EntityStorageException $e) {
-      \Drupal::messenger()->addError(t('There was a problem when saving the site: @message', [
-        '@message' => $e->getMessage(),
+    catch (AccessDeniedException $e) {
+      \Drupal::messenger()->addError($e->getMessage());
+      \Drupal::messenger()->addError(t('Access was denied when sending site data. Check the <a href=":link">:link_text</a> and try again.', [
+        ':link' => Url::fromRoute('site.advanced', [], ['fragment' => 'edit-site-manager'])->toString(),
+        ':link_text' => t('Site Manager Connection API Key'),
       ]));
     }
-    if ($entity->sent) {
-      \Drupal::messenger()->addStatus(t('Site data updated and sent.'));
-    }
-    else {
-      \Drupal::messenger()->addStatus(t('Site data updated.'));
+    catch (\Exception $e) {
+      \Drupal::messenger()->addError($e->getMessage());
     }
     return $this->redirect('site.about');
   }

@@ -61,12 +61,38 @@ class DrupalSiteBundle extends PhpSiteBundle {
    */
   public function getRemote() {
     if (empty($this->api_url->value) || empty($this->getApiKey())) {
+      if ($this->get('drupal_project')->first()) {
+        $project = $this->drupalProject();
+        $message = t('Add an API Key to this <a href=":site_url">site</a> or <a href=":project_url">project</a> for enhanced functionality.', [
+          ':site_url' => $this->isNew()? '#': $this->toUrl('edit-form', ['absolute' => true])->toString(),
+          ':project_url' => $project->isNew()? '#': $project->toUrl('edit-form', ['absolute' => true])->toString(),
+        ]);
+      }
+      else {
+        $message = t('Add an API Key to this <a href=":site_url">site</a> for enhanced functionality.', [
+          ':site_url' => $this->isNew()? '#': $this->toUrl('edit-form', ['absolute' => true])->toString(),
+        ]);
+      }
+      $this->addReason([
+        '#type' => 'item',
+        '#title' => t('Site API credentials not found in Site Manager.'),
+        '#markup' => $message,
+      ], 'site_api_no_creds');
+
+      // Everything else in this function uses site API. Don't bother without creds.
+      $state = SiteEntity::SITE_WARN;
+
+      // Set state.
+      if ($this->state->value < $state) {
+        $this->state->setValue($state);
+      }
+
       parent::getRemote();
       return;
     }
 
     // Load Drupal Site API info.
-    $api_url = $this->api_url->value;
+    $api_url = $this->api_url->value ?? $this->site_uri->value;
     $api_url .= "/jsonapi/self";
     $api_key = $this->getApiKey();
 
@@ -88,8 +114,7 @@ class DrupalSiteBundle extends PhpSiteBundle {
       // save fields again, because we just received remote data.
       // Run the SiteBundle::retRemote() only.
       if (\Drupal::request()->getMethod() == 'PATCH' || \Drupal::request()->getMethod() == 'POST') {
-        parent::getRemote();
-        return;
+        return parent::getRemote();
       }
 
       $received_content = $response->getBody()->getContents();
@@ -97,6 +122,7 @@ class DrupalSiteBundle extends PhpSiteBundle {
       foreach ($this->getFields() as $field_id => $field) {
         if (!empty($response_data['data']['attributes'][$field_id])) {
 
+          // @TODO: This is a copy of code in SiteEntity::send(). Create a method for this.
           // If JSONAPI worked, this wouldn't be needed.
           switch ($field_id) {
             case 'revision_timestamp':
@@ -134,34 +160,45 @@ class DrupalSiteBundle extends PhpSiteBundle {
       // This doesn't necessarily warrant an error.
       switch($e->getCode()) {
         case 404:
-          $reason = [
+          $this->addReason([
             '#type' => 'item',
             '#title' => t('Site API not found.'),
             '#markup' => t('Install Site Module for enhanced functionality: <code>composer require drupal/site</code>. See @link for more information. The requested API URL was @api', [
               '@link' => Link::fromTextAndUrl(t('drupal.org/project/site'), \Drupal\Core\Url::fromUri('https://www.drupal.org/project/site'))->toString(),
               '@api' => Link::fromTextAndUrl($api_url, \Drupal\Core\Url::fromUri($api_url))->toString(),
             ])
-          ];
+          ], 'site_api_404');
           break;
         case 403:
-          $reason = [
+          if ($this->get('drupal_project')->first()) {
+            $project = $this->drupalProject();
+            $message = t('Site API was found, but the request was denied. Check the API Key in the <a href=":site_url">site</a> or <a href=":project_url">project</a>.', [
+              ':site_url' => $this->isNew()? '#': $this->toUrl('edit-form', ['absolute' => true])->toString(),
+              ':project_url' => $project->isNew()? '#': $project->toUrl('edit-form', ['absolute' => true])->toString(),
+            ]);
+          }
+          else {
+            $message = t('Site API was found, but the request was denied. Check the API Key in the <a href=":site_url">site</a>. The message was: %message', [
+              ':site_url' => $this->isNew()? '#': $this->toUrl('edit-form', ['absolute' => true])->toString(),
+              '%message' => $e->getMessage(),
+            ]);
+          }
+          $this->addReason([
             '#type' => 'item',
             '#title' => t('Site API Access Denied.'),
-            '#markup' => t('Unable to connect to Site API. @link', [
-              '@link' => $this->toLink(t('Check API key in site settings'), 'edit-form')->toString(),
-            ]),
-          ];
+            '#markup' => $message,
+          ], 'site_api_403');
           $state = SiteEntity::SITE_ERROR;
           break;
       }
     }
     catch (\Exception $e) {
-      $reason = [
+      $this->addReason([
         '#markup' => t('Something went wrong when saving data from @api: %error', [
           '%error' => $e->getMessage(),
           '@api' => Link::fromTextAndUrl($api_url, \Drupal\Core\Url::fromUri($api_url))->toString(),
         ])
-      ];
+      ], 'site_api_error');
       $state = SiteEntity::SITE_ERROR;
     }
 
@@ -173,13 +210,6 @@ class DrupalSiteBundle extends PhpSiteBundle {
     // Set state.
     if ($this->state->value < $state) {
       $this->state->setValue($state);
-    }
-
-    // Append this reason.
-    if (!empty($reason)) {
-      $reasons = $this->get('reason')->get(0)->getValue();
-      $reasons[] = $reason;
-      $this->get('reason')->set(0, $reasons);
     }
 
     // Post process properties.
@@ -215,6 +245,16 @@ class DrupalSiteBundle extends PhpSiteBundle {
       if (!empty($project->get('api_key')->value)) {
         return $project->get('api_key')->value;
       }
+    }
+  }
+
+  /**
+   * @return DrupalProject
+   * @throws \Drupal\Core\TypedData\Exception\MissingDataException
+   */
+  public function drupalProject() {
+    if (!empty($this->get('drupal_project')->first())) {
+      return $this->get('drupal_project')->first()->get('entity')->getTarget()->getValue() ?? null;
     }
   }
 }

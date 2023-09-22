@@ -23,6 +23,7 @@ use Drupal\Core\Entity\RevisionableContentEntityBase;
 use Drupal\Core\Entity\RevisionableEntityBundleInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\Field\InternalViolation;
 use Drupal\Core\Field\Plugin\Field\FieldType\MapItem;
 use Drupal\Core\Link;
 use Drupal\Core\Routing\RedirectDestinationTrait;
@@ -34,6 +35,7 @@ use Drupal\jsonapi\JsonApiResource\ResourceObject;
 use Drupal\jsonapi\Normalizer\ResourceObjectNormalizer;
 use Drupal\site\Entity\Bundle\SiteManangerSiteBundle;
 use Drupal\site\Event\SitePreSaveEvent;
+use Drupal\site\JsonApiEntityTrait;
 use Drupal\site\SiteEntityTrait;
 use Drupal\site\SitePropertyBundleFieldDefinitionsTrait;
 use Drupal\site\SiteSelf;
@@ -42,8 +44,7 @@ use Drupal\user\EntityOwnerTrait;
 use Drupal\site\SiteEntityInterface;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
-use GuzzleHttp\Exception\GuzzleException;
-use GuzzleHttp\Psr7\Response;
+use Symfony\Component\Finder\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\HeaderBag;
 
 /**
@@ -124,6 +125,7 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
   use SiteEntityTrait;
   use RedirectDestinationTrait;
   use SitePropertyBundleFieldDefinitionsTrait;
+  use JsonApiEntityTrait;
 
   protected HeaderBag $headers;
 
@@ -235,9 +237,9 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
    * @param array $build
    * @return void
    */
-  public function addReason($value) {
+  public function addReason($value, $key = null) {
     $reasons = $this->reason->getValue();
-    $reasons[] = $value;
+    $reasons[0][$key] = $value;
     $this->reason->setValue($reasons);
   }
 
@@ -302,6 +304,25 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
   }
 
   /**
+   * When coming in via JSON API, remove fields that don't exist.
+   *
+   * @inheritdoc
+   */
+  public function validate()
+  {
+    if (strpos(\Drupal::routeMatch()->getRouteName(), 'jsonapi.') === 0) {
+      $fields = $this->toArray();
+      foreach ($fields as $field => $field_item) {
+        if (!$this->hasField($field)) {
+          $this->set($field, null);
+        }
+      }
+    }
+    $violations = parent::validate();
+    return $violations;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function preSave(EntityStorageInterface $storage) {
@@ -314,9 +335,13 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
     // This is where site data is gathered.
     // prepareEntity() loads all discovered properties.
     // getRemote() loads the site data remotely.
-    if ($this->isSelf() && !$this->skip_prepare) {
-      \Drupal::service('site.self')->setEntity($this)->prepareEntity();
+    // If saving itself, and skip_prepare was not set, run prepareEntity() to gather local properties.
+    if ($this->isSelf()) {
+      if (!$this->skip_prepare) {
+        \Drupal::service('site.self')->setEntity($this)->prepareEntity();
+      }
     }
+    // If not self, always getRemote() data
     else {
       $this->getRemote();
     }
@@ -354,18 +379,18 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
       }
     }
 
+    // Don't send if saving from JSON API.
     /** @var MapItem $settings */
     $settings = \Drupal::config('site.settings');
     $caller = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS,2)[1];
 
-    // Don't send if saving frmo JSON API.
     if ($caller['class'] != EntityResource::class && $this->isSelf() && !empty($settings->get('site_manager')['send_on_save']) && !$this->no_send) {
       // send() triggers this function again with "no_send", so we don't need to call saveConfig().
       try {
         $this->send();
       }
       catch (\Exception $e) {
-        throw new EntityStorageException($e->getMessage());
+        throw $e;
       }
     }
     else {
@@ -806,6 +831,10 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
 
     // Load all Site Manager nodes.
     $managers = $this->loadSiteManagers();
+
+    // Include drupal_project
+    $query = "?include=drupal_project";
+
     foreach ($managers as $site_manager) {
 
       if (empty($site_manager->api_url->value)) {
@@ -822,6 +851,7 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
       $client = new Client([
         'allow_redirects' => TRUE,
       ]);
+
       $options = [
         'headers' => [
           'Accept' => 'application/vnd.api+json',
@@ -837,9 +867,13 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
       // Confirm site manager and site UUID via GET
       $remote_site_exists = false;
       try {
-        $site_api_get_uri = $base_url . Url::fromRoute('site.api')->toString();
+        $site_api_get_uri = $base_url . Url::fromRoute('site.api')->toString() . $query;
         $response = $client->get($site_api_get_uri, $options);
+
+        // Site Manager Site API data.
         $site_api_data = Json::decode($response->getBody()->getContents());
+        $remote_site_entity_data = $site_api_data['requester']['site_entity'];
+        $remote_project_entity_data = $site_api_data['requester']['site_entity']['included'][0] ?? [];
 
         // If remote site entity exists, set the local uuid.
         $remote_site_exists = !empty($site_api_data['requester']['site_entity']['id']);
@@ -853,6 +887,8 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
 
           // Reload JSON API data.
           $data = $this->toJsonApiArray();
+
+          // Prepare data for PATCH/POST
           unset($data['attributes']['changed']);
           unset($data['attributes']['drupal_internal__sid']);
           unset($data['relationships']);
@@ -861,11 +897,16 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
           // There was a problem when saving the site: Unprocessable Entity 422: The attribute api_url does not exist on the site--drupal resource type..
           unset($data['attributes']['api_url']);
 
-          $options['json']['data'] = $data;
         }
       }
       catch (ClientException $e) {
-        throw $e;
+        if ($e->getCode() == '403') {
+          throw new AccessDeniedException(t('Access was denied when sending site data.'));
+        }
+
+        throw new \Exception(t('Unable to send site data: :message', [
+          ':message' => $e->getMessage(),
+        ]));
       }
       catch (\Exception $e) {
         throw new \Exception(t('Something else happened:') . $e->getMessage());
@@ -873,12 +914,38 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
 
       // If site exists, patch. If not, post.
       try {
+        $remote_fields = explode(PHP_EOL, \Drupal::config('site.settings')->get('site_manager')['fields_allow_override']);
+
+        // Include project entity.
+        // @TODO: This is drupal site entity specific... fix that.
+        if (method_exists($this, 'drupalProject') && $this->drupalProject()) {
+
+          // For all remotely overridden fields, set same value we just got so it won't change.
+          $project_data = $this->drupalProject()->toJsonApiArray();
+          $project_values = $project_data['attributes'];
+          foreach ($remote_fields as $field_name) {
+              $value = $remote_project_entity_data['attributes'][$field_name];
+              $project_values[$field_name] = $value;
+          }
+
+          $data['included'][0] = $project_values;
+        }
+
+        // For all remotely overridden fields, set same value we just got so it won't change.
+        // Set the posted value to the same value we just got.
+        foreach ($remote_fields as $field_name) {
+          if (isset($data['attributes'][$field_name])) {
+            $data['attributes'][$field_name] = $remote_site_entity_data['attributes'][$field_name] ?? null;
+          }
+        }
+        $options['json']['data'] = $data;
+
         if ($remote_site_exists) {
-          $site_api_url = $base_url . $this->toJsonApiUrl('individual')->toString();
+          $site_api_url = $base_url . $this->toJsonApiUrl('individual')->toString() . $query;
           $response = $client->patch($site_api_url, $options);
         }
         else {
-          $site_api_url = $base_url . $this->toJsonApiUrl('collection.post')->toString();
+          $site_api_url = $base_url . $this->toJsonApiUrl('collection.post')->toString() . $query;
           $response = $client->post($site_api_url, $options);
         }
       }
@@ -899,30 +966,9 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
         'url' => $site_api_url,
       ]);
 
+      // Save site
       $this->sent = true;
-      foreach ($this->getFields() as $field_id => $field) {
-        if (isset($response_entity_data['data']['attributes'][$field_id])) {
-
-          // If JSONAPI worked, this wouldn't be needed.
-          switch ($field_id) {
-            case 'sid':
-            case 'revision_timestamp':
-            case 'revision_log':
-            case 'reason':
-            case 'state':
-              continue(2);
-
-            case 'created':
-            case 'changed':
-              $value = strtotime($response_entity_data['data']['attributes'][$field_id]);
-              break;
-            default:
-              $value = $response_entity_data['data']['attributes'][$field_id];
-
-          }
-          $this->set($field_id, $value);
-        }
-      }
+      $this->updateFromJsonApiData($response_entity_data['data']['attributes']);
 
       $this->setRevisionLogMessage(t('Saving after receiving from :url', [
         ':url' => $site_api_url,
@@ -930,29 +976,19 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
       $this->no_send = true;
       $this->save();
 
-
-      $api_url = $response_entity_data['data']['links']['self']['href'] ?? '';
-//      \Drupal::messenger()->addStatus(t('The site was successfully connected. Data available at @link.', [
-//        '@link' => Link::fromTextAndUrl($api_url, Url::fromUri($api_url))->toString(),
-//      ]));
-
-      // @TODO: Save managed_fields.
-
+      // Save project
+      if (method_exists($this, 'drupalProject') && $this->drupalProject()) {
+        $project = $this->drupalProject();
+        $project->updateFromJsonApiData($response_entity_data['included'][0]['attributes']);
+        $project->save();
+      }
     }
-
-    /****
-     * @TODO: re-implement generic "send_destinations"
-     */
-
   }
 
   /**
    * @return SiteEntityInterface
    */
   public function getRemote() {
-
-    // Append reasons.
-    $reasons = $this->get('reason')->get(0) ? $this->get('reason')->get(0)->getValue(): [];
 
     $worst_code = 0;
     $site_uri_data = [];
@@ -969,7 +1005,7 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
         $response = \Drupal::httpClient()->get($site_uri);
 
         // We know it was successful, otherwise there's an exception.
-        $reason = [
+        $this->addReason([
           '#title' => t('HTTP Request for @url was successful.', [
             '@url' => Link::fromTextAndUrl($site_uri, Url::fromUri($site_uri))->toString(),
           ]),
@@ -980,10 +1016,10 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
             '@code' => $response->getStatusCode(),
             '@message' => $response->getReasonPhrase(),
           ])
-        ];
+        ]);
       } catch (ClientException $e) {
         $response = $e->getResponse();
-        $reason = [
+        $this->addReason([
           '#title' => t('HTTP Request for @url failed with @code when requested from @site.', [
             '@site' => $this_site_link,
             '@url' => Link::fromTextAndUrl($site_uri, Url::fromUri($site_uri))->toString(),
@@ -991,9 +1027,9 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
           ]),
           '#type' => 'item',
           '#markup' => $e->getMessage(),
-        ];
+        ]);
       } catch (\Exception $e) {
-        $reason = [
+        $this->addReason([
           '#title' => t('HTTP Request for @url from @site failed for an unknown reason.', [
             '@url' => Link::fromTextAndUrl($site_uri, Url::fromUri($site_uri))->toString(),
             '@site' => $this_site_link,
@@ -1002,8 +1038,7 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
           '#markup' => t('Request for URL @url failed: @message.', [
             '@message' => $e->getMessage(),
           ])
-        ];
-        $reasons[] = $reason;
+        ]);
         continue;
       }
 
@@ -1016,16 +1051,12 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
         'headers' => $response->getHeaders(),
         'content' => $response->getBody()->getContents(),
       ];
-      $reasons[] = $reason;
     }
 
     $this->addData('site_uri', [
       'sites' => $site_uri_data,
       'worst_code' => $worst_code,
     ]);
-    $this->get('reason')->set(0, $reasons);
-
-//    $this->reason->setValue($reasons);
 
     switch ($worst_code) {
       case 200:
@@ -1180,29 +1211,6 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
       $url->setRouteParameter('entity', $this->uuid());
     }
     return $url;
-  }
-
-  /**
-   * Generate a JSON:API object.
-   *
-   * @return array
-   */
-  public function toJsonApiArray() {
-    # @see EntityResource
-    $resource_object = $this->toResourceObject();
-    $serializer = \Drupal::service('jsonapi.serializer');
-    $cacher =  \Drupal::service('jsonapi.normalization_cacher');
-    $normalizer = new ResourceObjectNormalizer($cacher);
-    $normalizer->setSerializer($serializer);
-    $data = $normalizer->normalize($resource_object, 'api_json', [
-      'account' => \Drupal::currentUser()->getAccount(),
-    ]);
-    return $data->getNormalization();
-  }
-
-  public function toResourceObject() {
-    $resource_type = \Drupal::service('jsonapi.resource_type.repository')->get($this->getEntityTypeId(), $this->bundle());
-    return ResourceObject::createFromEntity($resource_type, $this);
   }
 
   /**

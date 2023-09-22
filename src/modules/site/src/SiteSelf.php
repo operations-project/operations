@@ -108,7 +108,7 @@ class SiteSelf {
   /**
    * Set Properties, state and reason.
    * @param $entity
-   * @return void
+   * @return self
    */
   public function prepareEntity() {
     if (empty($this->entity)) {

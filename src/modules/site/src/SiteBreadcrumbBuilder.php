@@ -9,6 +9,7 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\node\NodeInterface;
 use Drupal\site\Entity\SiteEntity;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 /**
  * Provides a breadcrumb builder for articles.
@@ -55,7 +56,7 @@ class SiteBreadcrumbBuilder implements BreadcrumbBuilderInterface {
         ->getRouteByName($projects_route);
       ;
     }
-    catch (\Exception $e) {
+    catch (RouteNotFoundException $e) {
       $sites_route = 'entity.site.collection';
     }
 

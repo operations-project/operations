@@ -76,6 +76,9 @@ function site_install() {
       }
     }
   }
+
+  // @TODO: I would create a site entity here... but when enabled during an install profile,
+  // the module is enabled BEFORE site title and URL are available... so.... just clear caches for first entity??
 }
 
 /**

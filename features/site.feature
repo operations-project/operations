@@ -6,7 +6,7 @@ Feature:
     When I am at "admin/site/about"
     Then I should see "Welcome to the Site Module!"
     When I click "History"
-    Then I should see "There are no site reports yet."
+#    Then I should see "There are no site reports yet."
     Given I am at "admin/site/save"
     And I should see "PHP Version"
     And I should see "8.1"

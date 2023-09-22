@@ -1,0 +1,6 @@
+
+site_manager.add_page:
+  title: 'Add site'
+  route_name: entity.site.add_page
+  appears_on:
+    - view.sites.page_1

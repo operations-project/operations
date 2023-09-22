@@ -46,10 +46,12 @@ class SiteActionsController extends ControllerBase {
    * @return \Symfony\Component\HttpFoundation\RedirectResponse
    */
   public function refresh(SiteEntity $site) {
-    // Get remote data...
-    $site = $site->getRemote();
-    $violations = $site->validate();
+    // Reset Reasons.
+    $site->get('reason')->setValue([]);
 
+    // Get remote data...
+    $site->getRemote();
+    $violations = $site->validate();
     // Save the site if there are no violations.
     // @TODO: getRemote() triggers a EntityChangedConstraintValidator to fail.
     // This code ignores it.
@@ -59,7 +61,7 @@ class SiteActionsController extends ControllerBase {
     }
     else {
 
-      \Drupal::messenger()->addStatus(t('The site could not validate:'));
+      \Drupal::messenger()->addError(t('The site could not validate:'));
       foreach ($violations as $violation) {
         \Drupal::messenger()->addError($violation->getMessage());
       }

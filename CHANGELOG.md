@@ -4,6 +4,23 @@ Drupal Operations
 Changelog
 ---------
 
+# 2.0.0-beta10
+## September 22, 2023
+
+- Reimplemented Field Overrides for drupal project and sites. Client sites can now read fields from site manager if they are set in Remote Field Overrides.
+- Fixed field data sending. Drupal project and site entities now send all data and gets saved in site manager.
+- Allow API key to be sent along with Drupal project entity, providing instant login from site manager.
+- Fixed exception throwing and catching.
+- Improve messaging when API keys are missing.
+- Allow Site Manager to receive entities with fields that do not exist, so that client sites can post if they have site-entity altering behavior.
+- Fix remote timestamp saving.
+- Create JsonAPI trait for converting to and from jsonapi arrays.
+- Update Drupal project data when saving site.
+- Fix sending reports on cache clear.
+- Enable instant connections in lando for testing using settings.php.
+- Cleaned up composer development commands.
+- Added a drush command to set a user's api key for key_auth module.
+
 # 2.0.0-beta8
 ## September 20, 2023
 
