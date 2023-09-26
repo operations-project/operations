@@ -180,7 +180,7 @@ entity.site.site_actions:
         type: string
 
 entity.drupal_project.add_site:
-  path:  '/drupal/{drupal_project}/add'
+  path:  '/project/{drupal_project}/add'
   defaults:
     _title_callback: '\Drupal\site\Controller\DrupalProjectAddSiteController::formPageTitle'
     _controller: '\Drupal\site\Controller\DrupalProjectAddSiteController::form'

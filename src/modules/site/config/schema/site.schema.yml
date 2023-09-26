@@ -33,6 +33,10 @@ site.settings:
       type: string
       label: 'List of URLs to post site entity data to.'
 
+    duplicate_handling:
+      type: string
+      default: unique_urls
+
     site_manager:
       type: mapping
       mapping:

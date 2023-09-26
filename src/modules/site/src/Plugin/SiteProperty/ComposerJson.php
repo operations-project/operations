@@ -9,7 +9,7 @@ use Drupal\site\SitePropertyPluginBase;
 use Symfony\Component\Yaml\Yaml;
 
 /**
- * Gather composer.json.
+ * Gather composer.json. Stored in "data" field.
  *
  * @SiteProperty(
  *   id = "composer_json",
@@ -28,27 +28,12 @@ class ComposerJson extends SitePropertyPluginBase {
    */
   public function value() {
     try {
-      return Yaml::parseFile(SiteEntity::getSiteRoot() . '/composer.json');
+      $value = Yaml::parseFile(SiteEntity::getSiteRoot() . '/composer.json');
+      $this->addData('contents', $value);
+      return $value;
     }
     catch (\Exception $e) {
       return [];
     }
-  }
-
-  /**
-   * @inheritdoc
-   */
-  static public function bundleFieldDefinitions(EntityTypeInterface $entity_type, $bundle, array $base_field_definitions) {
-    $fields['composer_json'] = BaseFieldDefinition::create('map')
-      ->setLabel(t('Composer.json Data'))
-      ->setRevisionable(TRUE)
-      ->setDisplayConfigurable('view', TRUE)
-      // @TODO: Create a module for viewing map fields.
-//      ->setDisplayOptions('view', [
-//        'label' => 'above',
-//        'type' => 'yaml',
-//      ])
-    ;
-    return $fields;
   }
 }

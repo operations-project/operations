@@ -108,10 +108,6 @@ use Symfony\Component\HttpFoundation\HeaderBag;
  *   bundle_entity_type = "site_type",
  *   field_ui_base_route = "entity.site_type.edit_form",
  *   common_reference_target = TRUE,
- *   constraints = {
- *     "SiteUniqueUrl" = {},
- *     "SiteDrupalProjectExists" = {}
- *   }
  * )
  *
  * The "SiteDrupalProjectExists" only affects DrupalSiteBundles. Can we apply a
@@ -264,7 +260,6 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
 
   /**
    * @param $id string Site UUID. If not supplied, will load this site.
-   * @inheritdoc
    */
   static public function loadBySiteUrl($site_url) {
 
@@ -552,7 +547,6 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
       ->setLabel(t('Primary Hostname'))
       ->setDescription(t('The primary hostname for this website, without a scheme or path.'))
       ->setRequired(true)
-      ->addConstraint('UniqueField')
       ->setDisplayOptions('form', [
         'type' => 'string_textfield',
         'weight' => -100,

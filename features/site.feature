@@ -30,6 +30,21 @@ Feature:
     Given I am logged in as a user with the "create site,administer sites,view site" permissions
     And I am at "admin/content/site"
     When I click "Add site"
+    Then I click "Website"
+    And fill in the following:
+      | Site URLs | https://google.com |
+      | Label | google |
+
+    Then I press "Save"
+    Then print current URL
+    Then I should see "New site google has been created."
+#    And I should see "Drupal 7 (https://www.drupal.org)"
+
+  @api
+  Scenario: Add a Drupal site
+    Given I am logged in as a user with the "create site,administer sites,view site" permissions
+    And I am at "admin/content/site"
+    When I click "Add site"
     Then I click "Drupal site"
     And fill in the following:
       | Site URLs | https://drupal.org |

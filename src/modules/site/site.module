@@ -391,7 +391,8 @@ function template_preprocess_site(array &$variables) {
   $build['content'] += $variables['content'] ?? [];
 
   // Composer Info
-  if ($site->composer_json && $site->composer_json->get(0) && $variables['view_mode'] != 'teaser') {
+  $data = $site->data->get(0)->getValue();
+  if (!empty($data['composer_json']) && $variables['view_mode'] != 'teaser') {
     $build['composer'] = [
       '#description' => t('Loaded from composer.json'),
       '#type' => 'details',
@@ -400,7 +401,6 @@ function template_preprocess_site(array &$variables) {
       '#markup' => t('Site Information'),
     ];
 
-    $composer = $site->composer_json->get(0)->getValue();
     $build['composer']['#title']['project'] = [
       '#type' => 'html_tag',
       '#tag' => 'div',
@@ -413,8 +413,8 @@ function template_preprocess_site(array &$variables) {
     ];
     $build['composer']['#title']['project']['composer'] = [
       '#type' => 'item',
-      '#title' => $composer['name'] ?? t('No "name" found in composer.json.'),
-      '#markup' => $composer['description'] ?? t('No "description" found in composer.json.'),
+      '#title' => $composer['name'] ?? t('<em>empty name<em>'),
+      '#markup' => $composer['description'] ?? t('<em>empty description<em>'),
       '#attributes' => [
         'class' => ['composer-info-name'],
       ],

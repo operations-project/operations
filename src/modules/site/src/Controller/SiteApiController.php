@@ -12,6 +12,7 @@ use Drupal\site\SiteSelf;
 use http\Client\Response;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -67,6 +68,9 @@ class SiteApiController extends ControllerBase {
 
     $requester = \Drupal::request()->headers->get('requester');
     $site = SiteEntity::loadBySiteUrl('http://'.$requester);
+    if (!$site->access('view')) {
+      throw new AccessDeniedHttpException('The requested site is not visible to the authenticated user.');
+    }
 
     $response['requester']['hostname'] = $requester;
     $response['requester']['site_entity'] = null;
@@ -105,7 +109,7 @@ class SiteApiController extends ControllerBase {
 
     $requester = \Drupal::request()->headers->get('requester');
     $site = SiteEntity::loadBySiteUrl($requester);
-    
+
     $response['requester']['hostname'] = $requester;
 
     if ($site) {

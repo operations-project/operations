@@ -141,3 +141,15 @@ function site_update_8002() {
   }
 }
 
+
+/**
+ * Remove composer_json field. Plugin stores in data field now.
+ *
+ * For some reason, this field was breaking basic website creation.
+ */
+function site_update_8003() {
+  $definition_manager = \Drupal::entityDefinitionUpdateManager();
+  $field_storage_definition = $definition_manager->getFieldStorageDefinition('composer_json', 'site');
+  $definition_manager->uninstallFieldStorageDefinition($field_storage_definition);
+}
+

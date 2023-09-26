@@ -41,6 +41,7 @@ class DrupalSiteUuid extends SitePropertyPluginBase {
     $fields['drupal_project'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('Drupal Project'))
       ->setRevisionable(TRUE)
+      ->addConstraint('SiteDrupalProjectExists')
       ->setSetting('target_type', 'drupal_project')
       ->setDisplayConfigurable('view', TRUE)
       ->setDisplayOptions('view', [

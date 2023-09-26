@@ -27,6 +27,6 @@
         }
     },
     "require": {
-        "drupal/site": "*"
+        "drupal/site": "^2.0"
     }
 }

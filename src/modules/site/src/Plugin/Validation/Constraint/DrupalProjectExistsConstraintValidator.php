@@ -25,7 +25,8 @@ class DrupalProjectExistsConstraintValidator extends ConstraintValidator {
   /**
    * {@inheritdoc}
    */
-  public function validate($entity, Constraint $constraint) {
+  public function validate($field, Constraint $constraint) {
+    $entity = $field->getEntity();
 
     $violations = [];
 

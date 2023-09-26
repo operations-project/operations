@@ -30,6 +30,7 @@ if ((bool) getenv('LANDO')) {
 
   if ($host != 'operations') {
     $config['site.settings'] = \Symfony\Component\Yaml\Yaml::parse(<<<YML
+  duplicate_handling: unique_urls_per_user
   site_manager:
     api_url: 'http://operations.lndo.site'
     api_key: '123testingkey'

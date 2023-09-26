@@ -1,3 +1,11 @@
+
+site.admin.add_page:
+  title: 'Add site'
+  route_name: entity.site.add_page
+  appears_on:
+    - entity.site.collection
+    - view.sites.page_1
+
 site.field_add:
   title: 'Add field'
   route_name: field_ui.field_storage_config_add_drupal_project
