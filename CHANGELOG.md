@@ -3,6 +3,21 @@ Drupal Operations
 
 Changelog
 ---------
+# 2.0.0-beta11
+## September 26, 2023
+
+- Fixed broken Basic Website entity addition. Added test to verify.
+- Moved `composer_json` property from schema field to `data` field because it was breaking basic sites. We don't need an extra field for it.
+- Fix problem with dependencies causing Site Manager and site to be different major versions.
+- Removed `drupal/ip_consumer_auth`. It was unnecessary and was preventing Drupal 10 installation!
+- Add special config to allow multiple site entities with the same URL.
+- Fixed missing "Add Site" button on Admin Sites page.
+- Changed "Drupal Project" URLs to `/project/{drupal_project}`
+- Check for view access to SiteEntity when requesting via SiteAPI.
+- Added drush command `site:state` to view and update site states and reasons. See README.md for examples for automatically reporting site state in response to custom scripts.
+- Implemented `site:state` for `composer operations:test:run` in the dev stack.
+- Added `processing` state for indicating that something is happening to a site like a deploy or a test.
+- Ensure revision log gets reset.
 
 # 2.0.0-beta10
 ## September 22, 2023
