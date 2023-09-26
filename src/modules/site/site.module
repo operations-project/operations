@@ -392,13 +392,14 @@ function template_preprocess_site(array &$variables) {
 
   // Composer Info
   $data = $site->data->get(0)->getValue();
-  if (!empty($data['composer_json']) && $variables['view_mode'] != 'teaser') {
+  if (!empty($data['composer_json']['contents']) && $variables['view_mode'] != 'teaser') {
+    $composer = $data['composer_json']['contents'];
     $build['composer'] = [
       '#description' => t('Loaded from composer.json'),
       '#type' => 'details',
     ];
     $build['composer']['#title']['label'] = [
-      '#markup' => t('Site Information'),
+      '#markup' => t('Codebase'),
     ];
 
     $build['composer']['#title']['project'] = [

@@ -231,23 +231,25 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
   /**
    * Add item to the state reason build array.
    * @param array $build
-   * @return void
+   * @return self
    */
   public function addReason($value, $key = null) {
     $reasons = $this->reason->getValue();
     $reasons[0][$key] = $value;
     $this->reason->setValue($reasons);
+    return $this;
   }
 
   /**
    * Add item to the data property.
    * @param array $build
-   * @return void
+   * @return self
    */
   public function addData($key, $value) {
     $data = $this->data->value;
     $data[$key] = $value;
     $this->set('data', $data);
+    return $this;
   }
 
   /**
@@ -263,11 +265,19 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
    */
   static public function loadBySiteUrl($site_url) {
 
+    // Allow lookup without http.
+    if (strpos($site_url, 'http') !== 0) {
+      $site_url = "https://$site_url";
+    }
+
     $url_host = parse_url($site_url, PHP_URL_HOST);
     $sites = \Drupal::entityTypeManager()
       ->getStorage('site')
       ->loadByProperties([
-        'hostname' => [$url_host],
+        'site_uri' => [
+          'http://' . $url_host,
+          'https://' . $url_host,
+        ],
       ])
     ;
     $site = array_shift($sites);
@@ -353,10 +363,22 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
    */
   public function save()
   {
-
     // Always set a new revision with create timestamp set to Now. (After property generation/retrieval)
     $this->setNewRevision();
     $this->setRevisionCreationTime(\Drupal::time()->getCurrentTime());
+
+    $revisions = $this->revisionIds();
+    $current = array_shift($revisions);
+    $previous = array_shift($revisions);
+
+    // Clear out the old revision log message if it matches the one before it.
+    // @TODO: Encourage use of timestamps in revision log messages.
+    $storage = \Drupal::entityTypeManager()->getStorage('site');
+    $site_revision = $storage->loadRevision($previous);
+    if ($site_revision && $site_revision->getRevisionLogMessage() == $this->getRevisionLogMessage()) {
+      $this->setRevisionLogMessage('');
+    }
+
 
     // Normalize URL.
     if (!empty($this->site_uri->getValue())) {
@@ -589,10 +611,7 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
 
     $fields['state'] = BaseFieldDefinition::create('list_integer')
       ->setSetting('allowed_values', [
-        static::SITE_OK => t('OK'),
-        static::SITE_INFO => t('OK (Info)'),
-        static::SITE_WARN => t('Warning'),
-        static::SITE_ERROR => t('Error'),
+        static::STATE_NAMES
       ])
       ->setLabel(t('Site State'))
       ->setDescription(t('The overall state of the site. OK, INFO, WARN, ERROR'))

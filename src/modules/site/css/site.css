@@ -263,6 +263,23 @@ fieldset.site-display fieldset .fieldset__wrapper {
     background-image: url(../../../../../../core/misc/icons/73b355/check.svg);
 }
 
+.site-entity-header .color-processing .icon::before,
+.site-state .state-processing .icon::before {
+    background-image: url(../../../../../../core/misc/icons/787878/cog.svg);
+    -webkit-animation: spin 4s linear infinite;
+    -moz-animation: spin 4s linear infinite;
+    animation: spin 4s linear infinite;
+}
+
+@-moz-keyframes spin { 100% { -moz-transform: rotate(360deg); } }
+@-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
+@keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
+
+details.state-processing,
+fieldset.site-display .color-processing {
+  background-color: whitesmoke;
+}
+
 .site-display {
     position: relative;
 }

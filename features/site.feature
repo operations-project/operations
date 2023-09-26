@@ -88,3 +88,16 @@ Feature:
     # And I should see the link "Behat Tested Site"
 
     # @TODO: Add test for site entity title changes here.
+
+  @api
+  Scenario: Set state with drush
+    Given I run drush "site:state all"
+    Then print last drush output
+
+    Given I run drush "site:state --state=warning --reason-label='Tests' --reason='Behat tests failed.'"
+    Then print last drush output
+
+    Given I am logged in as a user with the "access about this site page,access site history page,administer site entity settings,administer site configuration,access site history page" permission
+    And I am at "admin/site/about"
+    Then I should see "Warning"
+    And I should see "Behat tests failed."

@@ -19,7 +19,11 @@ Changelog
 - Fix sending reports on cache clear.
 - Enable instant connections in lando for testing using settings.php.
 - Cleaned up composer development commands.
-- Added a drush command to set a user's api key for key_auth module.
+- Added drush command `key:set` to set a user's api key for key_auth module.
+- Added drush command `site:state` to view and update site states and reasons. See README.md for examples for automatically reporting site state in response to custom scripts.
+- Implemented `site:state` for `composer operations:test:run` in the dev stack.
+- Added `processing` state for indicating that something is happening to a site like a deploy or a test.
+- Ensure revision log gets reset.
 
 # 2.0.0-beta8
 ## September 20, 2023

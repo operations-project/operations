@@ -167,7 +167,8 @@
             "@operations:test:run"
         ],
         "operations:test:run": [
-            "drush @operations behat"
+            "drush @operations site:state --state=processing --revision-log='Behat tests begun...' --yes",
+            "drush @operations behat && drush @operations site:state --state=ok --revision-log='Behat tests passed!' --yes || drush @operations site:state --state=error --revision-log='Behat tests failed!' --yes"
         ]
     },
     "extra": {

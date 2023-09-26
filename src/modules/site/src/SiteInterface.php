@@ -8,6 +8,11 @@ namespace Drupal\site;
 interface SiteInterface {
 
   /**
+   * A process is running on the site.
+   */
+  const SITE_PROCESSING = 3;
+
+  /**
    * The site is not operating.
    */
   const SITE_ERROR = 2;
@@ -37,6 +42,20 @@ interface SiteInterface {
       self::SITE_INFO => 'OK (info)',
       self::SITE_WARN => 'Warning',
       self::SITE_ERROR => 'Error',
+      self::SITE_PROCESSING => 'Processing',
+  ];
+
+  /**
+   * Human-readable strings for state.
+   *
+   * @var string
+   */
+  const STATE_IDS = [
+      self::SITE_OK => 'ok',
+      self::SITE_INFO => 'info',
+      self::SITE_WARN => 'warning',
+      self::SITE_ERROR => 'error',
+      self::SITE_PROCESSING => 'processing',
   ];
 
   /**
@@ -49,6 +68,15 @@ interface SiteInterface {
       self::SITE_INFO => 'info',
       self::SITE_WARN => 'warning',
       self::SITE_ERROR => 'error',
+      self::SITE_PROCESSING => 'processing',
+  ];
+
+  const STATE_ICONS = [
+    self::SITE_OK => '✓',
+    self::SITE_INFO => '⏼',
+    self::SITE_WARN => '⚠',
+    self::SITE_ERROR => '✗',
+    self::SITE_PROCESSING => '☉',
   ];
 
 }

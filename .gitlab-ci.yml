@@ -157,6 +157,9 @@ nightwatch:
     - *setup-operations
     - export PATH=./bin:$PATH
     - bin/drush behat
+    - bin/drush site:state --state=ok --reason="GitLab CI Passed!" --reason-label="Tests Passed"
+    - bin/drush site:state
+
   artifacts:
     expire_in: 6 mos
     expose_as: 'reports'

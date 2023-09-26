@@ -56,6 +56,11 @@ class SiteActionsController extends ControllerBase {
     // @TODO: getRemote() triggers a EntityChangedConstraintValidator to fail.
     // This code ignores it.
     if ($violations->count() == 0 || ($violations->count() == 1 && $violations->get(0)->getMessageTemplate() == "The content has either been modified by another user, or you have already submitted modifications. As a result, your changes cannot be saved.")) {
+      $site->setRevisionLogMessage(t('Site updated from :url by :user on :date.', [
+        ':url' => \Drupal::request()->getUri(),
+        ':user' => \Drupal::currentUser()->getDisplayName(),
+        ':date' => \Drupal::service('date.formatter')->format(time()),
+      ]));
       $site->save();
       \Drupal::messenger()->addStatus(t('Site data has been updated.'));
     }
