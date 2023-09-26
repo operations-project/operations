@@ -67,7 +67,7 @@ class SiteApiController extends ControllerBase {
     ];
 
     $requester = \Drupal::request()->headers->get('requester');
-    $site = SiteEntity::loadBySiteUrl('http://'.$requester);
+    $site = SiteEntity::loadBySiteUrl($requester);
     if (!$site->access('view')) {
       throw new AccessDeniedHttpException('The requested site is not visible to the authenticated user.');
     }
