@@ -121,7 +121,7 @@ class SiteSelf {
     // Set state and reason.
     $this->entity->set('state', $this->getState());
     $this->entity->set('reason', $this->getReasons());
-    $this->entity->set('data', $this->getData());
+//    $this->entity->set('data', $this->getData());
 
     // Set all properties from plugins.
     foreach ($this->getProperties() as $name => $value) {

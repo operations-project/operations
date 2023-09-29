@@ -2,3 +2,10 @@ site:
   css:
     theme:
       css/site.css: {}
+
+site.admin:
+  css:
+    theme:
+      css/site.history.css: {}
+  js:
+    js/site.history.js: {}

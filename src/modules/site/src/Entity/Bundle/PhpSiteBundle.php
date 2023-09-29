@@ -10,4 +10,30 @@ use Drupal\Core\Field\BaseFieldDefinition;
  */
 class PhpSiteBundle extends WebAppSiteBundle {
 
+  /**
+   * @inheritdoc
+   */
+  public function siteHistoryTableHeaders()
+  {
+    $headers = parent::siteHistoryTableHeaders();
+    $headers[] = 'PHP Version';
+    return $headers;
+  }
+
+  /**
+   * @inheritdoc
+   */
+  public function siteHistoryTableRow()
+  {
+    $row = parent::siteHistoryTableRow();
+    if ($this->php_version->value) {
+      $row[] = [
+        'data' => $this->php_version->value ?? '',
+      ];
+    }
+    else {
+      $row[] = '';
+    }
+    return $row;
+  }
 }

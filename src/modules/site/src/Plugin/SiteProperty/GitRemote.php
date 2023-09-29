@@ -33,7 +33,7 @@ class GitRemote extends SitePropertyPluginBase {
     $git_file = \Drupal::root() . '/../.git/config';
     if (file_exists($git_file)) {
       $data = parse_ini_file($git_file, TRUE);
-      if ($data['remote origin']['url']) {
+      if (!empty($data['remote origin']['url']) && $data['remote origin']['url']) {
         return $data['remote origin']['url'];
       }
     }

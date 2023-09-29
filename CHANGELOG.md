@@ -3,6 +3,23 @@ Drupal Operations
 
 Changelog
 ---------
+
+# 2.0.0-beta13
+## September 29, 2023
+
+- Redesign Project Create form: If canon URL is entered, site will be created and Project name automatically created from HTML title.
+- Redesign Site History and Site List page to offer detail dropdown when clicked.
+- Fix bug breaking site entity creation on sites where new entity is created for an existing site.
+- Fix warnings when refreshing reports.
+- Fix warning from GitRemote plugin if there is no remote found.
+- Allow bundles to override the data shown on the history tab. This allows drupal sites to show drupal version, etc.
+- Add Config Changes display to Reasons output.
+
+# 2.0.0-beta12
+## September 26, 2023
+
+Fixed error with /jsonapi/self.
+
 # 2.0.0-beta11
 ## September 26, 2023
 

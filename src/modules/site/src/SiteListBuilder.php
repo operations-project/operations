@@ -88,14 +88,44 @@ class SiteListBuilder extends EntityListBuilder {
    * {@inheritdoc}
    */
   public function render() {
-//    $this->site_type = \Drupal::routeMatch()->getParameter('site_type');
+    $build['table'] = [
+      '#type' => 'table',
+      '#header' => $this->buildHeader(),
+      '#title' => $this->getTitle(),
+      '#rows' => [],
+      '#empty' => $this->t('There are no @label yet.', ['@label' => $this->entityType->getPluralLabel()]),
+      '#cache' => [
+        'contexts' => $this->entityType->getListCacheContexts(),
+        'tags' => $this->entityType->getListCacheTags(),
+      ],
+    ];
+    foreach ($this->load() as $entity) {
+      if ($row = $this->buildRow($entity)) {
+        $build['table']['#rows'][$entity->id()] = $row;
+        $build['table']['#rows'][$entity->id(). '-details']['data'] = $entity->siteHistoryTableRowDetails();
+        $build['table']['#rows'][$entity->id() . '-details']['data'][0]['colspan'] = count($row['data']);
+        $build['table']['#rows'][$entity->id() . '-details']['class'] = [
+          'site-revision',
+          'site-revision-details',
+          'state-' . $entity->stateClass(),
+          'color-' . $entity->stateClass(),
+        ];
+      }
+    }
+    $total_columns = 0;
+    foreach ($build['table']['#rows'] as $row) {
+      $total_columns = count($row['data']) > $total_columns? count($row['data']): $total_columns;
+    }
+    foreach ($build['table']['#rows'] as &$row) {
+      if (count($row['data']) == 1) {
+        $row['data'][0]['colspan'] = $total_columns;
+      }
+      else {
+        $row['data'] = array_pad($row['data'], $total_columns, '');
+      }
+    }
 
-//    if (!$this->site_type) {
-//      return $this->dashboard();
-//    }
-
-    $build['table'] = parent::render();
-    $build['table']['#empty'] = $this->t('There are no @label yet.', ['@label' => t('sites')]);
+    $build['table']['#header'] = array_pad($build['table']['#header'], $total_columns, '');
 
     $total = $this->getStorage()
       ->getQuery()
@@ -107,6 +137,18 @@ class SiteListBuilder extends EntityListBuilder {
       '@total' => $total,
       '@label_plural' => t('sites'),
     ]);
+
+    // Only add the pager if a limit is specified.
+    if ($this->limit) {
+      $build['pager'] = [
+        '#type' => 'pager',
+      ];
+    }
+
+    $build['#attached'] = [
+      'library' => ['site/site.admin'],
+    ];
+
     return $build;
   }
 
@@ -144,78 +186,25 @@ class SiteListBuilder extends EntityListBuilder {
    */
   public function buildHeader() {
     $header['state'] = $this->t('State');
-    $header['http_status'] = $this->t('HTTP Code');
-    $header['site_title'] = $this->t('Label');
-    $header['id'] = $this->t('ID');
-    $header['site_uri'] = $this->t('Site URI');
-    $header['date'] = $this->t('Last Report');
-    return $header + parent::buildHeader();
+    $header['site_title'] = $this->t('Site Title');
+    $header['site_uri'] = $this->t('URL');
+    $header['date'] = $this->t('Log');
+    return $header;
   }
 
   /**
    * {@inheritdoc}
    */
   public function buildRow(EntityInterface $entity) {
-    /** @var \Drupal\site\SiteEntityInterface $entity */
-    $state =  $entity->state->view([
-      'label' => 'hidden',
-    ]);
-    $revision_log =  $entity->revision_log->view([
-      'label' => 'hidden',
-    ]);
-    $http_status =  $entity->http_status->view([
-      'label' => 'hidden',
-    ]);
-    $row['state'] = \Drupal::service('renderer')->render($state);
-    $row['http_status'] = \Drupal::service('renderer')->render($http_status);
-    $row['site_title'] = $entity->toLink(null, 'version_history');
-    $row['id'] = $entity->site_uuid->value ?? '';
-
-    $row['site_uri'] = $entity->site_uri->value ? Link::fromTextAndUrl($entity->site_uri->value, Url::fromUri($entity->site_uri->value), [
-      'attributes' => ['target' => '_blank'],
-    ]) : t('Unknown');
-    $date = $entity->revision_timestamp->view([
-      'label' => 'hidden',
-      'type' => 'timestamp_ago'
-    ]);
-
-    if ($entity->reason->value) {
-      $reason = $entity->reason->view([
-        'label' => 'hidden',
-        'type'=> 'text',
-      ]);
-      $reason[0]['#format'] = 'basic_html';
-      $reason[0]['#prefix'] = '<blockquote>';
-      $reason[0]['#suffix'] = '</blockquote>';
-      $reason['#type'] = 'details';
-      $reason['#title'] = t('Reason');
-
-    }
-    else {
-      $reason = [];
-    }
-    $log_column['log'] = [
-      '#prefix' => '<blockquote><small>',
-      '#suffix' => '</small></blockquote>',
-      '#access' => !empty($entity->revision_log->getValue()),
-      'log' => $revision_log,
-    ];
-    $log_column['date'] = [
-      'date' => $date,
-      '#prefix' => '<em>',
-      '#suffix' => '</em>',
-    ];
-
-    $row['log'] = \Drupal::service('renderer')->render($log_column) ;
-
-
-
-    return [
-      'data' => $row + parent::buildRow($entity),
+    $row = [
+      'data' => $entity->siteHistoryTableRow(),
       'class' => [
-        "color-" . $entity->stateClass()
-      ]
+        'site-revision',
+        'site-revision-row',
+        'state-' . $entity->stateClass(),
+        'color-' . $entity->stateClass(),
+      ],
     ];
+    return $row;
   }
-
 }

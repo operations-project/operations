@@ -110,8 +110,9 @@ class StateFormatter extends FormatterBase {
     $element['#attributes']['class'][] = 'state-' . $site->stateClass();
 
     if ($this->getSetting('show_reason')) {
-      $element[] = $site->reason->getValue();
+      $element['reason'] = $site->reason->getValue();
       $element['#open'] = $this->getSetting('reason_open');
+      $element['reason']['config_changes'] = site_config_changes_build($site);
     }
     else {
       $element['#type'] = 'fieldset';

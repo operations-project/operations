@@ -769,3 +769,22 @@ article.drupal-project.teaser .views-element-container .site-display.site-widget
 .site-display .composer-info-support ul li {
   display: inline;
 }
+
+table.config-changes-diff th {
+    background: none;
+}
+table.config-changes-diff tr {
+    background: none;
+    border: none;
+}
+table.config-changes-diff th,
+table.config-changes-diff td
+{
+    padding: .5rem;
+    height: auto;
+}
+
+table.config-changes-diff .diffchange {
+    font-weight: normal;
+    color: initial;
+}

@@ -108,6 +108,7 @@ class DrupalProject extends RevisionableContentEntityBase implements DrupalProje
       // If no owner has been set explicitly, make the anonymous user the owner.
       $this->setOwnerId(0);
     }
+
   }
 
   /**

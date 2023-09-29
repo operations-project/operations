@@ -19,7 +19,7 @@ site.history:
   path: '/admin/site/history'
   defaults:
     _title: 'Site History'
-    _controller: '\Drupal\site\Controller\SiteRevisionController::siteStatusHistoryWidget'
+    _controller: '\Drupal\site\Controller\SiteRevisionController::revisionHistory'
     type: 'default'
 
   requirements:
@@ -90,7 +90,7 @@ entity.site.version_history:
   path:  '/site/{site}/history'
   defaults:
     _title: 'Site History'
-    _controller: '\Drupal\site\Controller\SiteRevisionController::siteStatusHistoryWidget'
+    _controller: '\Drupal\site\Controller\SiteRevisionController::revisionHistory'
     type: 'default'
   options:
     parameters:

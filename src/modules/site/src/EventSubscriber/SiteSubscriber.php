@@ -60,6 +60,7 @@ class SiteSubscriber implements EventSubscriberInterface {
   public function onKernelResponse(ResponseEvent $event) {
     if ($this->config_changes) {
       try {
+        /** @var SiteEntity $entity */
         $entity = \Drupal::service('site.self')->getEntity();
 
         // If entity author does not exist, an error is thrown. This happens in automated testing.
@@ -67,6 +68,8 @@ class SiteSubscriber implements EventSubscriberInterface {
         if (empty($entity->uid->entity)) {
           $entity->set('uid', \Drupal::currentUser()->id());
         }
+
+        $entity->addData('config_changes', $this->config_changes);
 
         \Drupal::service('site.self')->setEntity($entity)->saveEntity(t('Configs :config updated at :url by ":user" (:ip)', [
           ':config' => implode(', ', array_keys($this->config_changes)),

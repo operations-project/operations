@@ -29,6 +29,7 @@ use Drupal\Core\Link;
 use Drupal\Core\Routing\RedirectDestinationTrait;
 use Drupal\Core\Routing\RouteMatch;
 use Drupal\Core\Serialization\Yaml;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\jsonapi\Controller\EntityResource;
 use Drupal\jsonapi\JsonApiResource\ResourceObject;
@@ -36,6 +37,7 @@ use Drupal\jsonapi\Normalizer\ResourceObjectNormalizer;
 use Drupal\site\Entity\Bundle\SiteManangerSiteBundle;
 use Drupal\site\Event\SitePreSaveEvent;
 use Drupal\site\JsonApiEntityTrait;
+use Drupal\site\SiteEntityHistoryTrait;
 use Drupal\site\SiteEntityTrait;
 use Drupal\site\SitePropertyBundleFieldDefinitionsTrait;
 use Drupal\site\SiteSelf;
@@ -122,6 +124,8 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
   use RedirectDestinationTrait;
   use SitePropertyBundleFieldDefinitionsTrait;
   use JsonApiEntityTrait;
+  use SiteEntityHistoryTrait;
+  use StringTranslationTrait;
 
   protected HeaderBag $headers;
 
@@ -146,6 +150,15 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
     return $this;
   }
 
+  /**
+   * Return a longer string describing this site.
+   * @return \Drupal\Core\StringTranslation\TranslatableMarkup|mixed|string|void|null
+   */
+  public function title()
+  {
+    return $this->get('site_title')->value
+      ?? parent::label();
+  }
 
   /**
    * @param $id string Site UUID. If not supplied, will load this site.
@@ -265,6 +278,9 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
    */
   static public function loadBySiteUrl($site_url) {
 
+    if (empty($site_url)) {
+      return;
+    }
     // Allow lookup without http.
     if (strpos($site_url, 'http') !== 0) {
       $site_url = "https://$site_url";
@@ -364,19 +380,9 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
   public function save()
   {
     // Always set a new revision with create timestamp set to Now. (After property generation/retrieval)
-    $this->setNewRevision();
-    $this->setRevisionCreationTime(\Drupal::time()->getCurrentTime());
-
-    $revisions = $this->revisionIds();
-    $current = array_shift($revisions);
-    $previous = array_shift($revisions);
-
-    // Clear out the old revision log message if it matches the one before it.
-    // @TODO: Encourage use of timestamps in revision log messages.
-    $storage = \Drupal::entityTypeManager()->getStorage('site');
-    $site_revision = $storage->loadRevision($previous);
-    if ($site_revision && $site_revision->getRevisionLogMessage() == $this->getRevisionLogMessage()) {
-      $this->setRevisionLogMessage('');
+    if (!$this->isNew()) {
+      $this->setNewRevision();
+      $this->setRevisionCreationTime(\Drupal::time()->getCurrentTime());
     }
 
 

@@ -20,6 +20,7 @@ use Drupal\node\NodeStorageInterface;
 use Drupal\site\Entity\SiteDefinition;
 use Drupal\site\Entity\SiteEntity;
 use Drupal\site\SiteEntityInterface;
+use Drupal\site\SiteInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -92,112 +93,12 @@ class SiteRevisionController extends EntityController {
   }
 
   /**
-   * Return a table of the last few reports.
-   * @return void
+   * Site Revisions list page.
+   * @return array
+   *    An array as expected by \Drupal\Core\Render\RendererInterface::render().
+   *
    */
-  public function siteStatusHistoryWidget() {
-    $site_entity = \Drupal::routeMatch()->getParameter('site');
-    if (!$site_entity) {
-      $site_entity = SiteEntity::loadSelf();
-      if (!$site_entity) {
-        \Drupal::messenger()->addWarning(t('There are no site reports yet.'));
-        return $this->redirect('site.about');
-      }
-    }
-    $site_entity->isLatestRevision();
-    $revisions = $site_entity->revisionIds();
-    arsort($revisions);
-    // @TODO: Implement a pager.
-    // $revisions = array_slice($revisions, 0, 5);
-    $build = [];
-    $storage = \Drupal::entityTypeManager()->getStorage('site');
-
-    if ($revisions) {
-      $rows = [];
-      foreach ($revisions as $vid) {
-        $site_revision = $storage->loadRevision($vid);
-        $date = $site_revision->isLatestRevision()?
-          $site_revision->changed->view([
-            'label' => 'hidden',
-            'type' => 'timestamp_ago'
-          ]):
-          $site_revision->revision_timestamp->view([
-            'label' => 'hidden',
-            'type' => 'timestamp_ago'
-          ]);
-
-        $state = $site_revision->state->view([
-          'label' => 'hidden'
-        ]);
-
-        $state['#attributes']['class'][] = $site_revision->stateClass();
-
-        $reason = [];
-        $reason_value = $site_revision->reason->getValue();
-        if ($reason_value) {
-          $reason['#type'] = 'details';
-          $reason['#title'] = t('Reason');
-          $reason['reason'] = $reason_value;
-        }
-        else {
-          $reason = [];
-        }
-
-        $drupal_version = $site_revision->drupal_version->view([
-          'label' => 'hidden',
-        ]);
-
-        $php_version = $site_revision->php_version->view([
-          'label' => 'hidden',
-        ]);
-
-        $http_status =  $site_revision->http_status->view([
-          'label' => 'hidden',
-        ]);
-        $row = [];
-        $row[] = \Drupal::service('renderer')->render($state);
-        $row[] = \Drupal::service('renderer')->render($http_status);
-        $row[] = $site_revision->toLink(null, 'revision');
-        $row[] = Link::fromTextAndUrl($site_revision->site_uri->value, Url::fromUri($site_revision->site_uri->value), [
-          'attributes' => ['target' => '_blank'],
-        ]);
-        $row[] = \Drupal::service('renderer')->render($drupal_version);
-        $row[] = \Drupal::service('renderer')->render($php_version);
-        $row[] = \Drupal::service('renderer')->render($date);
-        $row[] = \Drupal::service('renderer')->render($reason);
-        $row[] = $site_revision->get('revision_log')->value;
-        $row[] = $site_revision->get('vid')->value;
-        $rows[] = [
-          'data' => $row,
-          'class' => [
-            'color-' . $site_revision->stateClass(),
-          ],
-          'valign' => 'top',
-        ];
-      }
-
-      $build = [
-        '#type' => 'table',
-        '#rows' => $rows,
-        '#header' => [
-          'State',
-          'HTTP Status',
-          'Title',
-          'URL',
-          'Drupal',
-          'PHP',
-          'Date',
-          'State Reason',
-          'Log',
-          'Report #'
-        ],
-      ];
-    }
-    else {
-      \Drupal::messenger()->addWarning('No historical reports. Click "Save Site Record" to save a historical report.');
-      $build = [];
-    }
-    return $build;
-
+  public function revisionHistory(SiteInterface $site = null) {
+    return $site ? $site->siteHistory() : SiteEntity::loadSelf()->siteHistory();
   }
 }

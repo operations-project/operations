@@ -54,9 +54,10 @@ class SiteForm extends ContentEntityForm
       '#attached' => [
 //        'library' => ['node/drupal.node'],
       ],
-      '#weight' => 10,
+      '#weight' => -10,
       '#optional' => TRUE,
     ];
+    $form['label']['#group'] = 'site_info';
     $form['hostname']['#group'] = 'site_info';
     $form['description']['#group'] = 'site_info';
     $form['site_title']['#group'] = 'site_info';
@@ -69,11 +70,9 @@ class SiteForm extends ContentEntityForm
     if (empty($this->entity->hostname->value)) {
       $form['hostname']['widget'][0]['value']['#required'] = false;
     }
-
-    // Site API information.
-    $form['site_api'] = [
+    $form['api'] = [
       '#type' => 'details',
-      '#title' => $this->t('Site API'),
+      '#title' => t('Site API'),
       '#group' => 'advanced',
       '#attributes' => [
         'class' => ['site-form-api'],
@@ -81,15 +80,16 @@ class SiteForm extends ContentEntityForm
       '#attached' => [
 //        'library' => ['node/drupal.node'],
       ],
+      '#weight' => 10,
       '#optional' => TRUE,
     ];
 
-    $form['api_url']['#group'] = 'site_api';
-    $form['api_key']['#group'] = 'site_api';
+    $form['api_key']['#group'] = 'api';
+    $form['api_url']['#group'] = 'api';
 
     if ($this->entity->bundle() == 'site_manager') {
-      $form['site_api']['#title'] = t('Site Manager API');
-      $form['site_api']['#description'] = t('To connect to this Site Manager, generate an API key and enter it below.');
+      $form['api']['#title'] = t('Site Manager API');
+      $form['api']['#description'] = t('To connect to this Site Manager, generate an API key and enter it below.');
     }
 
     return $form;
@@ -101,6 +101,16 @@ class SiteForm extends ContentEntityForm
    */
   public function validateForm(array &$form, FormStateInterface $form_state)
   {
+    // Set value of Drupal Site Name if there is none.
+    if ($this->entity->bundle() == 'drupal' && empty($form_state->getValue('drupal_site_name')[0]['value']) && !empty($form_state->getValue('site_uri')[0]['value'])) {
+      $site = $this->buildEntity($form, $form_state);
+
+      // If there is no drupal site name, we will have to derive it from HTML site_title.
+      $site->getRemote();
+      if ($site->get('site_title') && !empty($site->get('site_title')->value)) {
+        $form_state->setValue('drupal_site_name', $site->get('site_title')->value);
+      }
+    }
 
     // Set value of primary hostname if there is none.
     if (empty($form_state->getValue('hostname')[0]['value']) && !empty($form_state->getValue('site_uri')[0]['value'])) {
@@ -108,13 +118,13 @@ class SiteForm extends ContentEntityForm
       $form_state->setValue(['hostname',0,'value'], parse_url($url, PHP_URL_HOST));
     }
 
+    // Set Form State UUID from entity validation.
+    if (!empty($this->entity->get('uuid')->value) && $this->entity->get('uuid')->value != $form_state->getValue('uuid')) {
+      $form_state->setValue('uuid', $this->entity->get('uuid')->value);
+    }
+
     /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
     $entity = parent::validateForm($form, $form_state);
-
-    // Set Form State UUID from entity validation.
-    if (!empty($entity->get('uuid')->value) && $entity->get('uuid')->value != $form_state->getValue('uuid')) {
-      $form_state->setValue('uuid', $entity->get('uuid')->value);
-    }
 
     return $entity;
   }

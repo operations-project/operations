@@ -79,20 +79,4 @@ function site_manager_entity_type_build(array &$entity_types) {
  */
 function site_manager_form_site_form_alter(array &$form, $form_state) {
     // Remote Site Connection fields.
-    $form['api'] = [
-      '#type' => 'details',
-      '#title' => t('Site API'),
-      '#group' => 'advanced',
-      '#attributes' => [
-        'class' => ['site-form-api'],
-      ],
-      '#attached' => [
-//        'library' => ['node/drupal.node'],
-      ],
-      '#weight' => -80,
-      '#optional' => TRUE,
-    ];
-
-    $form['api_key']['#group'] = 'api';
-    $form['api_url']['#group'] = 'api';
 }

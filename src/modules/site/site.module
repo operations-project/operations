@@ -210,7 +210,6 @@ function template_preprocess_site(array &$variables) {
       'settings' => [
       ]
     ]);
-    $changed['changed']['config_changes'] = site_config_changes_build($site);
 
 
     $changed['changed']['data'] = [
@@ -391,7 +390,7 @@ function template_preprocess_site(array &$variables) {
   $build['content'] += $variables['content'] ?? [];
 
   // Composer Info
-  $data = $site->data->get(0)->getValue();
+  $data = $site->data->value[0]?? [];
   if (!empty($data['composer_json']['contents']) && $variables['view_mode'] != 'teaser') {
     $composer = $data['composer_json']['contents'];
     $build['composer'] = [
@@ -589,15 +588,10 @@ function site_config_changes_build($entity) {
   if (!empty($data['config_changes'])) {
     $build['config_changes'] = [
       '#title' => t('Config Changes'),
-      '#type' => 'details',
-      '#attributes' => ['class' => ['color-info']]
+      '#type' => 'item',
     ];
 
     foreach ($data['config_changes'] as $config_item => $config_changes) {
-      $build['config_changes'][$config_item] = [
-        '#type' => 'item',
-        '#title' => $config_item,
-      ];
       $original = Yaml::encode($config_changes['original'], 2, 4);
       $original_lines = explode(PHP_EOL, $original);
 
@@ -614,14 +608,15 @@ function site_config_changes_build($entity) {
       ]);
       $date = \Drupal::service('renderer')->render($view[0]);
 
-      $build['config_changes'][$config_item]['table'] = [
+      $build['config_changes'][$config_item] = [
         '#attached' => [
           'library' => ['system/diff']
         ],
+        '#caption' => $config_item,
         '#type' => 'table',
         '#attributes' => [
           'class' => [
-            'diff',
+            'config-changes-diff diff',
           ],
         ],
         '#header' => [
@@ -640,6 +635,7 @@ function site_config_changes_build($entity) {
       ];
     }
 
+    $build['config_changes']['#description_display'] = 'before';
     $build['config_changes']['#description'] = t('Changes made by @user (:ip) at @url on @date.', [
       '@user' => $account ? $account->toLink()->toString() :
         $config_changes['user'] . ' (no user found)',

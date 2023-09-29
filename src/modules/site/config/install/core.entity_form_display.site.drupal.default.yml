@@ -40,6 +40,16 @@ content:
       rows: 5
       placeholder: ''
     third_party_settings: {  }
+  drupal_project:
+    type: entity_reference_autocomplete
+    weight: 10
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
   hostname:
     type: string_textfield
     weight: 1
@@ -90,5 +100,4 @@ content:
       placeholder: ''
     third_party_settings: {  }
 hidden:
-  drupal_project: true
   state: true
