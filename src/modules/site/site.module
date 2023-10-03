@@ -189,7 +189,7 @@ function template_preprocess_site(array &$variables) {
       '#title' => t('Site Report saved on @date', [
         '@date' => \Drupal::service('renderer')->render($date_time),
       ]),
-      '#attributes' => ['class' => ['color-info', 'site-timestamp']],
+      '#attributes' => ['class' => ['site-timestamp']],
       'field' => $site->revision_timestamp->view([
         'type'=> 'timestamp_ago',
         'label' => 'hidden',
@@ -216,7 +216,6 @@ function template_preprocess_site(array &$variables) {
       '#type' => 'details',
       '#title' => t('Site Data'),
     ];
-    $changed['changed']['data']['#attributes']['class'][] = 'color-info';
 
     $changed['changed']['data']['data'] = [
       '#value' => \Drupal\Component\Serialization\Yaml::encode($site->get('data')->getValue(), 2,4),
@@ -471,7 +470,7 @@ function template_preprocess_site(array &$variables) {
       ]
     ]);
 
-    $build['state_widget']['#attributes']['class'][] = 'color-' . $site->stateClass();
+//    $build['state_widget']['#attributes']['class'][] = 'color-' . $site->stateClass();
   }
   $variables['content'] = [
     'build' => $build
