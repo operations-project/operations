@@ -93,8 +93,11 @@ class DrupalProjectForm extends ContentEntityForm {
     }
 
     // If there are no sites with the project's canonical URL, create one.
-    $canonical_site = SiteEntity::loadBySiteUrl($form_state->getValue('canonical_url')[0]['value']);
-    if ($form_state->getValue('canonical_url') && !$canonical_site) {
+    // $canonical_site = SiteEntity::loadBySiteUrl($form_state->getValue('canonical_url')[0]['value']);
+
+    // @TODO: Strange things happened when trying to match an existing site. Just create a new one.
+//    if ($form_state->getValue('canonical_url') && !$canonical_site) {
+    if ($form_state->getValue('canonical_url')) {
       $canonical_site = SiteEntity::create([
         'site_type' => 'drupal',
         'site_uri' => $form_state->getValue('canonical_url'),
@@ -103,21 +106,21 @@ class DrupalProjectForm extends ContentEntityForm {
       ]);
       $canonical_site->save();
     }
-    elseif ($canonical_site && empty($canonical_site->drupalProject())) {
-      $canonical_site->set('drupal_project', $form_state->getValue('drupal_site_uuid'));
-      $canonical_site->set('drupal_site_uuid', $form_state->getValue('drupal_site_uuid'));
-      $canonical_site->save();
-      \Drupal::messenger()->addStatus(t("The site entity @site with that canonical URL exists, so it was automatically added to the project.", [
-        '@site' => $canonical_site->toLink()->toString(),
-      ]));
-    }
-    elseif ($canonical_site) {
-      \Drupal::messenger()->addWarning(t('A site entity with a URL that matches the project canonical URL exists, but is already associated with the Drupal project @project. Check the site @link.', [
-        '@project' => $canonical_site->drupalProject()->toLink()->toString(),
-        '@link' => $canonical_site->toLink()->toString(),
-      ]));
-      $canonical_site->save();
-    }
+//    elseif ($canonical_site && empty($canonical_site->drupalProject())) {
+//      $canonical_site->set('drupal_project', $form_state->getValue('drupal_site_uuid'));
+//      $canonical_site->set('drupal_site_uuid', $form_state->getValue('drupal_site_uuid'));
+//      $canonical_site->save();
+//      \Drupal::messenger()->addStatus(t("The site entity @site with that canonical URL exists, so it was automatically added to the project.", [
+//        '@site' => $canonical_site->toLink()->toString(),
+//      ]));
+//    }
+//    elseif ($canonical_site) {
+//      \Drupal::messenger()->addWarning(t('A site entity with a URL that matches the project canonical URL exists, but is already associated with the Drupal project @project. Check the site @link.', [
+//        '@project' => $canonical_site->drupalProject()->toLink()->toString(),
+//        '@link' => $canonical_site->toLink()->toString(),
+//      ]));
+//      $canonical_site->save();
+//    }
 
     // Set drupalproject drupal site name from site.
     if ($canonical_site && empty($form_state->getValue('drupal_site_name')[0]['value']) && !empty($canonical_site->site_title->value)) {
