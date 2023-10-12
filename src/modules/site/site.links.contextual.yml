@@ -15,13 +15,13 @@ entity.site.delete_form:
   title: Delete
   weight: 10
 
-entity.drupal_project.edit_form:
-  route_name: entity.drupal_project.edit_form
+entity.project.edit_form:
+  route_name: entity.project.edit_form
   group: drupal_project
   title: Edit
 
-entity.drupal_project.delete_form:
-  route_name: entity.drupal_project.delete_form
+entity.project.delete_form:
+  route_name: entity.project.delete_form
   group: drupal_project
   title: Delete
   weight: 10

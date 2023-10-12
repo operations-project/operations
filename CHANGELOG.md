@@ -4,6 +4,20 @@ Drupal Operations
 Changelog
 ---------
 
+# 2.1.0-beta1
+## October 12, 2023
+
+Operations 2.1.x: Project Entities
+
+- Created project and project type entities.
+- Moved functionality around `drupal_project` entity type to new `project` entity type, with `drupal` bundle.
+- Created `project` field on all sites so all sites can be grouped.
+- Refactored views, view modes, etc for new entity.
+- Created bundle classes for projects: WebProject includes URL, CodeProject includes Git Remote, Drupal project includes Site UUID.
+- Added upgrade tests.
+
+This release changes entity structure, so we bumped the version to 2.1.0.
+
 # 2.0.0-beta13
 ## September 29, 2023
 

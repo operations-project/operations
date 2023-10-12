@@ -65,7 +65,7 @@ class DrupalSiteBundle extends PhpSiteBundle {
    */
   public function isCanonical($url = null)
   {
-    $canonical_url = $this->drupal_project->entity->canonical_url->value ?? null;
+    $canonical_url = $this->project->entity->canonical_url->value ?? null;
     if (empty($canonical_url)) {
       return false;
     }
@@ -195,8 +195,8 @@ class DrupalSiteBundle extends PhpSiteBundle {
             ], 'site_api_404');
             break;
           case 403:
-            if ($this->get('drupal_project')->first()) {
-              $project = $this->drupalProject();
+            if ($this->get('project')->first()) {
+              $project = $this->project();
               $message = t('Site API was found, but the request was denied. Check the API Key in the <a href=":site_url">site</a> or <a href=":project_url">project</a>.', [
                 ':site_url' => $this->isNew()? '#': $this->toUrl('edit-form', ['absolute' => true])->toString(),
                 ':project_url' => $project->isNew()? '#': $project->toUrl('edit-form', ['absolute' => true])->toString(),
@@ -261,9 +261,9 @@ class DrupalSiteBundle extends PhpSiteBundle {
     if (!empty($site->get('api_key'))) {
       return $site->get('api_key')->value;
     }
-    elseif (!empty($site->get('drupal_project'))) {
+    elseif (!empty($site->get('project'))) {
       $project = $site
-        ->get('drupal_project')
+        ->get('project')
         ->first()
         ->get('entity')
         ->getTarget()

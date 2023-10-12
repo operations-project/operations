@@ -12,6 +12,8 @@ use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Serialization\Yaml;
 use Drupal\Core\Url;
+use Drupal\site\Entity\Project;
+use Drupal\site\Entity\ProjectBundle\DrupalProjectBundle;
 use Drupal\site\Entity\Site;
 use Drupal\site\Entity\SiteEntity;
 use Drupal\site\Entity\SiteType;
@@ -83,6 +85,9 @@ function site_theme() {
       'render element' => 'elements',
     ],
     'drupal_project' => [
+      'render element' => 'elements',
+    ],
+    'project' => [
       'render element' => 'elements',
     ],
     'site_definition' => [
@@ -320,7 +325,7 @@ function template_preprocess_site(array &$variables) {
 
   if ($site->isCanonical()) {
     $note = t('This is the canonical environment for Drupal project :project.', [
-      ':project' => $site->drupal_project->entity->label(),
+      ':project' => $site->project->entity->label(),
     ]);
     $build['header']['title']['link']['#attributes']['title'] = $note;
     $build['header']['title']['link']['#attributes']['class'][] = 'canonical-site';
@@ -342,11 +347,11 @@ function template_preprocess_site(array &$variables) {
     ];
   }
 
-  if (!empty($site->drupal_project->entity)) {
-    $build['site_subheader']['drupal_project'] =  $site->drupal_project->view([
+  if (!empty($site->project->entity)) {
+    $build['site_subheader']['project'] =  $site->project->view([
       'label' => 'hidden',
     ]);
-    $build['site_subheader']['drupal_project'][0]['#attributes']['title'] = t('Drupal Project');
+    $build['site_subheader']['project'][0]['#attributes']['title'] = t('Drupal Project');
   }
 
   $build['urls'] = [
@@ -520,17 +525,17 @@ function template_preprocess_site_widget(array &$variables)
  *     fields attached to the entity.
  *   - attributes: HTML attributes for the containing element.
  */
-function template_preprocess_drupal_project(array &$variables)
+function template_preprocess_project(array &$variables)
 {
-  /** @var DrupalProject $project */
-  $project = $variables['elements']['#drupal_project'];
+  /** @var Project $project */
+  $project = $variables['elements']['#project'];
   $variables['view_mode'] = $variables['elements']['#view_mode'];
   foreach (Element::children($variables['elements']) as $key) {
     $variables['content'][$key] = $variables['elements'][$key];
   }
 
 
-  $variables['content']['drupal_site_name'][0]['operations'] = [
+  $variables['content']['label'][0]['operations'] = [
     '#type' => 'html_tag',
     '#tag' => 'div',
     '#attributes' => ['class' => 'site-operations'],
@@ -540,13 +545,13 @@ function template_preprocess_drupal_project(array &$variables)
     ],
   ];
 
-  if (!empty($project->canonical_url->getValue())) {
-    $variables['content']['drupal_site_name'][0]['url'] = $project->canonical_url->view([
+  if (!empty($project->canonical_url->value)) {
+    $variables['content']['label'][0]['url'] = $project->canonical_url->view([
       'label' => 'hidden',
     ]);
   }
   else {
-    $variables['content']['drupal_site_name'][0]['url'] = [
+    $variables['content']['label'][0]['url'] = [
       '#type' => 'html_tag',
       '#tag' => 'em',
       '#content' => t('There is no canonical URL set for this project.'),
@@ -559,12 +564,12 @@ function template_preprocess_drupal_project(array &$variables)
   // If teaser, wrap with a box.
   if ($variables['view_mode'] == 'teaser') {
 
-    if (!empty($variables['content']['drupal_project_environments_entity_view_1'])){
-      $variables['content']['drupal_project_environments_entity_view_1'] = [
+    if (!empty($variables['content']['project_sites_entity_view_1'])){
+      $variables['content']['project_sites_entity_view_1'] = [
         '#weight' => 10,
         '#type' => 'container',
-        '#attributes' => ['class' => 'field drupal_project_environments_entity_view_1'],
-        'field' => $variables['content']['drupal_project_environments_entity_view_1'],
+        '#attributes' => ['class' => 'field project_sites_entity_view_1'],
+        'field' => $variables['content']['project_sites_entity_view_1'],
       ];
     }
     $variables['content'] = [
@@ -739,6 +744,9 @@ function site_entity_bundle_info_alter(array &$bundles): void {
   if (isset($bundles['site']['site_manager'])) {
     $bundles['site']['site_manager']['class'] = \Drupal\site\Entity\Bundle\SiteManangerSiteBundle::class;
   }
+  if (isset($bundles['project']['drupal'])) {
+    $bundles['project']['drupal']['class'] = DrupalProjectBundle::class;
+  }
 }
 
 
@@ -755,9 +763,25 @@ function site_entity_bundle_info_alter(array &$bundles): void {
 function site_entity_bundle_field_info(\Drupal\Core\Entity\EntityTypeInterface $entity_type, $bundle, array $base_field_definitions) {
   $fields = [];
   $entity_class = $entity_type->getClass();
-  if (method_exists($entity_class, 'propertyFieldDefinitions')) {
-    $fields = $entity_class::propertyFieldDefinitions($entity_type, $bundle, $base_field_definitions);
-    foreach ($fields as $field) {
+//
+//  /** @var \Drupal\Core\Entity\EntityTypeBundleInfo $service */
+//  $service = \Drupal::service('entity_type.bundle.info');
+//  $bundles = $service->getAllBundleInfo();
+//
+//  if (!empty($bundles[$entity_type->id()][$bundle]['class'])) {
+//    $entity_class = $bundles[$entity_type->id()][$bundle]['class'];
+//  }
+
+  // Get this bundle's bundle info.
+  $bundles = \Drupal::service('entity_type.bundle.info')->getBundleInfo($entity_type->id());
+  $this_bundle_class = $bundles[$bundle]['class'] ?? $entity_class;
+
+  if (method_exists($this_bundle_class, 'propertyFieldDefinitions')) {
+    /** @var \Drupal\Core\Field\BaseFieldDefinition[] $fields */
+    $fields = $this_bundle_class::propertyFieldDefinitions($entity_type, $bundle, $base_field_definitions);
+    foreach ($fields as $field_name => $field) {
+      $field->setTargetEntityTypeId($entity_type->id());
+      $field->setName($field_name);
       \Drupal::service('field_definition.listener')->onFieldDefinitionCreate($field);
     }
   }

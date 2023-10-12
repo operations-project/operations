@@ -62,3 +62,16 @@ bypass site action user login password requirement:
 access all site actions:
   title: access all site actions
   description: Allow user to execute any site action.
+
+administer project types:
+  title: 'Administer project types'
+  description: 'Maintain the types of project entity.'
+  restrict access: true
+delete project:
+  title: Delete project
+create project:
+  title: Create project
+view project:
+  title: View project
+edit project:
+  title: Edit project

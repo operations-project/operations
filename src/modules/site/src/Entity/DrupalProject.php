@@ -65,11 +65,11 @@ use Drupal\user\EntityOwnerTrait;
  *   },
  *   links = {
  *     "collection" = "/admin/content/drupal-project",
- *     "add-form" = "/project/add/{drupal_project_type}",
- *     "add-page" = "/project/add",
- *     "canonical" = "/project/{drupal_project}",
- *     "edit-form" = "/project/{drupal_project}/edit",
- *     "delete-form" = "/project/{drupal_project}/delete",
+ *     "add-form" = "/drupal_project/add/{drupal_project_type}",
+ *     "add-page" = "/drupal_project/add",
+ *     "canonical" = "/drupal_project/{drupal_project}",
+ *     "edit-form" = "/drupal_project/{drupal_project}/edit",
+ *     "delete-form" = "/drupal_project/{drupal_project}/delete",
  *   },
  *   bundle_entity_type = "drupal_project_type",
  *   field_ui_base_route = "entity.drupal_project_type.edit_form",
@@ -80,7 +80,6 @@ class DrupalProject extends RevisionableContentEntityBase implements DrupalProje
   use EntityChangedTrait;
   use EntityOwnerTrait;
   use RedirectDestinationTrait;
-  use SitePropertyBundleFieldDefinitionsTrait;
   use JsonApiEntityTrait;
 
   /**

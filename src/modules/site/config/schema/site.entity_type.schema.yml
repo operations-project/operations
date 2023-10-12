@@ -44,3 +44,16 @@ site.drupal_project_type.*:
       label: 'Label'
     uuid:
       type: string
+
+site.project_type.*:
+  type: config_entity
+  label: 'Project type config'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: label
+      label: 'Label'
+    uuid:
+      type: string

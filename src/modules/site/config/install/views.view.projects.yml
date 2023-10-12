@@ -1,18 +1,17 @@
-uuid: b0862431-46e6-44af-93ab-fc5c8cac48e4
 langcode: en
 status: true
 dependencies:
   config:
-    - core.entity_view_mode.drupal_project.teaser
+    - core.entity_view_mode.project.teaser
   module:
     - site
-id: drupal_projects
-label: 'Drupal Projects'
+id: projects
+label: Projects
 module: views
 description: ''
 tag: ''
-base_table: operations_site_drupal_project_fields
-base_field: revision_id
+base_table: operations_project_field_data
+base_field: id
 display:
   default:
     id: default
@@ -20,18 +19,17 @@ display:
     display_plugin: default
     position: 0
     display_options:
-      title: 'Drupal Projects'
+      title: Projects
       fields:
-        drupal_site_uuid:
-          id: drupal_site_uuid
-          table: operations_site_drupal_project_fields
-          field: drupal_site_uuid
+        rendered_entity:
+          id: rendered_entity
+          table: operations_project
+          field: rendered_entity
           relationship: none
           group_type: group
           admin_label: ''
-          entity_type: null
-          entity_field: drupal_site_uuid
-          plugin_id: field
+          entity_type: project
+          plugin_id: rendered_entity
           label: ''
           exclude: false
           alter:
@@ -65,7 +63,7 @@ display:
           element_class: ''
           element_label_type: ''
           element_label_class: ''
-          element_label_colon: true
+          element_label_colon: false
           element_wrapper_type: ''
           element_wrapper_class: ''
           element_default_classes: true
@@ -73,19 +71,7 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          click_sort_column: value
-          type: string
-          settings: {  }
-          group_column: value
-          group_columns: {  }
-          group_rows: true
-          delta_limit: 0
-          delta_offset: 0
-          delta_reversed: false
-          delta_first_last: false
-          multi_type: separator
-          separator: ', '
-          field_api_classes: false
+          view_mode: teaser
       pager:
         type: mini
         options:
@@ -121,47 +107,13 @@ display:
         type: tag
         options: {  }
       empty: {  }
-      sorts:
-        drupal_site_name:
-          id: drupal_site_name
-          table: operations_site_drupal_project_fields
-          field: drupal_site_name
-          relationship: none
-          group_type: group
-          admin_label: ''
-          entity_type: drupal_project
-          entity_field: drupal_site_name
-          plugin_id: standard
-          order: ASC
-          expose:
-            label: 'Drupal Site Name'
-            field_identifier: drupal_site_name
-          exposed: true
-        revision_timestamp:
-          id: revision_timestamp
-          table: operations_site_drupal_project_revision
-          field: revision_timestamp
-          relationship: none
-          group_type: group
-          admin_label: ''
-          entity_type: drupal_project
-          entity_field: revision_timestamp
-          plugin_id: date
-          order: DESC
-          expose:
-            label: 'Last Update'
-            field_identifier: revision_timestamp
-          exposed: true
-          granularity: second
+      sorts: {  }
       arguments: {  }
       filters: {  }
       style:
         type: default
       row:
-        type: 'entity:drupal_project'
-        options:
-          relationship: none
-          view_mode: teaser
+        type: fields
       query:
         type: views_query
         options:
@@ -177,12 +129,11 @@ display:
     cache_metadata:
       max-age: -1
       contexts:
-        - 'languages:language_content'
         - 'languages:language_interface'
         - url.query_args
-        - 'url.query_args:sort_by'
-        - 'url.query_args:sort_order'
-      tags: {  }
+      tags:
+        - 'config:core.entity_view_display.project.drupal.default'
+        - 'config:core.entity_view_display.project.drupal.teaser'
   page_1:
     id: page_1
     display_title: Page
@@ -201,16 +152,15 @@ display:
         parent: ''
         context: '0'
       tab_options:
-        type: normal
+        type: tab
         title: Projects
         description: ''
         weight: 0
     cache_metadata:
       max-age: -1
       contexts:
-        - 'languages:language_content'
         - 'languages:language_interface'
         - url.query_args
-        - 'url.query_args:sort_by'
-        - 'url.query_args:sort_order'
-      tags: {  }
+      tags:
+        - 'config:core.entity_view_display.project.drupal.default'
+        - 'config:core.entity_view_display.project.drupal.teaser'

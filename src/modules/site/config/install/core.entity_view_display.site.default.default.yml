@@ -33,6 +33,14 @@ content:
     third_party_settings: {  }
     weight: -98
     region: content
+  project:
+    label: above
+    type: string
+    region: content
+    weight: -96
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
   site_root:
     label: above
     type: string

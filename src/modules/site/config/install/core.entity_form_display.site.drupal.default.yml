@@ -40,13 +40,11 @@ content:
       rows: 5
       placeholder: ''
     third_party_settings: {  }
-  drupal_project:
-    type: entity_reference_autocomplete
-    weight: 10
+  drupal_site_uuid:
+    type: string_textfield
     region: content
+    weight: 26
     settings:
-      match_operator: CONTAINS
-      match_limit: 10
       size: 60
       placeholder: ''
     third_party_settings: {  }
@@ -65,6 +63,16 @@ content:
     settings:
       size: 60
       placeholder: ''
+    third_party_settings: {  }
+  project:
+    type: entity_reference_autocomplete
+    settings:
+      match_operator: CONTAINS
+      size: 60
+      placeholder: ''
+      match_limit: 10
+    weight: 15
+    region: content
     third_party_settings: {  }
   site_title:
     type: string_textfield

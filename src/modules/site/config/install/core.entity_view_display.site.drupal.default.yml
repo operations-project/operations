@@ -1,4 +1,3 @@
-uuid: 68858448-e299-439d-83ec-e1b34a0e172e
 langcode: en
 status: true
 dependencies:
@@ -100,6 +99,14 @@ content:
     third_party_settings: {  }
     weight: 3
     region: content
+  project:
+    label: above
+    type: string
+    region: content
+    weight: 22
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
   site_root:
     label: above
     type: string
@@ -114,7 +121,6 @@ hidden:
   created: true
   data: true
   description: true
-  drupal_project: true
   drupal_site_uuid: true
   hostname: true
   http_status: true

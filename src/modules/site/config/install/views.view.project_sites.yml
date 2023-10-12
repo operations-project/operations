@@ -1,4 +1,3 @@
-uuid: 197a1d95-e4f2-4bc9-b7fe-5329ca38ae3c
 langcode: en
 status: true
 dependencies:
@@ -7,10 +6,8 @@ dependencies:
   module:
     - eva
     - site
-_core:
-  default_config_hash: 0wG3yyW90jir9EPhLO4F-1_lMNyiwF6FTqG7pCfTMH8
-id: drupal_project_environments
-label: 'Drupal Site Environments'
+id: project_sites
+label: 'Project Sites'
 module: views
 description: ''
 tag: ''
@@ -128,15 +125,15 @@ display:
           exposed: false
           granularity: second
       arguments:
-        drupal_project:
-          id: drupal_project
+        project:
+          id: project
           table: operations_site
-          field: drupal_project
+          field: project
           relationship: none
           group_type: group
           admin_label: ''
           entity_type: site
-          entity_field: drupal_project
+          entity_field: project
           plugin_id: numeric
           default_action: default
           exception:
@@ -159,7 +156,7 @@ display:
             format: default_summary
           specify_validation: true
           validate:
-            type: 'entity:drupal_project'
+            type: 'entity:project'
             fail: 'not found'
           validate_options:
             bundles: {  }
@@ -204,30 +201,7 @@ display:
         - 'config:core.entity_view_display.site.default.default'
         - 'config:core.entity_view_display.site.drupal.default'
         - 'config:core.entity_view_display.site.drupal.teaser'
-  drupal_project_environments:
-    id: drupal_project_environments
-    display_title: EVA
-    display_plugin: entity_view
-    position: 1
-    display_options:
-      title: Environments
-      display_extenders: {  }
-      entity_type: drupal_project
-      bundles:
-        - default
-      show_title: false
-      argument_mode: id
-      default_argument: null
-    cache_metadata:
-      max-age: -1
-      contexts:
-        - 'languages:language_interface'
-        - url
-        - url.query_args
-      tags:
-        - 'config:core.entity_view_display.site.default.default'
-        - 'config:core.entity_view_display.site.drupal.default'
-        - 'config:core.entity_view_display.site.drupal.teaser'
+        - 'config:core.entity_view_display.site.site_manager.default'
   entity_view_1:
     id: entity_view_1
     display_title: 'Site Widgets'
@@ -291,9 +265,9 @@ display:
         fields: false
       display_description: ''
       display_extenders: {  }
-      entity_type: drupal_project
+      entity_type: project
       bundles:
-        - default
+        - drupal
       show_title: false
       argument_mode: id
       default_argument: null
@@ -307,3 +281,28 @@ display:
         - 'config:core.entity_view_display.site.default.default'
         - 'config:core.entity_view_display.site.drupal.default'
         - 'config:core.entity_view_display.site.drupal.teaser'
+        - 'config:core.entity_view_display.site.site_manager.default'
+  project_environments:
+    id: project_environments
+    display_title: EVA
+    display_plugin: entity_view
+    position: 1
+    display_options:
+      title: Environments
+      display_extenders: {  }
+      entity_type: project
+      bundles: {  }
+      show_title: false
+      argument_mode: id
+      default_argument: null
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_interface'
+        - url
+        - url.query_args
+      tags:
+        - 'config:core.entity_view_display.site.default.default'
+        - 'config:core.entity_view_display.site.drupal.default'
+        - 'config:core.entity_view_display.site.drupal.teaser'
+        - 'config:core.entity_view_display.site.site_manager.default'

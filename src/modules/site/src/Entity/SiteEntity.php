@@ -723,6 +723,28 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
       ->setRequired(FALSE)
       ->setDisplayConfigurable('view', TRUE)
     ;
+    $fields['project'] = BaseFieldDefinition::create('entity_reference')
+      ->setLabel(t('Project'))
+      ->setDescription(t('The project that this site belongs to.'))
+      ->setRevisionable(TRUE)
+      ->addConstraint('ProjectExistsConstraint')
+      ->setSetting('target_type', 'project')
+      ->setDisplayConfigurable('view', TRUE)
+      ->setDisplayOptions('view', [
+        'label' => 'above',
+        'type' => 'string',
+      ])
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayOptions('form', [
+        'type' => 'entity_reference_autocomplete',
+        'settings' => [
+          'match_operator' => 'CONTAINS',
+          'size' => 60,
+          'placeholder' => '',
+        ],
+        'weight' => 15,
+      ])
+    ;
     return $fields;
   }
 
@@ -851,8 +873,8 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
     // Load all Site Manager nodes.
     $managers = $this->loadSiteManagers();
 
-    // Include drupal_project
-    $query = "?include=drupal_project";
+    // Include project
+    $query = "?include=project";
 
     foreach ($managers as $site_manager) {
 
@@ -1250,5 +1272,18 @@ class SiteEntity extends RevisionableContentEntityBase implements SiteEntityInte
       }
     }
     return $items;
+  }
+
+  /**
+   * @return \Drupal\site\Entity\ProjectBundle\DrupalProjectBundle
+   * @throws \Drupal\Core\TypedData\Exception\MissingDataException
+   */
+  public function project() {
+    if (!empty($this->project->entity)) {
+      return $this->project->entity;
+    }
+    elseif ($this->isSelf()) {
+      return \Drupal\site\Entity\ProjectBundle\DrupalProjectBundle::loadSelf();
+    }
   }
 }

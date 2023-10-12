@@ -92,6 +92,14 @@ content:
     third_party_settings: {  }
     weight: 3
     region: content
+  project:
+    label: above
+    type: string
+    region: content
+    weight: 11
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
   site_root:
     label: above
     type: string
@@ -106,7 +114,6 @@ hidden:
   created: true
   data: true
   description: true
-  drupal_project: true
   drupal_site_uuid: true
   hostname: true
   http_status: true

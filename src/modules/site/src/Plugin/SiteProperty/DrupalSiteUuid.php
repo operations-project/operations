@@ -17,7 +17,6 @@ use Drupal\site\SitePropertyPluginBase;
  *   name = "drupal_site_uuid",
  *   site_bundles = {
  *     "Drupal\site\Entity\Bundle\DrupalSiteBundle",
- *     "Drupal\site_manager\Entity\SiteGroup\DrupalSiteGroup",
  *   },
  *   label = @Translation("Drupal Site UUID"),
  *   description = @Translation("The unique identifyer of this Drupal site.")
@@ -37,23 +36,28 @@ class DrupalSiteUuid extends SitePropertyPluginBase {
       ->setLabel(t('Drupal Site UUID'))
       ->setRevisionable(TRUE)
       ->setDisplayConfigurable('view', TRUE)
-    ;
-    $fields['drupal_project'] = BaseFieldDefinition::create('entity_reference')
-      ->setLabel(t('Drupal Project'))
-      ->setRevisionable(TRUE)
-      ->addConstraint('SiteDrupalProjectExists')
-      ->setSetting('target_type', 'drupal_project')
-      ->setDisplayConfigurable('view', TRUE)
-      ->setDisplayOptions('view', [
-        'label' => 'above',
-        'type' => 'string',
-      ])
-      ->setDisplayConfigurable('form', TRUE)
       ->setDisplayOptions('form', [
         'type' => 'string_textfield',
-        'weight' => -90,
       ])
+      ->setDisplayConfigurable('form', TRUE)
     ;
+// @TODO: Uninstall.
+    //    $fields['drupal_project'] = BaseFieldDefinition::create('entity_reference')
+//      ->setLabel(t('Drupal Project'))
+//      ->setRevisionable(TRUE)
+//      ->addConstraint('SiteDrupalProjectExists')
+//      ->setSetting('target_type', 'drupal_project')
+//      ->setDisplayConfigurable('view', TRUE)
+//      ->setDisplayOptions('view', [
+//        'label' => 'above',
+//        'type' => 'string',
+//      ])
+//      ->setDisplayConfigurable('form', TRUE)
+//      ->setDisplayOptions('form', [
+//        'type' => 'string_textfield',
+//        'weight' => -90,
+//      ])
+//    ;
 
     return $fields;
   }

@@ -16,7 +16,6 @@ use Drupal\site\SitePropertyPluginBase;
  *   description = @Translation("The git repository this site was cloned from."),
  *   site_bundles = {
  *     "Drupal\site\Entity\Bundle\WebAppSiteBundle",
- *     "Drupal\site\Entity\DrupalProject",
  *   },
  * )
  */

@@ -179,15 +179,15 @@ entity.site.site_actions:
       plugin_id:
         type: string
 
-entity.drupal_project.add_site:
-  path:  '/project/{drupal_project}/add'
+entity.project.add_site:
+  path:  '/project/{project}/add'
   defaults:
     _title_callback: '\Drupal\site\Controller\DrupalProjectAddSiteController::formPageTitle'
     _controller: '\Drupal\site\Controller\DrupalProjectAddSiteController::form'
     type: 'default'
   options:
     parameters:
-      drupal_project:
-        type: entity:drupal_project
+      project:
+        type: entity:project
   requirements:
-    _permission: 'site.view site environments'
+    _permission: 'create site'

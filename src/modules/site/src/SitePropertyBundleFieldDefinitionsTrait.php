@@ -36,7 +36,7 @@ trait SitePropertyBundleFieldDefinitionsTrait {
     $bundles = $EntityTypeBundleInfo->getBundleInfo($entity_type->id());
     $fields = [];
     foreach ($bundles as $bundle => $bundle_info) {
-      $fields += static::propertyFieldDefinitions($entity_type, $bundle, $base_field_definitions);
+      $fields += $bundle_info['class']::propertyFieldDefinitions($entity_type, $bundle, $base_field_definitions);
     }
     return $fields;
   }
@@ -61,7 +61,7 @@ trait SitePropertyBundleFieldDefinitionsTrait {
       return $fields;
     }
 
-    $this_bundle_class = $bundles[$bundle]['class'] ?? static::class;
+    $this_bundle_class = $bundles[$bundle]['class'] ?? $entity_type->getClass();
 
     // Load all plugins.
     $type = \Drupal::service('plugin.manager.site_property');
@@ -95,3 +95,4 @@ trait SitePropertyBundleFieldDefinitionsTrait {
     return $fields;
   }
 }
+

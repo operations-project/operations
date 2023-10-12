@@ -1,4 +1,3 @@
-uuid: 100e861f-2246-4c6a-beec-8ff9b19658ff
 langcode: en
 status: true
 dependencies:
@@ -27,6 +26,14 @@ content:
     settings:
       link_to_entity: false
     third_party_settings: {  }
+  project:
+    label: above
+    type: string
+    region: content
+    weight: 22
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
   site_root:
     label: above
     type: string
@@ -44,7 +51,6 @@ hidden:
   drupal_cron_last: true
   drupal_install_profile: true
   drupal_install_time: true
-  drupal_project: true
   drupal_site_name: true
   drupal_site_uuid: true
   drupal_version: true

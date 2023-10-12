@@ -53,11 +53,11 @@ class DrupalProjectAddSiteController extends ControllerBase
       'site_type' => 'drupal',
     ]);
 
-    // Set drupal_project field.
-    $project = \Drupal::routeMatch()->getParameter('drupal_project');
-    $site->set('drupal_project', $project->id());
+    // Set project field.
+    $project = \Drupal::routeMatch()->getParameter('project');
+    $site->set('project', $project->id());
     $form = $this->entityFormBuilder()->getForm($site, 'add');
-    $form['drupal_project'] = [
+    $form['project'] = [
       '#type' => 'value',
       '#value' => $project->id(),
     ];
@@ -71,7 +71,7 @@ class DrupalProjectAddSiteController extends ControllerBase
    */
   public function formPageTitle()
   {
-    $project = \Drupal::routeMatch()->getParameter('drupal_project');
+    $project = \Drupal::routeMatch()->getParameter('project');
     if ($project) {
       return t('Add site');
     }

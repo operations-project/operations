@@ -3,7 +3,7 @@ status: true
 dependencies:
   module:
     - site
-id: site.full
-label: Full
-targetEntityType: site
+id: project.teaser
+label: Teaser
+targetEntityType: project
 cache: true

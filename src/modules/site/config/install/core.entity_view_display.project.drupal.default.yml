@@ -1,0 +1,50 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - site.project_type.drupal
+  module:
+    - text
+id: project.drupal.default
+targetEntityType: project
+bundle: drupal
+mode: default
+content:
+  changed:
+    type: timestamp
+    label: above
+    settings:
+      date_format: medium
+      custom_date_format: ''
+      timezone: ''
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  description:
+    type: text_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  git_remote:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  project_sites_project_environments:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 2
+    region: content
+hidden:
+  canonical_url: true
+  created: true
+  drupal_site_uuid: true
+  label: true
+  project_sites_entity_view_1: true
+  status: true
+  uid: true

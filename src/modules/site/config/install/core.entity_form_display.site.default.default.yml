@@ -40,6 +40,16 @@ content:
       size: 60
       placeholder: ''
     third_party_settings: {  }
+  project:
+    type: entity_reference_autocomplete
+    settings:
+      match_operator: CONTAINS
+      size: 60
+      placeholder: ''
+      match_limit: 10
+    weight: 15
+    region: content
+    third_party_settings: {  }
   site_title:
     type: string_textfield
     weight: 3

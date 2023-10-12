@@ -534,7 +534,7 @@ fieldset.site-display .color-processing {
 .drupal-project .site-operations .dropbutton button {
   padding: .5rem .75rem !important;
 }
-.view-drupal-project-environments.view-display-id-drupal_project_environments ,
+.view-project-sites.view-display-id-project_sites ,
 .view-sites .view-content
 {
     display: grid;
@@ -544,19 +544,19 @@ fieldset.site-display .color-processing {
 
 
 @media screen and (max-width: 768px) {
-    .view-drupal-project-environments,
+    .view-project-sites,
     .view-sites .view-content {
         grid-template-columns: auto auto;
     }
 }
 @media screen and (max-width: 425px) {
-    .view-drupal-project-environments,
+    .view-project-sites,
     .view-sites .view-content {
         grid-template-columns: auto;
     }
 }
 @media screen and (min-width: 1900px) {
-    .view-drupal-project-environments,
+    .view-project-sites,
     .view-sites .view-content {
         grid-template-columns: auto auto auto auto;
     }
@@ -564,7 +564,7 @@ fieldset.site-display .color-processing {
 
 
 @media screen and (min-width: 2500px) {
-    .view-drupal-project-environments,
+    .view-project-sites,
     .view-sites .view-content {
         grid-template-columns: auto auto auto auto auto;
     }
@@ -633,7 +633,7 @@ article.drupal-project.teaser .fieldset__wrapper .field
     padding: 1rem;
 }
 
-article.drupal-project .field--name-drupal-site-name .site-operations {
+article.drupal-project .field--name-label .site-operations {
   position: relative;
   width: 2rem;
   height: 2rem;
@@ -650,7 +650,7 @@ article.drupal-project .site-operations .dropbutton {
 article.drupal-project .site-operations .dropbutton > .dropbutton-toggle > button {
   background: none;
 }
-article.drupal-project.teaser .field--name-drupal-site-name {
+article.drupal-project.teaser .field--name-label {
     text-overflow: ellipsis;
     position: relative;
   padding-right: 2rem;
@@ -658,15 +658,15 @@ article.drupal-project.teaser .field--name-drupal-site-name {
   display: grid;
 
 }
-article.drupal-project.teaser .field--name-drupal-site-name {
+article.drupal-project.teaser .field--name-label {
   grid-template-columns: auto 3rem;
 }
 
-article.drupal-project.teaser .field--name-drupal-site-name .field--name-canonical-url {
+article.drupal-project.teaser .field--name-label .field--name-canonical-url {
   padding: 0;
 }
 
-article.drupal-project.teaser .field--name-drupal-site-name .field--name-canonical-url a {
+article.drupal-project.teaser .field--name-label .field--name-canonical-url a {
     color: #666;
     font-weight: bold;
     font-size: .7rem;
@@ -675,17 +675,17 @@ article.drupal-project.teaser .field--name-drupal-site-name .field--name-canonic
     padding: 0.5rem;
     margin-left: -0.5rem;
 }
-article.drupal-project.teaser .field--name-drupal-site-name .field--name-canonical-url a:hover {
+article.drupal-project.teaser .field--name-label .field--name-canonical-url a:hover {
   text-decoration: underline;
 }
-article.drupal-project.teaser .field--name-drupal-site-name > a {
+article.drupal-project.teaser .field--name-label > a {
     font-size: 1.6rem;
     font-weight: bold;
     text-decoration: none;
     position: relative;
     z-index: 10;
 }
-article.drupal-project.teaser .field--name-drupal-site-name > a:hover {
+article.drupal-project.teaser .field--name-label > a:hover {
   text-decoration: underline;
 }
 article.drupal-project.teaser .field--name-git-remote {
@@ -719,7 +719,7 @@ article.drupal-project.teaser .views-element-container .site-display.site-widget
     margin: 0;
 }
 
-.view-drupal-project-environments {
+.view-project-sites {
 
 }
 

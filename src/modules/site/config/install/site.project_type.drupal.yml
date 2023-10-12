@@ -1,6 +1,5 @@
-uuid: 879ea08c-fbf3-4ea5-a91e-654a42794abc
 langcode: en
 status: true
 dependencies: {  }
-id: default
+id: drupal
 label: 'Drupal Project'

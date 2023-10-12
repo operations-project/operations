@@ -6,7 +6,7 @@ dependencies:
     - site
     - user
 _core:
-  default_config_hash: IkdhtWfOmm41WTYihWr-mx_xnOdjAFv-_q-rbSd4RJw
+  default_config_hash: l8TyOLBJAyh88dxzEODuBQIUvhy6o_KFUC72asP50zA
 id: sites
 label: Sites
 module: views
@@ -150,10 +150,10 @@ display:
         options:
           grouping:
             -
-              field: drupal_project
+              field: project
               rendered: true
               rendered_strip: false
-          row_class: drupal-project
+          row_class: project
           default_row_class: false
       row:
         type: fields
@@ -202,7 +202,7 @@ display:
         weight: 0
         expanded: false
         menu_name: main
-        parent: 'views_view:views.drupal_projects.page_1'
+        parent: 'views_view:views.projects.page_1'
         context: '0'
       tab_options:
         type: normal

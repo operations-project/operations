@@ -66,6 +66,13 @@ entity.site.collection:
   parent: system.admin_content
   weight: 10
 
+entity.project.collection:
+  title: 'Projects'
+  description: 'List all project entities.'
+  route_name: entity.project.collection
+  parent: system.admin_content
+  weight: 20
+
 entity.site_type.collection:
   title: 'Site types'
   description: 'Manage site types.'
@@ -73,9 +80,8 @@ entity.site_type.collection:
   route_name: entity.site_type.collection
   weight: 20
 
-
-entity.drupal_project_type.collection:
-  title: 'Drupal Project types'
-  description: 'Manage and CRUD actions on Drupal Project type.'
+entity.project_type.collection:
+  title: 'Project types'
+  description: 'Manage and CRUD actions on Project type.'
   parent: system.admin_structure
-  route_name: entity.drupal_project_type.collection
+  route_name: entity.project_type.collection

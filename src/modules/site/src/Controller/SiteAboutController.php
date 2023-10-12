@@ -7,7 +7,7 @@ use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\migrate\Exception\EntityValidationException;
-use Drupal\site\Entity\DrupalProject;
+use Drupal\site\Entity\ProjectBundle\DrupalProjectBundle;
 use Drupal\site\Entity\SiteEntity;
 use Drupal\site\SiteSelf;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -51,9 +51,8 @@ class SiteAboutController extends ControllerBase {
   public function build() {
 
     // The SiteEntity (Environment)
-    $drupal_project_entity = DrupalProject::loadSelf();
+    $drupal_project_entity = DrupalProjectBundle::loadSelf();
     $site_entity = SiteEntity::loadSelf();
-
     if (empty($drupal_project_entity)) {
       $build['welcome'] = [
         '#type' => 'fieldset',
@@ -129,7 +128,7 @@ class SiteAboutController extends ControllerBase {
    */
   public function edit() {
     // $site = SiteEntity::loadSelf();
-    $project = DrupalProject::loadSelf();
+    $project = DrupalProjectBundle::loadSelf();
     $form = \Drupal::service('entity.form_builder')->getForm($project, 'edit');
 
     return $form;
