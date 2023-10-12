@@ -4,13 +4,15 @@ namespace Drupal\site\Drush\Commands;
 
 use _PHPStan_c900ee2af\Symfony\Component\Console\Exception\CommandNotFoundException;
 use Consolidation\OutputFormatters\StructuredData\RowsOfFields;
+use Drupal\Core\Entity\EntityStorageException;
+use Drupal\Core\Url;
 use Drupal\site\Entity\SiteEntity;
-use Drupal\site\SiteEntityInterface;
 use Drush\Commands\DrushCommands;
 use Drush\Exceptions\CommandFailedException;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Finder\Exception\AccessDeniedException;
 
 /**
  * Site module drush commands.
@@ -89,11 +91,40 @@ class SiteCommands extends DrushCommands {
     }
     elseif ($site) {
       $url = $site;
+      $entity = SiteEntity::loadBySiteUrl($url);
     }
     else {
       $url = $this->input()->getOption('uri');
+      $entity = \Drupal::service('site.self')->getEntity();
     }
-    $entity = $this->siteEntity = SiteEntity::loadBySiteUrl($url);
+
+    // Create site if it doesn't exist.
+    // @TODO: This code is SiteAboutController. Make it a method.
+    if (empty($entity->id())) {
+      try {
+        $entity = \Drupal::service('site.self')->prepareEntity()->saveEntity(t('Report saved by @user via Save Report form.', [
+          '@user' => \Drupal::currentUser()->getAccount()->getDisplayName(),
+        ]));
+        if ($entity->sent) {
+          \Drupal::messenger()->addStatus(t('Site data updated and sent.'));
+        }
+        else {
+          \Drupal::messenger()->addStatus(t('Site data updated.'));
+        }
+      }
+      catch (AccessDeniedException $e) {
+        \Drupal::messenger()->addError($e->getMessage());
+        \Drupal::messenger()->addError(t('Access was denied when sending site data. Check the <a href=":link">:link_text</a> and try again.', [
+          ':link' => Url::fromRoute('site.advanced', [], ['fragment' => 'edit-site-manager'])->toString(),
+          ':link_text' => t('Site Manager Connection API Key'),
+        ]));
+      }
+      catch (\Exception $e) {
+        \Drupal::messenger()->addError($e->getMessage());
+      }
+    }
+
+    $this->siteEntity = $entity;
 
     if (empty($entity)) {
       throw new CommandFailedException(dt('Site ":site" not found.', [
@@ -141,6 +172,7 @@ class SiteCommands extends DrushCommands {
         $this->io()->table(['Desired State', 'Reason'], $rows);
 
         if ($this->io()->confirm('Set desired state?')) {
+          $entity->validate();
           $entity->save();
 
           $message = dt('Site state was set to :state', [
