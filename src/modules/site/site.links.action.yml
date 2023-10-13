@@ -34,12 +34,6 @@ entity.site.refresh:
   appears_on:
     - entity.site.canonical
 
-drupal_project.type_add:
-  title: 'Add drupal project type'
-  route_name: entity.project_type.add_form
-  appears_on:
-    - entity.project_type.collection
-
 entity.project.add_site:
   title: 'Add site'
   route_name: entity.project.add_site
