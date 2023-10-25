@@ -48,12 +48,16 @@ class BehatCommands extends DrushCommands implements CustomEventAwareInterface, 
   {
     global $_composer_bin_dir;
 
+    // Make sure Behat base_url has http in front. Drush works with or without it, but behat needs it to work.
+    $uri = $this->commandData->options()['uri'];
+    $uri = str_starts_with($uri, 'http')? $uri: 'http://' . $uri;
+
     // The BEHAT_PARAMS environment variable.
     // Options set in behat.yml will override these.
     $behat_params = [
       "extensions" => [
         "Drupal\\MinkExtension" => [
-          "base_url" => $this->commandData->options()['uri'],
+          "base_url" => $uri,
         ],
         "Drupal\\DrupalExtension" => [
           "drupal" => [
