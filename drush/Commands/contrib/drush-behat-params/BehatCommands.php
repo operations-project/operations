@@ -5,21 +5,19 @@ namespace Drush\Commands\drush_behat_params;
 use Composer\Autoload\ClassLoader;
 use Drupal\Core\Composer\Composer;
 use Drush\Commands\DrushCommands;
-use Consolidation\SiteAlias\SiteAliasManagerAwareInterface;
-use Consolidation\SiteAlias\SiteAliasManagerAwareTrait;
 
 use Consolidation\AnnotatedCommand\Events\CustomEventAwareInterface;
 use Consolidation\AnnotatedCommand\Events\CustomEventAwareTrait;
+use Drush\Drush;
 use Symfony\Component\Yaml\Yaml;
 
 /**
  *
  */
 
-class BehatCommands extends DrushCommands implements CustomEventAwareInterface, SiteAliasManagerAwareInterface
+class BehatCommands extends DrushCommands implements CustomEventAwareInterface
 {
   use CustomEventAwareTrait;
-  use SiteAliasManagerAwareTrait;
 
   /**
    * @description Run bin/behat with BEHAT_PARAMS set from the drush information.
@@ -64,7 +62,7 @@ class BehatCommands extends DrushCommands implements CustomEventAwareInterface, 
             "drupal_root" => $this->commandData->options()['root']
           ],
           "drush" => [
-            "alias" =>  $this->siteAliasManager()->getSelf()->name(),
+            "alias" =>  Drush::aliasManager()->getSelf()->name(),
           ]
         ]
       ]
@@ -82,7 +80,7 @@ class BehatCommands extends DrushCommands implements CustomEventAwareInterface, 
     $command .= ' ' . implode(' ', $arguments);
 
     $this->io()->table(['Drush Alias', 'URL', 'Root'], [[
-      $this->siteAliasManager()->getSelf()->name(),
+      Drush::aliasManager()->getSelf()->name(),
       $this->commandData->options()['uri'],
       $this->commandData->options()['root'],
     ]]);
