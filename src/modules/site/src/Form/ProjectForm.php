@@ -103,6 +103,7 @@ class ProjectForm extends ContentEntityForm {
         'drupal_site_uuid' => $form_state->getValue('drupal_site_uuid')[0]['value'],
       ]);
       $canonical_site->save();
+      $form_state->setValue('canonical_site', $canonical_site->id());
     }
 //    elseif ($canonical_site && empty($canonical_site->drupalProject())) {
 //      $canonical_site->set('drupal_project', $form_state->getValue('drupal_site_uuid'));
@@ -135,6 +136,11 @@ class ProjectForm extends ContentEntityForm {
     $result = parent::save($form, $form_state);
 
     $entity = $this->getEntity();
+    if ($form_state->getValue('canonical_site')) {
+      $site = SiteEntity::load($form_state->getValue('canonical_site'));
+      $site->set('project', $entity->id());
+      $site->save();
+    }
 
     $message_arguments = ['%label' => $entity->toLink()->toString()];
     $logger_arguments = [
