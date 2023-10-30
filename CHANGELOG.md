@@ -4,6 +4,12 @@ Drupal Operations
 Changelog
 ---------
 
+# 2.1.0-beta2
+## October 30, 2023
+
+- Fix a bug with drush behat params.
+- Creating a project now creates a site.
+
 # 2.1.0-beta1
 ## October 12, 2023
 
