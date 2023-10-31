@@ -4,6 +4,11 @@ Drupal Operations
 Changelog
 ---------
 
+# 2.1.0-beta3
+## October 30, 2023
+
+Handle when there is a site but it is not associated with the project.
+
 # 2.1.0-beta2
 ## October 30, 2023
 
