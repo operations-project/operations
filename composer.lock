@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d15dd895636ce603bd843486f3dcf43e",
+    "content-hash": "6884e8720b1e56a22c0e692f79d8f14e",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -2252,6 +2252,29 @@
             "support": {
                 "source": "https://git.drupalcode.org/project/key_auth",
                 "issues": "https://www.drupal.org/project/issues/key_auth"
+            }
+        },
+        {
+            "name": "drupal/ox_stock",
+            "version": "2.x-dev",
+            "dist": {
+                "type": "path",
+                "url": "src/profiles/ox_stock",
+                "reference": "0b6ea2536ed3cb71cd25d69f1baf1bf566f30b56"
+            },
+            "type": "drupal-profile",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Jon Pugh",
+                    "email": "jon@thinkdrop.net"
+                }
+            ],
+            "description": "Stock install profile for an Ox instance.",
+            "transport-options": {
+                "relative": true
             }
         },
         {

@@ -62,6 +62,7 @@
         "drupal/core-recommended": "^9.0.0",
         "drupal/devel": "^5.1",
         "drupal/devel_entity_updates": "^4.1@dev",
+        "drupal/ox_stock": "2.x-dev",
         "drupal/restui": "^1.21",
         "drupal/site": "*",
         "drupal/site_audit": "4.x-dev",

@@ -1,5 +1,5 @@
 {
-    "name": "drupal/ox_stock-ox_stock",
+    "name": "drupal/ox_stock",
     "description": "Stock install profile for an Ox instance.",
     "type": "drupal-profile",
     "license": "GPL-2.0-or-later",
