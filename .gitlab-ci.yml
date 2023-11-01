@@ -181,6 +181,7 @@ behat_upgrade:
     - *show-environment-variables
     - git config --global --add safe.directory /builds/project/operations
     - git checkout 2.0.0-beta15
+    - composer install --no-dev
     - *setup-operations
     - export PATH=./bin:$PATH
     - bin/drush behat
@@ -188,6 +189,7 @@ behat_upgrade:
     - composer install
     - bin/drush cr
     - bin/drush updb --yes
+    - bin/drush behat
 
 #################
 ## DrupalCI GitLabCI template
