@@ -17,7 +17,6 @@ function ox_stock_install() {
   \Drupal::configFactory()->getEditable('system.site')->set('page.front', '/projects')->save();
   \Drupal::service('module_installer')->install([
     'site_manager',
-    'operations_ui',
     'devel',
     'devel_entity_updates',
     'key_auth',
