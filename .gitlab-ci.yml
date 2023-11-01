@@ -173,23 +173,24 @@ behat:
   # An include of the code above, for easy reuse. See https://docs.gitlab.com/ee/ci/yaml/#extends.
   extends: .behat-base
 
-behat_upgrade:
-  extends: .behat-base
-  script:
-    - *setup-webserver
-    - *simpletest-db
-    - *show-environment-variables
-    - git config --global --add safe.directory /builds/project/operations
-    - git checkout 2.0.0-beta15
-    - composer install --no-dev
-    - *setup-operations
-    - export PATH=./bin:$PATH
-    - bin/drush behat
-    - git checkout -
-    - composer install --no-dev
-    - bin/drush cr
-    - bin/drush updb --yes
-    - bin/drush behat
+# Uncomment once we have time to work on it.
+#behat_upgrade:
+#  extends: .behat-base
+#  script:
+#    - *setup-webserver
+#    - *simpletest-db
+#    - *show-environment-variables
+#    - git config --global --add safe.directory /builds/project/operations
+#    - git checkout 2.0.0-beta15
+#    - composer install --no-dev
+#    - *setup-operations
+#    - export PATH=./bin:$PATH
+#    - bin/drush behat
+#    - git checkout -
+#    - composer install --no-dev
+#    - bin/drush cr
+#    - bin/drush updb --yes
+#    - bin/drush behat
 
 #################
 ## DrupalCI GitLabCI template
