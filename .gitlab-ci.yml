@@ -71,8 +71,8 @@ include:
   # Currently, fields are from plugins so install is not creating them properly.
   # - bin/drush entup --yes
   # The install profile should handle this, but it's not working!
-  - bin/drush cset system.theme default claro -y
-  - bin/drush en site_manager operations_ui devel devel_entity_updates admin_toolbar key_auth restui -y
+#  - bin/drush cset system.theme default claro -y
+#  - bin/drush en site_manager operations_ui devel devel_entity_updates admin_toolbar key_auth restui -y
 
 
 variables:
