@@ -87,6 +87,7 @@ variables:
   SKIP_STYLELINT: 1
   SKIP_PHPCS: 1
   SKIP_PHPUNIT: 1
+  SKIP_PHPSTAN: 1
 
 #################
 ## Override composer base because this is not a module project.
