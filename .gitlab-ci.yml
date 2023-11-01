@@ -186,7 +186,7 @@ behat_upgrade:
     - export PATH=./bin:$PATH
     - bin/drush behat
     - git checkout -
-    - composer install
+    - composer install --no-dev
     - bin/drush cr
     - bin/drush updb --yes
     - bin/drush behat
