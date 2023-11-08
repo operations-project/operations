@@ -396,8 +396,7 @@ function site_update_8005() {
 
 /**
  * Delete all Drupal Project entities, remove the entity definition, and remove the drupal_project field from sites.
- * @TODO: Uncomment for the RC1 release.
- *
+ */
 function site_update_8007() {
 
   $projects = \Drupal::entityTypeManager()->getStorage('drupal_project')
@@ -420,8 +419,4 @@ function site_update_8007() {
   } catch (\Exception $exception) {
     throw new UpdateException($exception->getMessage());
   }
-
-  //@TODO: Delete Drupal Project view modes.?
-
 }
- */
