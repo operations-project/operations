@@ -191,8 +191,6 @@
             "src/composer/Plugin/DrupalSettings": "git@github.com:drupal-operations/drupal-settings.git",
             "src/composer/Plugin/GitSplit": "git@github.com:drupal-operations/git-split.git",
             "src/modules/operations_ui": "git@git.drupal.org:project/operations_ui.git",
-            "src/modules/site": "git@git.drupal.org:project/site.git",
-            "src/modules/site_manager": "git@git.drupal.org:project/site_manager.git",
             "src/profiles/ox_stock": "git@git.drupal.org:project/ox_stock.git"
           }
         },
