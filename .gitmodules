@@ -1,0 +1,6 @@
+[submodule "src/modules/site"]
+	path = src/modules/site
+	url = git@git.drupal.org:project/site.git
+[submodule "src/modules/site_manager"]
+	path = src/modules/site_manager
+	url = git@git.drupal.org:project/site_manager.git
