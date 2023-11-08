@@ -68,7 +68,8 @@ include:
   - export DRUPAL_TEST_DB_URL=$SIMPLETEST_DB
   - bin/drush status
   - bin/drush sql:query "show tables"
-  - composer operations:ox-install
+  - bin/drush si ox_stock --yes
+#  - composer operations:ox-install
 
   # Currently, fields are from plugins so install is not creating them properly.
   # - bin/drush entup --yes
