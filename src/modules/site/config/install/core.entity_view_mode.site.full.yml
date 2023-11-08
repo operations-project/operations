@@ -1,9 +1,0 @@
-langcode: en
-status: true
-dependencies:
-  module:
-    - site
-id: site.full
-label: Full
-targetEntityType: site
-cache: true

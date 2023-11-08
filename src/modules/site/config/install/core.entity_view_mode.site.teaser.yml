@@ -1,9 +1,0 @@
-langcode: en
-status: true
-dependencies:
-  module:
-    - site
-id: site.teaser
-label: Teaser
-targetEntityType: site
-cache: true
