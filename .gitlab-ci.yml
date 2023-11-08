@@ -24,7 +24,7 @@ include:
 .test-variables:
   variables:
     GIT_SUBMODULE_STRATEGY: recursive
-    GIT_SUBMODULE_FORCE_HTTPS: true
+    GIT_SUBMODULE_FORCE_HTTPS: "true"
     BROWSERTEST_OUTPUT_DIRECTORY: $CI_PROJECT_DIR/$_WEB_ROOT/sites/simpletest/browser_output
     FF_NETWORK_PER_BUILD: 1
     SIMPLETEST_BASE_URL: http://localhost/$_WEB_ROOT
