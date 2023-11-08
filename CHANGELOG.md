@@ -4,6 +4,15 @@ Drupal Operations
 Changelog
 ---------
 
+# 2.1.0-beta4
+## November 8, 2023
+
+Update hook to remove DrupalProject entities.
+
+If you are upgrading, make sure to update to this version and run the update hooks BEFORE updating to 2.2.
+
+The next version, 2.2.0 will NOT contain the DrupalProject entity type code.
+
 # 2.1.0-beta3
 ## October 30, 2023
 
