@@ -49,6 +49,7 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *     "label",
  *     "uuid",
  *     "command_template",
+ *     "working_directory_template",
  *   }
  * )
  */
@@ -79,5 +80,18 @@ class TaskType extends ConfigEntityBundleBase {
    */
   public function commandTemplate() {
     return $this->command_template;
+  }
+
+  /**
+   * @var string
+   */
+  protected $working_directory_template;
+
+  /**
+   * The command to run for tasks of this type, with tokens.
+   * @return string
+   */
+  public function workingDirectoryTemplate() {
+    return $this->working_directory_template ?? getcwd();
   }
 }

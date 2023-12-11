@@ -38,6 +38,7 @@ class TaskForm extends ContentEntityForm {
     $entity_type = $this->getBundleEntity();
 
     $entity->set('command', $entity_type->commandTemplate());
+    $entity->set('working_directory', $entity_type->workingDirectoryTemplate());
 
     $this->setEntity($entity);
     $result = parent::save($form, $form_state);

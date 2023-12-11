@@ -129,6 +129,12 @@ class Task extends RevisionableContentEntityBase {
     $command = $this->command->value;
     $this->set('command', $command);
 
+
+    // Parse working directory from task type command template.
+    // @TODO: Pass through tokenization.
+    $working_directory = $this->working_directory->value;
+    $this->set('working_directory', $working_directory);
+
   }
 
   /**
@@ -195,6 +201,16 @@ class Task extends RevisionableContentEntityBase {
       ->setRequired(TRUE)
       ->setTranslatable(TRUE)
       ->setRevisionable(TRUE)
+      ->setDisplayOptions('view', [
+        'label' => 'visible',
+        'type' => 'string',
+        'weight' => -5,
+      ])
+      ->setDisplayConfigurable('view', TRUE)
+    ;
+    $fields['working_directory'] = BaseFieldDefinition::create('string')
+      ->setLabel(t('Working Directory'))
+      ->setDescription(t('The directory to run the command in.'))
       ->setDisplayOptions('view', [
         'label' => 'visible',
         'type' => 'string',

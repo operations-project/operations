@@ -98,6 +98,8 @@ class TaskCommands extends DrushCommands {
     $args = explode(' ', $task->command->value);
     $process = Drush::process($args);
 
+    $process->setWorkingDirectory($task->working_directory->value ?? getcwd());
+
     $this->logger()->info(dt('Task starting. Updated state.'));
 
     try {

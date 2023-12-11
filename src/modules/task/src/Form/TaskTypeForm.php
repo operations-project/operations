@@ -57,6 +57,15 @@ class TaskTypeForm extends BundleEntityFormBase {
       '#size' => 30,
     ];
 
+    $form['working_directory_template'] = [
+      '#title' => $this->t('Working Directory Template'),
+      '#type' => 'textfield',
+      '#default_value' => $entity_type->workingDirectoryTemplate(),
+      '#description' => $this->t('The directory to run the command in, optionally using tokens to create a command from field data.'),
+      '#required' => TRUE,
+      '#size' => 30,
+    ];
+
 
     return $this->protectBundleIdElement($form);
   }
@@ -82,6 +91,7 @@ class TaskTypeForm extends BundleEntityFormBase {
     $entity_type->set('id', trim($entity_type->id()));
     $entity_type->set('label', trim($entity_type->label()));
     $entity_type->set('command_template', $entity_type->commandTemplate());
+    $entity_type->set('working_directory_template', $entity_type->workingDirectoryTemplate());
 
     $status = $entity_type->save();
 

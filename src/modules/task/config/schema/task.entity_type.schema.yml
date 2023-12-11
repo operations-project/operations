@@ -15,3 +15,8 @@ task.task_type.*:
       type: string
       label: 'Command Template'
       description: 'The command to run, optionally using tokens to create a command from field data.'
+
+    working_directory_template:
+      type: string
+      label: 'Working Directory template'
+      description: 'The directory to run tasks in, optionally using tokens to set the directory dynamically.'
