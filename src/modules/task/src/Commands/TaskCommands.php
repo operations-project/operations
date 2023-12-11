@@ -5,6 +5,7 @@ namespace Drupal\task\Commands;
 use Consolidation\OutputFormatters\StructuredData\RowsOfFields;
 use Drupal\Core\Cache\Cache;
 use Drupal\node\Entity\Node;
+use Drupal\task\Entity\Task;
 use Drush\Commands\DrushCommands;
 use Drush\Drush;
 use Drush\Exceptions\CommandFailedException;
@@ -24,10 +25,6 @@ use Symfony\Component\Process\Process;
  */
 class TaskCommands extends DrushCommands {
 
-  public const TASK_QUEUED = 3;
-  public const TASK_RUNNING = 2;
-  public const TASK_FAILURE = 1;
-  public const TASK_SUCCESS = 0;
 
   /**
    * Run Task
@@ -48,17 +45,17 @@ class TaskCommands extends DrushCommands {
     'force' => false,
   ]) {
 
-    $task = Node::load($id);
+    $task = Task::load($id);
     if (empty($task)) {
       throw new CommandFailedException(dt('No task found with that ID.'));
     }
 
-    if ($task->field_state->value == self::TASK_QUEUED || $options['force']) {
+    if ($task->state->value == Task::TASK_QUEUED || $options['force']) {
       $this->logger()->success(dt('Found Task in state:!state [!summary](!link) !command', [
-        '!summary' => $task->getTitle(),
+        '!summary' => $task->label(),
         '!link' => $task->toUrl()->setAbsolute(true)->toString(),
-        '!command' => $task->field_command->value,
-        '!state' => $task->field_state->get(0)->getString(),
+        '!command' => $task->command->value,
+        '!state' => $task->state->value,
       ]));
 
       if ($options['force']) {
@@ -67,19 +64,19 @@ class TaskCommands extends DrushCommands {
 
       $this->taskRunExecute($task);
     }
-    elseif ($task->field_state->value == self::TASK_RUNNING) {
+    elseif ($task->state->value == self::TASK_RUNNING) {
       $this->logger()->warning(dt('Task already running: !summary [!link].', [
         '!summary' => $task->getTitle(),
         '!link' => $task->toUrl()->setAbsolute(true)->toString(),
       ]));
     }
-    elseif ($task->field_state->value == self::TASK_FAILURE) {
+    elseif ($task->state->value == self::TASK_FAILURE) {
       $this->logger()->warning(dt('Task already failed: !summary [!link].', [
         '!summary' => $task->getTitle(),
         '!link' => $task->toUrl()->setAbsolute(true)->toString(),
       ]));
     }
-    elseif ($task->field_state->value == self::TASK_SUCCESS) {
+    elseif ($task->state->value == self::TASK_SUCCESS) {
       $this->logger()->warning(dt('Task already succeeded: !summary [!link].', [
         '!summary' => $task->getTitle(),
         '!link' => $task->toUrl()->setAbsolute(true)->toString(),
@@ -87,18 +84,18 @@ class TaskCommands extends DrushCommands {
     }
     else {
       # @TODO: (maybe?) Print constant names too.
-      throw new CommandFailedException(dt('Task field_state value is not found in DevShopTaskCommands. Possible states are: 0,1,2,3'));
+      throw new CommandFailedException(dt('Task state value is not found in DevShopTaskCommands. Possible states are: 0,1,2,3'));
     }
   }
 
-  private function taskRunExecute(Node $task) {
+  private function taskRunExecute(Task $task) {
 
-    $task->set('field_state', self::TASK_RUNNING);
-    $task->set('field_output', '');
+    $task->set('state', Task::TASK_PROCESSING);
+    $task->set('output', '');
     $task->setNewRevision();
     $task->save();
 
-    $args = explode(' ', $task->field_command->value);
+    $args = explode(' ', $task->command->value);
     $process = Drush::process($args);
 
     $this->logger()->info(dt('Task starting. Updated state.'));
@@ -106,16 +103,16 @@ class TaskCommands extends DrushCommands {
     try {
       $process->mustRun(function ($type, $buffer) use ($task){
         echo $buffer;
-        $task->field_output->setValue($task->field_output->value . PHP_EOL . $buffer);
+        $task->output->setValue($task->output->value . PHP_EOL . $buffer);
         $task->save();
       });
-      $task->set('field_state', self::TASK_SUCCESS);
+      $task->set('state', Task::TASK_OK);
       $task->setNewRevision();
       $task->save();
       $this->logger()->info(dt('Task ended in Success. Updated state.'));
     }
     catch (ProcessFailedException $exception) {
-      $task->set('field_state', self::TASK_FAILURE);
+      $task->set('state', Task::TASK_ERROR);
       $task->setNewRevision();
       $task->save();
       $this->logger()->info(dt('Task ended in Failure. Updated state.'));
