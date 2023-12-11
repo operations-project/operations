@@ -47,28 +47,18 @@ class TaskTypeForm extends BundleEntityFormBase {
       ],
       '#description' => $this->t('A unique machine-readable name for this task type. It must only contain lowercase letters, numbers, and underscores.'),
     ];
-    $form['plugin'] = [
+
+    $form['command_template'] = [
+      '#title' => $this->t('Command Template'),
       '#type' => 'textfield',
-      '#title' => t('Plugin'),
-      '#default_value' => $entity_type->plugin(),
+      '#default_value' => $entity_type->commandTemplate(),
+      '#description' => $this->t('The command to run, optionally using tokens to create a command from field data.'),
+      '#required' => TRUE,
+      '#size' => 30,
     ];
 
-    return $this->protectBundleIdElement($form);
-  }
 
-  /**
-   * Generate an options list from all TaskType plugins.
-   * @return array
-   */
-  public function getTaskPluginOptions() {
-    $options = [];
-//    $types = \Drupal::service('plugin.manager.tasks');
-//    $plugin_definitions = $types->getDefinitions();
-//dsm($types);
-//    foreach ($plugin_definitions as $plugin_definition) {
-//      $options[$plugin_definition['id']] = $plugin_definition['label']->render() . '<div class="description">' . $plugin_definition['description']->render() . '</div>';
-//    }
-    return $options;
+    return $this->protectBundleIdElement($form);
   }
 
   /**
@@ -85,11 +75,13 @@ class TaskTypeForm extends BundleEntityFormBase {
    * {@inheritdoc}
    */
   public function save(array $form, FormStateInterface $form_state) {
+
+    /** @var TaskType $entity_type */
     $entity_type = $this->entity;
 
     $entity_type->set('id', trim($entity_type->id()));
     $entity_type->set('label', trim($entity_type->label()));
-    $entity_type->set('plugin', $form_state->getValue('plugin'));
+    $entity_type->set('command_template', $entity_type->commandTemplate());
 
     $status = $entity_type->save();
 

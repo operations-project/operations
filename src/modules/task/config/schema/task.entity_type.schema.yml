@@ -10,6 +10,8 @@ task.task_type.*:
       label: 'Label'
     uuid:
       type: string
-    plugin:
+
+    command_template:
       type: string
-      label: 'Plugin'
+      label: 'Command Template'
+      description: 'The command to run, optionally using tokens to create a command from field data.'
