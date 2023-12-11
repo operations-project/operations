@@ -200,6 +200,7 @@ class Task extends RevisionableContentEntityBase {
         'type' => 'string',
         'weight' => -5,
       ])
+      ->setDisplayConfigurable('view', TRUE)
     ;
 
     $fields['output'] = BaseFieldDefinition::create('text_long')
@@ -212,6 +213,7 @@ class Task extends RevisionableContentEntityBase {
         'type' => 'text_default',
         'weight' => -5,
       ])
+      ->setDisplayConfigurable('view', TRUE)
     ;
 
     return $fields;

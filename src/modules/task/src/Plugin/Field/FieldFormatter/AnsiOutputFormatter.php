@@ -11,11 +11,13 @@ use SensioLabs\AnsiConverter\AnsiToHtmlConverter;
  * Plugin implementation of the 'ANSI Output' formatter.
  *
  * @FieldFormatter(
- *   id = "devshop_task_ansi_output",
+ *   id = "ansi_output",
  *   label = @Translation("ANSI Output"),
  *   field_types = {
  *     "string",
  *     "string_long",
+ *     "text",
+ *     "text_long",
  *   }
  * )
  */
@@ -57,10 +59,10 @@ class AnsiOutputFormatter extends FormatterBase {
    */
   public function viewElements(FieldItemListInterface $items, $langcode) {
     $element = [];
-//    $converter = new AnsiToHtmlConverter();
+    $converter = new AnsiToHtmlConverter();
     foreach ($items as $delta => $item) {
       $element[$delta] = [
-        '#markup' => $item->value,
+        '#children' => $converter->convert($item->value),
       ];
     }
 
