@@ -1,6 +1,0 @@
-bin
-vendor
-.idea
-web/sites/default/settings.local.php
-web/modules/contrib
-web/core
