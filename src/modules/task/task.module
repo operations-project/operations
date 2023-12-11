@@ -80,9 +80,9 @@ function task_user_cancel($edit, UserInterface $account, $method) {
  * @see hook_entity_bundle_info_alter()
  */
 function task_entity_bundle_info() {
-  $bundles['task']['drush'] = [
-    'label' => t('Drush Command'),
-    'class' => \Drupal\task\Entity\Bundle\DrushTask::class
-  ];
-  return $bundles;
+//  $bundles['task']['drush'] = [
+//    'label' => t('Drush Command'),
+//    'class' => \Drupal\task\Entity\Bundle\DrushTask::class
+//  ];
+//  return $bundles;
 }
