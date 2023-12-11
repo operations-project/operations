@@ -64,21 +64,21 @@ class TaskCommands extends DrushCommands {
 
       $this->taskRunExecute($task);
     }
-    elseif ($task->state->value == self::TASK_RUNNING) {
+    elseif ($task->state->value == Task::TASK_PROCESSING) {
       $this->logger()->warning(dt('Task already running: !summary [!link].', [
-        '!summary' => $task->getTitle(),
+        '!summary' => $task->label(),
         '!link' => $task->toUrl()->setAbsolute(true)->toString(),
       ]));
     }
-    elseif ($task->state->value == self::TASK_FAILURE) {
+    elseif ($task->state->value == Task::TASK_ERROR) {
       $this->logger()->warning(dt('Task already failed: !summary [!link].', [
-        '!summary' => $task->getTitle(),
+        '!summary' => $task->label(),
         '!link' => $task->toUrl()->setAbsolute(true)->toString(),
       ]));
     }
-    elseif ($task->state->value == self::TASK_SUCCESS) {
+    elseif ($task->state->value == Task::TASK_OK) {
       $this->logger()->warning(dt('Task already succeeded: !summary [!link].', [
-        '!summary' => $task->getTitle(),
+        '!summary' => $task->label(),
         '!link' => $task->toUrl()->setAbsolute(true)->toString(),
       ]));
     }
