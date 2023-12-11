@@ -1,0 +1,5 @@
+name: DevShop Tasks
+type: module
+description: Run and track commands.
+package: DevShop
+core_version_requirement: ^9 || ^10

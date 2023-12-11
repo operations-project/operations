@@ -1,0 +1,12 @@
+devshop_task.settings_form:
+  title: 'DevShop Tasks'
+  description: 'Configure DevShop Tasks.'
+  parent: system.admin_config_system
+  route_name: devshop_task.settings_form
+  weight: 10
+
+entity.task_type.collection:
+  title: 'Task types'
+  description: 'Manage and CRUD actions on Task type.'
+  parent: system.admin_structure
+  route_name: entity.task_type.collection

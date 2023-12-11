@@ -1,0 +1,17 @@
+administer devshop_task configuration:
+  title: 'Administer devshop_task configuration'
+  description: 'Optional description.'
+  restrict access: true
+
+administer task types:
+  title: 'Administer task types'
+  description: 'Maintain the types of task entity.'
+  restrict access: true
+delete task:
+  title: Delete task
+create task:
+  title: Create task
+view task:
+  title: View task
+edit task:
+  title: Edit task
