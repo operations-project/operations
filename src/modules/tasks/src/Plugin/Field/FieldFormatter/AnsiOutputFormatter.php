@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\devshop_task\Plugin\Field\FieldFormatter;
+namespace Drupal\task\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FormatterBase;

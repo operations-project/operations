@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\devshop_task\Commands;
+namespace Drupal\task\Commands;
 
 use Consolidation\OutputFormatters\StructuredData\RowsOfFields;
 use Drupal\Core\Cache\Cache;

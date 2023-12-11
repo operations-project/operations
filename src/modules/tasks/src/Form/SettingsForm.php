@@ -1,12 +1,12 @@
 <?php
 
-namespace Drupal\devshop_task\Form;
+namespace Drupal\task\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Configure DevShop Tasks settings for this site.
+ * Configure Tasks settings for this site.
  */
 class SettingsForm extends ConfigFormBase {
 
@@ -14,14 +14,14 @@ class SettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function getFormId() {
-    return 'devshop_task_settings';
+    return 'task_settings';
   }
 
   /**
    * {@inheritdoc}
    */
   protected function getEditableConfigNames() {
-    return ['devshop_task.settings'];
+    return ['task.settings'];
   }
 
   /**
@@ -31,7 +31,7 @@ class SettingsForm extends ConfigFormBase {
     $form['example'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Example'),
-      '#default_value' => $this->config('devshop_task.settings')->get('example'),
+      '#default_value' => $this->config('task.settings')->get('example'),
     ];
     return parent::buildForm($form, $form_state);
   }
@@ -50,7 +50,7 @@ class SettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $this->config('devshop_task.settings')
+    $this->config('task.settings')
       ->set('example', $form_state->getValue('example'))
       ->save();
     parent::submitForm($form, $form_state);

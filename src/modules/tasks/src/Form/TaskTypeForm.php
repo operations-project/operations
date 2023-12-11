@@ -1,11 +1,11 @@
 <?php
 
-namespace Drupal\devshop_task\Form;
+namespace Drupal\task\Form;
 
 use Drupal\Core\Entity\BundleEntityFormBase;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\devshop_task\Entity\TaskType;
+use Drupal\task\Entity\TaskType;
 
 /**
  * Form handler for task type forms.
@@ -42,7 +42,7 @@ class TaskTypeForm extends BundleEntityFormBase {
       '#default_value' => $entity_type->id(),
       '#maxlength' => EntityTypeInterface::BUNDLE_MAX_LENGTH,
       '#machine_name' => [
-        'exists' => ['Drupal\devshop_task\Entity\TaskType', 'load'],
+        'exists' => ['Drupal\task\Entity\TaskType', 'load'],
         'source' => ['label'],
       ],
       '#description' => $this->t('A unique machine-readable name for this task type. It must only contain lowercase letters, numbers, and underscores.'),

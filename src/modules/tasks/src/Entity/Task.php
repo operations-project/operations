@@ -1,13 +1,13 @@
 <?php
 
-namespace Drupal\devshop_task\Entity;
+namespace Drupal\task\Entity;
 
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityChangedTrait;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
-use Drupal\devshop_task\TaskInterface;
+use Drupal\task\TaskInterface;
 use Drupal\user\EntityOwnerTrait;
 
 /**
@@ -25,12 +25,12 @@ use Drupal\user\EntityOwnerTrait;
  *   ),
  *   bundle_label = @Translation("Task type"),
  *   handlers = {
- *     "list_builder" = "Drupal\devshop_task\TaskListBuilder",
+ *     "list_builder" = "Drupal\task\TaskListBuilder",
  *     "views_data" = "Drupal\views\EntityViewsData",
- *     "access" = "Drupal\devshop_task\TaskAccessControlHandler",
+ *     "access" = "Drupal\task\TaskAccessControlHandler",
  *     "form" = {
- *       "add" = "Drupal\devshop_task\Form\TaskForm",
- *       "edit" = "Drupal\devshop_task\Form\TaskForm",
+ *       "add" = "Drupal\task\Form\TaskForm",
+ *       "edit" = "Drupal\task\Form\TaskForm",
  *       "delete" = "Drupal\Core\Entity\ContentEntityDeleteForm",
  *     },
  *     "route_provider" = {

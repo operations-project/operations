@@ -1,15 +1,15 @@
 <?php
 
-namespace Drupal\devshop_task;
+namespace Drupal\task;
 
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Url;use Drupal\devshop_task\Entity\TaskType;
+use Drupal\Core\Url;use Drupal\task\Entity\TaskType;
 
 /**
  * Defines a class to build a listing of task type entities.
  *
- * @see \Drupal\devshop_task\Entity\TaskType
+ * @see \Drupal\task\Entity\TaskType
  */
 class TaskTypeListBuilder extends ConfigEntityListBuilder {
 

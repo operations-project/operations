@@ -6,13 +6,13 @@
  */
 
 use Drupal\Core\Render\Element;
-use Drupal\devshop_task\Entity\Task;
+use Drupal\task\Entity\Task;
 use Drupal\user\UserInterface;
 
 /**
  * Implements hook_theme().
  */
-function devshop_task_theme() {
+function task_theme() {
   return [
     'task' => [
       'render element' => 'elements',
@@ -41,7 +41,7 @@ function template_preprocess_task(array &$variables) {
 /**
  * Implements hook_user_cancel().
  */
-function devshop_task_user_cancel($edit, UserInterface $account, $method) {
+function task_user_cancel($edit, UserInterface $account, $method) {
   switch ($method) {
     case 'user_cancel_reassign':
       // Anonymize tasks.
@@ -56,20 +56,6 @@ function devshop_task_user_cancel($edit, UserInterface $account, $method) {
       break;
   }
 }
-
-/**
- * Implements hook_ENTITY_TYPE_predelete() for user entities.
- */
-function devshop_task_user_predelete(UserInterface $account) {
-  // Delete tasks.
-  $storage = \Drupal::entityTypeManager()->getStorage('task');
-  $task_ids = $storage->getQuery()
-    ->condition('uid', $account->id())
-    ->execute();
-  $tasks = $storage->loadMultiple($task_ids);
-  $storage->delete($tasks);
-}
-
 
 /**
  * Describe the bundles for entity types.
@@ -93,10 +79,10 @@ function devshop_task_user_predelete(UserInterface $account) {
  * @see \Drupal\Core\Entity\EntityTypeBundleInfo::getBundleInfo()
  * @see hook_entity_bundle_info_alter()
  */
-function devshop_task_entity_bundle_info() {
+function task_entity_bundle_info() {
   $bundles['task']['drush'] = [
     'label' => t('Drush Command'),
-    'class' => \Drupal\devshop_task\Entity\Bundle\DrushTask::class
+    'class' => \Drupal\task\Entity\Bundle\DrushTask::class
   ];
   return $bundles;
 }

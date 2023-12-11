@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\devshop_task;
+namespace Drupal\task;
 
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityAccessControlHandler;

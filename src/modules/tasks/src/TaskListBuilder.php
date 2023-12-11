@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\devshop_task;
+namespace Drupal\task;
 
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Entity\EntityInterface;
@@ -80,7 +80,7 @@ class TaskListBuilder extends EntityListBuilder {
    * {@inheritdoc}
    */
   public function buildRow(EntityInterface $entity) {
-    /** @var \Drupal\devshop_task\TaskInterface $entity */
+    /** @var \Drupal\task\TaskInterface $entity */
     $row['id'] = $entity->toLink();
     $row['uid']['data'] = [
       '#theme' => 'username',

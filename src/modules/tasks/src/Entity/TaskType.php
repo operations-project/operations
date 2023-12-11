@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\devshop_task\Entity;
+namespace Drupal\task\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
 use Drupal\Core\Entity\EntityTypeInterface;
@@ -21,11 +21,11 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *   ),
  *   handlers = {
  *     "form" = {
- *       "add" = "Drupal\devshop_task\Form\TaskTypeForm",
- *       "edit" = "Drupal\devshop_task\Form\TaskTypeForm",
+ *       "add" = "Drupal\task\Form\TaskTypeForm",
+ *       "edit" = "Drupal\task\Form\TaskTypeForm",
  *       "delete" = "Drupal\Core\Entity\EntityDeleteForm",
  *     },
- *     "list_builder" = "Drupal\devshop_task\TaskTypeListBuilder",
+ *     "list_builder" = "Drupal\task\TaskTypeListBuilder",
  *     "route_provider" = {
  *       "html" = "Drupal\Core\Entity\Routing\AdminHtmlRouteProvider",
  *     }

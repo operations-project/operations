@@ -1,6 +1,6 @@
 {
-    "name": "drupal/devshop_task",
-    "type": "drupal-drush",
+    "name": "drupal/task",
+    "type": "drupal-module",
     "extra": {
         "drush": {
             "services": {

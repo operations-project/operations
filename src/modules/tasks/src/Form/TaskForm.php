@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\devshop_task\Form;
+namespace Drupal\task\Form;
 
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Form\FormStateInterface;
