@@ -64,6 +64,44 @@ class Task extends ContentEntityBase {
   use EntityOwnerTrait;
 
   /**
+   * A task is queued.
+   */
+  const TASK_QUEUED = -1;
+
+  /**
+   * A task process is running.
+   */
+  const TASK_PROCESSING = 3;
+
+  /**
+   * The task ended with an error.
+   */
+  const TASK_ERROR = 2;
+
+  /**
+   * The task ended successfully.
+   */
+  const TASK_OK = 0;
+
+  /**
+   * The task ended but a warning was detected.
+   */
+  const TASK_WARN = 1;
+
+  /**
+   * Human-readable strings for state.
+   *
+   * @var string
+   */
+  const STATE_NAMES = [
+    self::TASK_OK => 'OK',
+    self::TASK_WARN => 'Warning',
+    self::TASK_ERROR => 'Error',
+    self::TASK_PROCESSING => 'Processing',
+    self::TASK_QUEUED => 'Queued',
+  ];
+
+  /**
    * {@inheritdoc}
    */
   public function preSave(EntityStorageInterface $storage) {
@@ -72,6 +110,12 @@ class Task extends ContentEntityBase {
       // If no owner has been set explicitly, make the anonymous user the owner.
       $this->setOwnerId(0);
     }
+
+    // Parse command from task type command template.
+    // @TODO: Pass through tokenization.
+    $command = $this->command->value;
+    $this->set('command', $command);
+
   }
 
   /**
@@ -121,7 +165,30 @@ class Task extends ContentEntityBase {
       ->setLabel(t('Changed'))
       ->setDescription(t('The time that the task was last edited.'));
 
+    $fields['state'] = BaseFieldDefinition::create('list_integer')
+      ->setSetting('allowed_values', [
+        static::STATE_NAMES
+      ])
+      ->setLabel(t('Task State'))
+      ->setDescription(t('The latest state of a task.'))
+      ->setRequired(TRUE)
+      ->setRevisionable(TRUE)
+      ->setDefaultValue(static::TASK_QUEUED)
+      ->setDisplayConfigurable('view', TRUE)
+    ;
+
+    $fields['command'] = BaseFieldDefinition::create('string')
+      ->setLabel(t('Command'))
+      ->setRequired(TRUE)
+      ->setTranslatable(TRUE)
+      ->setRevisionable(TRUE)
+      ->setDisplayOptions('view', [
+        'label' => 'visible',
+        'type' => 'string',
+        'weight' => -5,
+      ])
+    ;
+
     return $fields;
   }
-
 }
