@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6884e8720b1e56a22c0e692f79d8f14e",
+    "content-hash": "19931f6aa374ae353829e4f4846c0683",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -2336,7 +2336,7 @@
             "dist": {
                 "type": "path",
                 "url": "src/modules/site",
-                "reference": "1a2ab268f100440be3bd9dfa3c8ae717d2356006"
+                "reference": "a415252c4903d1640ee96b0766e24f5049e4c4dd"
             },
             "require": {
                 "drupal/admin_toolbar": "^3.4",
@@ -2345,11 +2345,7 @@
             },
             "type": "drupal-module",
             "extra": {
-                "patches": {
-                    "drupal/core": {
-                        "EntityViewsData for bundle fields": "https://www.drupal.org/files/issues/2021-11-09/2898635-48.patch"
-                    }
-                }
+                "patches": []
             },
             "authors": [
                 {
@@ -2484,7 +2480,7 @@
         },
         {
             "name": "drupal/site_manager",
-            "version": "2.x-dev",
+            "version": "2.1.0-beta1",
             "dist": {
                 "type": "path",
                 "url": "src/modules/site_manager",
@@ -2512,6 +2508,29 @@
                 "chat": "https://drupal.slack.com/archives/C05CM6A9UDN",
                 "issues": "https://www.drupal.org/project/issues/operations?categories=All",
                 "source": "https://git.drupalcode.org/project/operations"
+            },
+            "transport-options": {
+                "relative": true
+            }
+        },
+        {
+            "name": "drupal/task",
+            "version": "2.x-dev",
+            "dist": {
+                "type": "path",
+                "url": "src/modules/task",
+                "reference": "22aa112aa952902c2ec4b51a520109364ff2dfa2"
+            },
+            "require": {
+                "sensiolabs/ansi-to-html": "^1.2"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drush": {
+                    "services": {
+                        "drush.services.yml": "^11"
+                    }
+                }
             },
             "transport-options": {
                 "relative": true
@@ -4474,6 +4493,61 @@
                 "source": "https://github.com/ralouphie/getallheaders/tree/develop"
             },
             "time": "2019-03-08T08:55:37+00:00"
+        },
+        {
+            "name": "sensiolabs/ansi-to-html",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sensiolabs/ansi-to-html.git",
+                "reference": "de80a16abecc833840e21c036fbbd55f74b1db98"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sensiolabs/ansi-to-html/zipball/de80a16abecc833840e21c036fbbd55f74b1db98",
+                "reference": "de80a16abecc833840e21c036fbbd55f74b1db98",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2.5"
+            },
+            "conflict": {
+                "twig/twig": "< 2.4.0"
+            },
+            "require-dev": {
+                "twig/twig": "^2.4 || ^3.0"
+            },
+            "suggest": {
+                "twig/twig": "Provides nice templating features"
+            },
+            "default-branch": true,
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.2-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "SensioLabs\\AnsiConverter\\": "SensioLabs/AnsiConverter"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                }
+            ],
+            "description": "A library to convert a text with ANSI codes to HTML",
+            "support": {
+                "issues": "https://github.com/sensiolabs/ansi-to-html/issues",
+                "source": "https://github.com/sensiolabs/ansi-to-html/tree/master"
+            },
+            "time": "2022-09-30T07:50:44+00:00"
         },
         {
             "name": "stack/builder",
@@ -12344,6 +12418,7 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "drupal/devel_entity_updates": 20,
+        "drupal/ox_stock": 20,
         "drupal/site_audit": 20,
         "drupal/site_audit_server": 20,
         "mouf/nodejs-installer": 20,

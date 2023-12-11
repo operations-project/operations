@@ -44,6 +44,10 @@
         },
         {
           "type": "path",
+          "url": "src/modules/task"
+        },
+        {
+          "type": "path",
           "url": "src/modules/operations_ui"
         },
         {
@@ -68,6 +72,7 @@
         "drupal/site_audit": "4.x-dev",
         "drupal/site_audit_server": "^4.0@dev",
         "drupal/site_manager": "*",
+        "drupal/task": "*",
         "drush/drush": "^11.4.0",
         "mouf/nodejs-installer": "1.0.x-dev",
         "symfony/http-client": "5.4.x-dev",
