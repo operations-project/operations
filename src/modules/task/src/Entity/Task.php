@@ -6,6 +6,7 @@ use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityChangedTrait;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Entity\RevisionableContentEntityBase;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\task\TaskInterface;
 use Drupal\user\EntityOwnerTrait;
@@ -37,12 +38,17 @@ use Drupal\user\EntityOwnerTrait;
  *       "html" = "Drupal\Core\Entity\Routing\AdminHtmlRouteProvider",
  *     }
  *   },
- *   base_table = "devshop_task",
+ *   base_table = "operations_task",
+ *   data_table = "operations_task_data",
+ *   revision_table = "operations_task_revision",
+ *   revision_data_table = "operations_task_revision_data",
+ *   show_revision_ui = TRUE,
  *   admin_permission = "administer task types",
  *   entity_keys = {
  *     "id" = "id",
- *     "bundle" = "bundle",
+ *     "bundle" = "task_type",
  *     "label" = "id",
+ *     "revision" = "vid",
  *     "uuid" = "uuid",
  *     "owner" = "uid",
  *   },
@@ -53,12 +59,19 @@ use Drupal\user\EntityOwnerTrait;
  *     "canonical" = "/task/{task}",
  *     "edit-form" = "/task/{task}/edit",
  *     "delete-form" = "/task/{task}/delete",
+ *      "version_history" = "/task/{site}/history",
+ *      "revision" = "/task/{site}/history/{task_revision}/view",
+ *   },
+ *   revision_metadata_keys = {
+ *     "revision_user" = "revision_uid",
+ *     "revision_created" = "revision_timestamp",
+ *     "revision_log_message" = "revision_log",
  *   },
  *   bundle_entity_type = "task_type",
  *   field_ui_base_route = "entity.task_type.edit_form",
  * )
  */
-class Task extends ContentEntityBase {
+class Task extends RevisionableContentEntityBase {
 
   use EntityChangedTrait;
   use EntityOwnerTrait;
@@ -185,6 +198,18 @@ class Task extends ContentEntityBase {
       ->setDisplayOptions('view', [
         'label' => 'visible',
         'type' => 'string',
+        'weight' => -5,
+      ])
+    ;
+
+    $fields['output'] = BaseFieldDefinition::create('text_long')
+      ->setLabel(t('Output'))
+      ->setRequired(TRUE)
+      ->setTranslatable(TRUE)
+      ->setRevisionable(TRUE)
+      ->setDisplayOptions('view', [
+        'label' => 'visible',
+        'type' => 'text_default',
         'weight' => -5,
       ])
     ;
