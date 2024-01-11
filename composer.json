@@ -9,16 +9,14 @@
         "composer/composer": "^2.0"
     },
     "license": "MIT",
-    "autoload": {
-        "psr-4": {
-            "Jonpugh\\ComposerProjectBins\\": "src/"
-        }
-    },
     "authors": [
         {
             "name": "Jon Pugh",
             "email": "jon@thinkdrop.net"
         }
     ],
-    "minimum-stability": "dev"
+    "minimum-stability": "dev",
+    "extra": {
+        "class": "JonPugh\\Composer"
+    }
 }
