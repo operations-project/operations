@@ -3,15 +3,18 @@
 namespace JonPugh;
 
 use Composer\Composer;
+use Composer\EventDispatcher\EventSubscriberInterface;
+use Composer\Installer\BinaryInstaller;
 use Composer\Installer\PackageEvent;
 use Composer\Installer\PackageEvents;
 use Composer\IO\IOInterface;
+use Composer\Plugin\Capability\CommandProvider;
 use Composer\Plugin\PluginEvents;
 use Composer\Plugin\PluginInterface;
 use Composer\Script\Event;
 use Composer\Script\ScriptEvents;
 
-class ProjectBinPlugin implements PluginInterface
+class ProjectBinPlugin implements PluginInterface, EventSubscriberInterface
 {
   /**
    * The Composer service.
@@ -53,6 +56,9 @@ class ProjectBinPlugin implements PluginInterface
 
   public function installProjectBins(Event $event)
   {
-    $this->io->notice('Hiya. Installing bins..');
+    $config = $this->composer->getPackage()->getConfig();
+    $installer = new BinaryInstaller($this->io, $config['bin-dir'], 'auto');
+    $this->io->notice('Installing local bins...');
+    $installer->installBinaries($this->composer->getPackage(), getcwd());
   }
 }
