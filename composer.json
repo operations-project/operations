@@ -17,6 +17,6 @@
     ],
     "minimum-stability": "dev",
     "extra": {
-        "class": "JonPugh\\Composer"
+        "class": "JonPugh\\ProjectBinPlugin"
     }
 }

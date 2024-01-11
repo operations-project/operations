@@ -1,6 +1,6 @@
 <?php
 
-namespace JonPugh\Composer;
+namespace JonPugh;
 
 use Composer\Composer;
 use Composer\Installer\PackageEvent;
