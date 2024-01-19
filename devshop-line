@@ -13,7 +13,7 @@ usage() {
 "
 }
 
-if [[ -z $COLUMNS && `command -v tput`]]; then
+if [[ -z $COLUMNS && `command -v tput` ]]; then
   COLUMNS=${COLUMNS:-$(tput cols -T xterm)}
 else
   COLUMNS=80
