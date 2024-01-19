@@ -13,4 +13,9 @@ usage() {
 "
 }
 
+if [[ -z $COLUMNS && `command -v tput`]]; then
+  COLUMNS=${COLUMNS:-$(tput cols -T xterm)}
+else
+  COLUMNS=80
+fi
 printf '%*s\n' "${COLUMNS:-$(tput cols -T xterm)}" '' | tr ' ' $CHARACTER
