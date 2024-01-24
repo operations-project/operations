@@ -55,7 +55,7 @@ class AnsiMarkup extends RenderElement {
    */
   public static function preRenderAnsiMarkup(array $element) {
 
-    $theme = new SolarizedXTermTheme();
+    $theme = new Theme();
     $converter = new AnsiToHtmlConverter($theme, false);
 
     $element['output'] = [
