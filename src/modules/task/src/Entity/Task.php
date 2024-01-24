@@ -8,6 +8,7 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\RevisionableContentEntityBase;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\task\TaskInterface;
 use Drupal\user\EntityOwnerTrait;
 
@@ -219,14 +220,16 @@ class Task extends RevisionableContentEntityBase {
       ->setDisplayConfigurable('view', TRUE)
     ;
 
-    $fields['output'] = BaseFieldDefinition::create('text_long')
+    $fields['output'] = BaseFieldDefinition::create('output')
       ->setLabel(t('Output'))
-      ->setRequired(TRUE)
-      ->setTranslatable(TRUE)
-      ->setRevisionable(TRUE)
+      ->setDescription(t('Output from the command.'))
+      ->setCardinality(FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED)
+      ->setRequired(FALSE)
+      ->setTranslatable(FALSE)
+      ->setRevisionable(FALSE)
       ->setDisplayOptions('view', [
         'label' => 'visible',
-        'type' => 'text_default',
+        'type' => 'output_default',
         'weight' => -5,
       ])
       ->setDisplayConfigurable('view', TRUE)

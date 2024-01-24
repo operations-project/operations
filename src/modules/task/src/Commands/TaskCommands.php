@@ -90,22 +90,36 @@ class TaskCommands extends DrushCommands {
 
   private function taskRunExecute(Task $task) {
 
+    $this->logger()->info(dt('Task starting. Updated state.'));
+
     $task->set('state', Task::TASK_PROCESSING);
-    $task->set('output', '');
+    $task->set('output', null);
     $task->setNewRevision();
     $task->save();
+
+    // Turn off revisions for process run.
+    $task->setNewRevision(FALSE);
 
     $args = explode(' ', $task->command->value);
     $process = Drush::process($args);
 
     $process->setWorkingDirectory($task->working_directory->value ?? getcwd());
 
-    $this->logger()->info(dt('Task starting. Updated state.'));
-
     try {
       $process->mustRun(function ($type, $buffer) use ($task){
-        echo $buffer;
-        $task->output->setValue($task->output->value . PHP_EOL . $buffer);
+
+        // Echo output to the same stream the process returned.
+        if (Process::ERR === $type) {
+          $this->stderr()->write($buffer);
+        } else {
+          $this->output()->write($buffer);
+        }
+
+        // @TODO: Use insert queries directly? Test performance.
+        $task->get('output')->appendItem([
+          'output' => $buffer,
+          'stream' => $type == Process::OUT ? Process::STDOUT: Process::STDERR,
+        ]);
         $task->save();
       });
       $task->set('state', Task::TASK_OK);

@@ -3,3 +3,8 @@ task:
   css:
     theme:
       css/task.css: {}
+
+output:
+  css:
+    component:
+      css/output-widget.css: {}
