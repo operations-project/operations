@@ -90,7 +90,9 @@ class TaskCommands extends DrushCommands {
 
   private function taskRunExecute(Task $task) {
 
-    $this->logger()->info(dt('Task starting. Updated state.'));
+    $this->logger()->info(dt('Task starting. Updated state. Command: @command', [
+      '@command' => $task->command->value,
+    ]));
 
     $task->set('state', Task::TASK_PROCESSING);
     $task->set('output', null);
