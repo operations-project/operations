@@ -3,6 +3,7 @@
 namespace Drupal\task\Commands;
 
 use Consolidation\OutputFormatters\StructuredData\RowsOfFields;
+use Drupal\Component\Datetime\Time;
 use Drupal\Core\Cache\Cache;
 use Drupal\node\Entity\Node;
 use Drupal\task\Entity\Task;
@@ -96,6 +97,12 @@ class TaskCommands extends DrushCommands {
 
     $task->set('state', Task::TASK_PROCESSING);
     $task->set('output', null);
+    $task->set('executed', \Drupal::time()->getCurrentTime());
+
+    // Unset values in case this task is being retried
+    $task->set('finished', NULL);
+    $task->set('duration', NULL);
+
     $task->setNewRevision();
     $task->save();
 
@@ -126,12 +133,14 @@ class TaskCommands extends DrushCommands {
       });
       $task->set('state', Task::TASK_OK);
       $task->setNewRevision();
+      $task->set('finished', \Drupal::time()->getCurrentTime());
       $task->save();
       $this->logger()->info(dt('Task ended in Success. Updated state.'));
     }
     catch (ProcessFailedException $exception) {
       $task->set('state', Task::TASK_ERROR);
       $task->setNewRevision();
+      $task->set('finished', \Drupal::time()->getCurrentTime());
       $task->save();
       $this->logger()->info(dt('Task ended in Failure. Updated state.'));
       throw $exception;

@@ -136,6 +136,11 @@ class Task extends RevisionableContentEntityBase {
     $working_directory = $this->working_directory->value;
     $this->set('working_directory', $working_directory);
 
+    // If "finished" time is set, save duration field.
+    if ($this->finished->value) {
+      $this->duration->setValue($this->finished->value - $this->executed->value);
+    }
+
   }
 
   /**
@@ -167,8 +172,8 @@ class Task extends RevisionableContentEntityBase {
       ->setDisplayConfigurable('view', TRUE);
 
     $fields['created'] = BaseFieldDefinition::create('created')
-      ->setLabel(t('Authored on'))
-      ->setDescription(t('The time that the task was created.'))
+      ->setLabel(t('Queued on'))
+      ->setDescription(t('The time that the task entity was created.'))
       ->setDisplayOptions('view', [
         'label' => 'above',
         'type' => 'timestamp',
@@ -181,16 +186,13 @@ class Task extends RevisionableContentEntityBase {
       ])
       ->setDisplayConfigurable('view', TRUE);
 
-    $fields['changed'] = BaseFieldDefinition::create('changed')
-      ->setLabel(t('Changed'))
-      ->setDescription(t('The time that the task was last edited.'));
-
     $fields['state'] = BaseFieldDefinition::create('list_integer')
       ->setSetting('allowed_values', [
         static::STATE_NAMES
       ])
       ->setLabel(t('Task State'))
       ->setDescription(t('The latest state of a task.'))
+      ->setDefaultValue(static::TASK_QUEUED)
       ->setRequired(TRUE)
       ->setRevisionable(TRUE)
       ->setDefaultValue(static::TASK_QUEUED)
@@ -229,7 +231,7 @@ class Task extends RevisionableContentEntityBase {
       ->setRevisionable(FALSE)
       ->setDisplayOptions('view', [
         'label' => 'visible',
-        'type' => 'output_default',
+        'type' => 'output_ansi',
         'weight' => -5,
       ])
       ->setDisplayConfigurable('view', TRUE)
@@ -237,10 +239,9 @@ class Task extends RevisionableContentEntityBase {
     $fields['executed'] = BaseFieldDefinition::create('timestamp')
       ->setLabel(t('Start Time'))
       ->setDescription(t('The time that the command was started.'))
-      ->setRequired(TRUE)
+      ->setRequired(FALSE)
       ->setTranslatable(FALSE)
       ->setRevisionable(FALSE)
-      ->setDefaultValueCallback('Drupal\task\Entity\Task::getCurrentTime')
       ->setDisplayOptions('view', [
         'label' => 'visible',
         'type' => 'timestamp',
@@ -263,9 +264,10 @@ class Task extends RevisionableContentEntityBase {
     ;
 
     $fields['duration'] = BaseFieldDefinition::create('integer')
-      ->setLabel(t('Command Duration'))
+      ->setLabel(t('Duration'))
       ->setDescription(t('The amount of time that a command took to run.'))
       ->setRequired(FALSE)
+      ->setSetting('suffix', t(' seconds'))
       ->setTranslatable(FALSE)
       ->setRevisionable(FALSE)
       ->setDisplayOptions('view', [
@@ -277,12 +279,5 @@ class Task extends RevisionableContentEntityBase {
     ;
 
     return $fields;
-  }
-
-  /**
-   * @return int
-   */
-  public static function getCurrentTime() {
-    return time();
   }
 }

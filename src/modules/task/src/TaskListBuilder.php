@@ -53,7 +53,8 @@ class TaskListBuilder extends EntityListBuilder {
   protected function getEntityIds() {
     $query = $this->getStorage()->getQuery()
       ->accessCheck(TRUE)
-      ->sort('changed', 'desc');
+      ->sort('created', 'desc')
+    ;
 
     // Only add the pager if a limit is specified.
     if ($this->limit) {
@@ -87,7 +88,6 @@ class TaskListBuilder extends EntityListBuilder {
     $header['id'] = $this->t('ID');
     $header['uid'] = $this->t('Author');
     $header['created'] = $this->t('Created');
-    $header['changed'] = $this->t('Updated');
     return $header + parent::buildHeader();
   }
 
@@ -102,7 +102,6 @@ class TaskListBuilder extends EntityListBuilder {
       '#account' => $entity->getOwner(),
     ];
     $row['created'] = $this->dateFormatter->format($entity->get('created')->value);
-    $row['changed'] = $this->dateFormatter->format($entity->getChangedTime());
     return $row + parent::buildRow($entity);
   }
 
