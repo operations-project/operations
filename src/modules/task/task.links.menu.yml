@@ -1,9 +1,10 @@
-#devshop_task.settings_form:
-#  title: 'DevShop Tasks'
-#  description: 'Configure DevShop Tasks.'
-#  parent: system.admin_config_system
-#  route_name: devshop_task.settings_form
-#  weight: 10
+
+entity.task.collection:
+  title: 'Tasks'
+  description: 'List all site entities.'
+  route_name: entity.task.collection
+  parent: system.admin_content
+  weight: 10
 
 entity.task_type.collection:
   title: 'Task types'
