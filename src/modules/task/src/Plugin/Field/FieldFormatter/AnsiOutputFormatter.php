@@ -6,6 +6,7 @@ use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Form\FormStateInterface;
 use SensioLabs\AnsiConverter\AnsiToHtmlConverter;
+use SensioLabs\AnsiConverter\Theme\Theme;
 
 /**
  * Plugin implementation of the 'ANSI Output' formatter.
@@ -59,10 +60,16 @@ class AnsiOutputFormatter extends FormatterBase {
    */
   public function viewElements(FieldItemListInterface $items, $langcode) {
     $element = [];
-    $converter = new AnsiToHtmlConverter();
+    $theme = new Theme();
+    $converter = new AnsiToHtmlConverter($theme);
     foreach ($items as $delta => $item) {
       $element[$delta] = [
-        '#children' => $converter->convert($item->value),
+        '#type' => 'container',
+        '#attributes' => ['class' => 'task-module ansi-output'],
+        '#attached' => ['library' => ['task/task']],
+        'output' => [
+          '#children' => $converter->convert($item->value),
+        ],
       ];
     }
 
