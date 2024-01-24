@@ -17,7 +17,7 @@ use Symfony\Component\Process\Process;
  *   id = "output",
  *   label = @Translation("Command Output"),
  *   category = @Translation("General"),
- *   default_formatter = "output_default"
+ *   default_formatter = "output_ansi"
  * )
  */
 class OutputItem extends FieldItemBase {
