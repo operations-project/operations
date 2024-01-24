@@ -6,6 +6,7 @@ use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Form\FormStateInterface;
 use SensioLabs\AnsiConverter\AnsiToHtmlConverter;
+use SensioLabs\AnsiConverter\Theme\SolarizedXTermTheme;
 use SensioLabs\AnsiConverter\Theme\Theme;
 
 /**
@@ -61,12 +62,10 @@ class OutputAnsiFormatter extends FormatterBase {
   public function viewElements(FieldItemListInterface $items, $langcode) {
     $element = [];
     $lines = [];
-    $theme = new Theme();
-    $converter = new AnsiToHtmlConverter($theme);
     foreach ($items as $delta => $item) {
       $lines[] = $item->output;
     }
-    $output = implode(PHP_EOL, $lines);
+    $output = implode('', $lines);
     $element = [
       '#type' => 'ansi_markup',
       '#attributes' => ['class' => 'task-module'],

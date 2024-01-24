@@ -1,9 +1,6 @@
 
-.task-module.ansi-output span {
-  font-family: monospace;
-  display: block;
-  padding: 1rem;
-  white-space: pre;
+.task-module.ansi-output {
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }

@@ -4,6 +4,7 @@ namespace Drupal\task\Element;
 
 use Drupal\Core\Render\Element\RenderElement;
 use SensioLabs\AnsiConverter\AnsiToHtmlConverter;
+use SensioLabs\AnsiConverter\Theme\SolarizedXTermTheme;
 use SensioLabs\AnsiConverter\Theme\Theme;
 
 /**
@@ -54,8 +55,8 @@ class AnsiMarkup extends RenderElement {
    */
   public static function preRenderAnsiMarkup(array $element) {
 
-    $theme = new Theme();
-    $converter = new AnsiToHtmlConverter($theme);
+    $theme = new SolarizedXTermTheme();
+    $converter = new AnsiToHtmlConverter($theme, false);
 
     $element['output'] = [
       '#type' => 'container',
@@ -64,8 +65,12 @@ class AnsiMarkup extends RenderElement {
       'output' => [
         '#children' => $converter->convert($element['#output']),
       ],
+      'style' => [
+        '#type' => 'html_tag',
+        '#tag' => 'style',
+        '#children' => $theme->asCss(),
+      ],
     ];
-
     return $element;
   }
 
