@@ -12,24 +12,21 @@ use SensioLabs\AnsiConverter\Theme\Theme;
  * Plugin implementation of the 'ANSI Output' formatter.
  *
  * @FieldFormatter(
- *   id = "ansi_output",
- *   label = @Translation("ANSI Output"),
+ *   id = "output_ansi",
+ *   label = @Translation("ANSI Color Output"),
  *   field_types = {
- *     "string",
- *     "string_long",
- *     "text",
- *     "text_long",
+ *     "output",
  *   }
  * )
  */
-class AnsiOutputFormatter extends FormatterBase {
+class OutputAnsiFormatter extends FormatterBase {
 
   /**
    * {@inheritdoc}
    */
   public static function defaultSettings() {
     return [
-      'foo' => 'bar',
+      'theme' => 'default',
     ] + parent::defaultSettings();
   }
 
@@ -38,10 +35,13 @@ class AnsiOutputFormatter extends FormatterBase {
    */
   public function settingsForm(array $form, FormStateInterface $form_state) {
 
-    $elements['foo'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('Foo'),
-      '#default_value' => $this->getSetting('foo'),
+    $elements['theme'] = [
+      '#type' => 'radios',
+      '#title' => $this->t('Theme'),
+      '#default_value' => $this->getSetting('theme'),
+      '#options' => [
+        'dark' => t('Dark'),
+      ],
     ];
 
     return $elements;
@@ -51,7 +51,7 @@ class AnsiOutputFormatter extends FormatterBase {
    * {@inheritdoc}
    */
   public function settingsSummary() {
-    $summary[] = $this->t('Foo: @foo', ['@foo' => $this->getSetting('foo')]);
+    $summary[] = $this->t('Theme: @theme', ['@theme' => $this->getSetting('theme')]);
     return $summary;
   }
 
@@ -60,19 +60,18 @@ class AnsiOutputFormatter extends FormatterBase {
    */
   public function viewElements(FieldItemListInterface $items, $langcode) {
     $element = [];
+    $lines = [];
     $theme = new Theme();
     $converter = new AnsiToHtmlConverter($theme);
     foreach ($items as $delta => $item) {
-      $element[$delta] = [
-        '#type' => 'container',
-        '#attributes' => ['class' => 'task-module ansi-output'],
-        '#attached' => ['library' => ['task/task']],
-        'output' => [
-          '#children' => $converter->convert($item->value),
-        ],
-      ];
+      $lines[] = $item->output;
     }
-
+    $output = implode(PHP_EOL, $lines);
+    $element = [
+      '#type' => 'ansi_markup',
+      '#attributes' => ['class' => 'task-module'],
+      '#output' => $output,
+    ];
     return $element;
   }
 
