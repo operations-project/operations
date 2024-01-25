@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 usage() {
-  echo -n "${scriptName} [OPTION]... [FILE]...
+  echo -n "branch-or-tag [OPTION]... [FILE]...
 
 Prints the branch or tag of a git repository.
 

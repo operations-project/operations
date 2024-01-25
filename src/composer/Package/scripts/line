@@ -6,7 +6,7 @@ usage() {
   echo -n "${scriptName} [CHARACTER] [COLUMNS]
   Prints a line across the screen.
 
-  devshop-line $CHARACTER $COLUMNS
+  line $CHARACTER $COLUMNS
 
   $COLUMNS    Number of columns to print. Defaults to the width of the terminal.
   $CHARACTER  The character to print. Defaults to the bar thing.
