@@ -47,6 +47,10 @@
           "url": "src/modules/operations_ui"
         },
         {
+          "type": "path",
+          "url": "src/composer/Package/scripts"
+        },
+        {
           "type": "composer",
           "url": "https://packages.drupal.org/8"
         }
@@ -55,8 +59,6 @@
         "php": ">=7.4",
         "composer/installers": "^2.1",
         "cweagans/composer-patches": "^1.7",
-        "operations/drupal-settings": "*",
-        "operations/git-split": "*",
         "drupal/admin_toolbar": "^3.4",
         "drupal/core-composer-scaffold": "^9.0.0",
         "drupal/core-recommended": "^9.0.0",
@@ -70,6 +72,9 @@
         "drupal/site_manager": "*",
         "drush/drush": "^11.4.0",
         "mouf/nodejs-installer": "1.0.x-dev",
+        "operations/drupal-settings": "*",
+        "operations/git-split": "*",
+        "operations/scripts": "*",
         "symfony/http-client": "5.4.x-dev",
         "vlucas/phpdotenv": "^5.1",
         "webflo/drupal-finder": "^1.2"

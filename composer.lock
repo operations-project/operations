@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "925b6b1c3c5378dc5be5338a4713f27b",
+    "content-hash": "5b15e1dac0e98ede086a1d4eb5a48ca1",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -3774,6 +3774,49 @@
                 "issues": "https://www.drupal.org/project/issues/operations?categories=All",
                 "source": "https://git.drupalcode.org/project/operations"
             },
+            "transport-options": {
+                "relative": true
+            }
+        },
+        {
+            "name": "operations/scripts",
+            "version": "2.x-dev",
+            "dist": {
+                "type": "path",
+                "url": "src/composer/Package/scripts",
+                "reference": "3f935263f442c18f4b97c2e9c95537a68a5884e5"
+            },
+            "bin": [
+                "branch-or-tag",
+                "line",
+                "log",
+                "drush-site-active",
+                "run-quiet",
+                "tail-file",
+                "wait-for",
+                "wait-mysql"
+            ],
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.x-dev"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jon Pugh",
+                    "email": "jon@thinkdrop.net"
+                },
+                {
+                    "name": "Operations Community",
+                    "homepage": "https://github.com/https://github.com/operations-platform/operations/graphs/contributors"
+                }
+            ],
+            "description": "Useful shell scripts",
+            "homepage": "https://github.com/operations-platform",
             "transport-options": {
                 "relative": true
             }
