@@ -1,9 +1,9 @@
 {
-  "name": "devshop/bin-tools",
+  "name": "operations/scripts",
   "type": "library",
   "description": "Useful shell scripts",
   "keywords": [],
-  "homepage": "https://getdevshop.com",
+  "homepage": "https://github.com/operations-platform",
   "license": "MIT",
   "authors": [
     {
@@ -11,8 +11,8 @@
       "email": "jon@thinkdrop.net"
     },
     {
-      "name": "DevShop Community",
-      "homepage": "https://github.com/opendevshop/devshop/graphs/contributors"
+      "name": "Operations Community",
+      "homepage": "https://github.com/https://github.com/operations-platform/operations/graphs/contributors"
     }
   ],
   "require": {
