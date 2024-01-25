@@ -187,9 +187,10 @@
         "composer-exit-on-patch-failure": true,
         "git-split": {
           "repos": {
-            "drush/Commands/contrib/drush-behat-params": "git@github.com:drupal-operations/drush-behat-params.git",
-            "src/composer/Plugin/DrupalSettings": "git@github.com:drupal-operations/drupal-settings.git",
-            "src/composer/Plugin/GitSplit": "git@github.com:drupal-operations/git-split.git",
+            "drush/Commands/contrib/drush-behat-params": "git@github.com:operations-platform/drush-behat-params.git",
+            "src/composer/Plugin/composer-project-bins": "git@github.com:operations-platform/composer-project-bins.git",
+            "src/composer/Plugin/DrupalSettings": "git@github.com:operations-platform/drupal-settings.git",
+            "src/composer/Plugin/GitSplit": "git@github.com:operations-platform/git-split.git",
             "src/modules/operations_ui": "git@git.drupal.org:project/operations_ui.git",
             "src/profiles/ox_stock": "git@git.drupal.org:project/ox_stock.git"
           }
