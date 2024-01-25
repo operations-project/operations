@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+# Extract the filename of the calling script.
+# Thanks:
+#    https://stackoverflow.com/a/26985984
+#    https://stackoverflow.com/a/965072
+
+COMMAND="$(ps -o args= $PPID)"
+IFS=' '
+read -a COMMANDS <<< "$COMMAND"
+SCRIPT_PATH=${COMMANDS[1]}
+FILENAME=$(basename -- "$SCRIPT_PATH")
+LABEL=${LABEL:-$FILENAME}
+OPTIONS=${OPTIONS:-}
+MESSAGE="$@"
+
+usage() {
+echo \
+"log Message
+  Prints 'Message' with a prefix that identifies the file.
+
+  Alter the message with environment variables:
+
+    PREFIX  The string to show at the beginning. Default: none
+    LABEL   The string to show next. Default: The name of the script calling 'log'
+
+"
+}
+
+if [ -z "$MESSAGE" ]; then usage && exit 1; fi
+echo $OPTIONS "$LABEL | $@";

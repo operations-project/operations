@@ -1,5 +1,5 @@
 {
-  "name": "drupal-operations/git-split",
+  "name": "operations/git-split",
   "type": "composer-plugin",
   "description": "Adds composer git:split composer command for easy splitting of a git repository into many others.",
   "keywords": [],

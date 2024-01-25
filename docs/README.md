@@ -4,7 +4,7 @@ Welcome to the machine.
 
 This "monorepo" is a functioning Drupal site that contains lots of components.
 
-To contribute to any of the components, fork this repository. 
+To contribute to any of the components, fork this repository.
 
 ## Project Management
 
@@ -26,7 +26,7 @@ Once your work is ready for review, create a "Merge Request".
 | Site Module        | [SITE.md](SITE.md)                                 | https://drupal.org/project/site                                  | [../src/modules/site](../src/modules/site)                                     |
 | Site Manager       | [SITE-MANAGER.md](SITE-MANAGER.md)                 | https://drupal.org/project/site_manager                          | [../src/modules/site_manager](../src/modules/site_manager)                     |
 | Drush Behat Params | [README.md](../drush/Commands/contrib)             | https://drupal.org/project/drush_behat_params                    | [../drush/Commands/contrib](../drush/Commands/contrib)                         |
-| Drupal Settings    | [README.md](../src/composer/Plugin/DrupalSettings) | https://packagist.org/packages/drupal-operations/drupal-settings | [../src/composer/Plugin/DrupalSettings](../src/composer/Plugin/DrupalSettings) |
+| Drupal Settings    | [README.md](../src/composer/Plugin/DrupalSettings) | https://packagist.org/packages/operations/drupal-settings | [../src/composer/Plugin/DrupalSettings](../src/composer/Plugin/DrupalSettings) |
 | Git Split          | [README.md](../src/composer/Plugin/GitSplit)       | https://drupal.org/project/drupal_settings                       | [../src/composer/Plugin/GitSplit](../src/composer/Plugin/GitSplit)             |
 
 ## Community

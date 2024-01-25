@@ -9,8 +9,8 @@
  *
  * To use this file, put something like this in your settings.php file:
  *
- * if (file_exists($app_root . '/../vendor/drupal-operations/drupal-settings/Settings/settings.include.php')) {
- *   include $app_root . '/../vendor/drupal-operations/drupal-settings/Settings/settings.include.php';
+ * if (file_exists($app_root . '/../vendor/operations/drupal-settings/Settings/settings.include.php')) {
+ *   include $app_root . '/../vendor/operations/drupal-settings/Settings/settings.include.php';
  * }
  *
  */
@@ -89,7 +89,7 @@ if (!(bool) getenv('DRUPAL_ENV')) {
 /**
  * Include environment specific settings.
  *
- * Include the global settings file in drupal-operations/drupal-settings based on DRUPAL_ENV.
+ * Include the global settings file in operations/drupal-settings based on DRUPAL_ENV.
  */
 if (file_exists(__DIR__ . '/Environments/settings.' . getenv('DRUPAL_ENV') . '.php')) {
   include(__DIR__ . '/Environments/settings.' . getenv('DRUPAL_ENV') . '.php');

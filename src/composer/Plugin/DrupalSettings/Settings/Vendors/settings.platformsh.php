@@ -43,14 +43,14 @@ if (isset($platformsh->branch)) {
   if ($platformsh->onProduction() || $platformsh->onDedicated()) {
     $config['system.logging']['error_level'] = 'hide';
 
-    // Added by drupal-operations/drupal-settings
+    // Added by operations/drupal-settings
     putenv('DRUPAL_ENV=prod');
 
   } // Development type environment.
   else {
     $config['system.logging']['error_level'] = 'verbose';
 
-    // Added by drupal-operations/drupal-settings
+    // Added by operations/drupal-settings
     putenv('DRUPAL_ENV=dev');
   }
 }

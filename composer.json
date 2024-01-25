@@ -51,6 +51,10 @@
           "url": "src/modules/operations_ui"
         },
         {
+          "type": "path",
+          "url": "src/composer/Package/scripts"
+        },
+        {
           "type": "composer",
           "url": "https://packages.drupal.org/8"
         }
@@ -59,8 +63,6 @@
         "php": ">=7.4",
         "composer/installers": "^2.1",
         "cweagans/composer-patches": "^1.7",
-        "drupal-operations/drupal-settings": "*",
-        "drupal-operations/git-split": "*",
         "drupal/admin_toolbar": "^3.4",
         "drupal/core-composer-scaffold": "^9.0.0",
         "drupal/core-recommended": "^9.0.0",
@@ -75,6 +77,9 @@
         "drupal/task": "*",
         "drush/drush": "^11.4.0",
         "mouf/nodejs-installer": "1.0.x-dev",
+        "operations/drupal-settings": "*",
+        "operations/git-split": "*",
+        "operations/scripts": "*",
         "symfony/http-client": "5.4.x-dev",
         "vlucas/phpdotenv": "^5.1",
         "webflo/drupal-finder": "^1.2"
@@ -98,7 +103,7 @@
             "drupal/core-composer-scaffold": true,
             "dealerdirect/phpcodesniffer-composer-installer": true,
             "phpstan/extension-installer": true,
-            "drupal-operations/git-split": true,
+            "operations/git-split": true,
             "php-http/discovery": true,
             "pyrech/composer-changelogs": true,
             "mouf/nodejs-installer": true
@@ -192,9 +197,11 @@
         "composer-exit-on-patch-failure": true,
         "git-split": {
           "repos": {
-            "drush/Commands/contrib/drush-behat-params": "git@github.com:drupal-operations/drush-behat-params.git",
-            "src/composer/Plugin/DrupalSettings": "git@github.com:drupal-operations/drupal-settings.git",
-            "src/composer/Plugin/GitSplit": "git@github.com:drupal-operations/git-split.git",
+            "drush/Commands/contrib/drush-behat-params": "git@github.com:operations-platform/drush-behat-params.git",
+            "src/composer/Package/scripts": "git@github.com:operations-platform/scripts.git",
+            "src/composer/Plugin/composer-project-bins": "git@github.com:operations-platform/composer-project-bins.git",
+            "src/composer/Plugin/DrupalSettings": "git@github.com:operations-platform/drupal-settings.git",
+            "src/composer/Plugin/GitSplit": "git@github.com:operations-platform/git-split.git",
             "src/modules/operations_ui": "git@git.drupal.org:project/operations_ui.git",
             "src/profiles/ox_stock": "git@git.drupal.org:project/ox_stock.git"
           }

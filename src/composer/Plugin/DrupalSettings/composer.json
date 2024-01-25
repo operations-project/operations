@@ -1,5 +1,5 @@
 {
-    "name": "drupal-operations/drupal-settings",
+    "name": "operations/drupal-settings",
     "description": "Automatic Drupal Settings.",
     "type": "library",
     "license": "GPL-2.0-or-later",
