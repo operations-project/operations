@@ -193,6 +193,7 @@
         "git-split": {
           "repos": {
             "drush/Commands/contrib/drush-behat-params": "git@github.com:operations-platform/drush-behat-params.git",
+            "src/composer/Package/scripts": "git@github.com:operations-platform/scripts.git",
             "src/composer/Plugin/composer-project-bins": "git@github.com:operations-platform/composer-project-bins.git",
             "src/composer/Plugin/DrupalSettings": "git@github.com:operations-platform/drupal-settings.git",
             "src/composer/Plugin/GitSplit": "git@github.com:operations-platform/git-split.git",
