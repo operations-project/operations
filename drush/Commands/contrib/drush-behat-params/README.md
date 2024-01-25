@@ -21,6 +21,21 @@ Make sure `DRUSH_OPTIONS_URI` value is set so behat tests the right URL.
 
 NOTE: For easy setting of `DRUSH_OPTIONS_URI` on Lando, see https://github.com/operations-platform/drupal-settings.
 
+### Remote Aliases
+
+You can use this command to run tests on a remote site from your local using [Drush Site Aliases](https://www.drush.org/12.x/site-aliases/).
+
+For example, if you have an alias called `@test`, you can run your behat tests on it like so:
+
+        $ drush @dev behat
+        ------------- ---------------------------------------- -----------
+        Drush Alias   URL                                      Root
+        ------------- ---------------------------------------- -----------
+        @self         test-projectcode.pantheonsite.io          /code/web
+        ------------- ---------------------------------------- -----------
+        ....
+
+
 ## What?
 
 Behat uses either hard-coded config or a JSON blob in BEHAT_PARAMS to configure what site to test.
