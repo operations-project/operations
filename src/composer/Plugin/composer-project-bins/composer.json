@@ -1,5 +1,5 @@
 {
-    "name": "jonpugh/composer-project-bins",
+    "name": "operations/composer-project-bins",
     "description": "Include bin scripts in top level composer projects.",
     "type": "composer-plugin",
     "require": {
@@ -7,7 +7,7 @@
     },
     "autoload": {
         "psr-4": {
-            "JonPugh\\": ""
+            "Operations\\": ""
         }
     },
     "license": "MIT",
@@ -19,6 +19,6 @@
     ],
     "minimum-stability": "dev",
     "extra": {
-        "class": "JonPugh\\ProjectBinPlugin"
+        "class": "Operations\\ProjectBinPlugin"
     }
 }

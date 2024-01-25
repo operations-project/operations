@@ -1,6 +1,6 @@
 <?php
 
-namespace JonPugh;
+namespace Operations;
 
 use Composer\Composer;
 use Composer\EventDispatcher\EventSubscriberInterface;

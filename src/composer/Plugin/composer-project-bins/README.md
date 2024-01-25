@@ -9,7 +9,7 @@ This plugin allows you to define composer bin scripts in a top level project.
 1. Install the plugin.
 
     ```
-    $ composer require jonpugh/composer-project-bins
+    $ composer require operations/composer-project-bins
     ```
 2. Create a script file.
     ```shell
