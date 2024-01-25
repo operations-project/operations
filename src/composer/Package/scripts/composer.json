@@ -26,18 +26,13 @@
   },
   "bin": [
     "branch-or-tag",
-    "devshop-ansible-playbook",
-    "devshop-chuid",
-    "devshop-line",
-    "devshop-log",
-    "devshop-logo",
-    "devshop-site-active",
-    "devshop-site-info",
-    "hosting-queue-runner",
+    "line",
+    "log",
+    "drush-site-active",
+    "run-quiet",
     "tail-file",
     "wait-for",
-    "wait-mysql",
-    "wait-site"
+    "wait-mysql"
   ],
   "minimum-stability": "dev"
 }
