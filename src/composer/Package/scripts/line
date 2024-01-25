@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+CHARACTER="${1:--}"
+COLUMNS="$2"
+
+usage() {
+  echo -n "${scriptName} [CHARACTER] [COLUMNS]
+  Prints a line across the screen.
+
+  line $CHARACTER $COLUMNS
+
+  $COLUMNS    Number of columns to print. Defaults to the width of the terminal.
+  $CHARACTER  The character to print. Defaults to the bar thing.
+"
+}
+
+if [[ -z $COLUMNS && `command -v tput` ]]; then
+  COLUMNS=${COLUMNS:-$(tput cols -T xterm)}
+else
+  COLUMNS=80
+fi
+printf '%*s\n' "${COLUMNS:-$(tput cols -T xterm)}" '' | tr ' ' $CHARACTER

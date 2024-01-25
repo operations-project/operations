@@ -1,0 +1,38 @@
+{
+  "name": "operations/scripts",
+  "type": "library",
+  "description": "Useful shell scripts",
+  "keywords": [],
+  "homepage": "https://github.com/operations-platform",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Jon Pugh",
+      "email": "jon@thinkdrop.net"
+    },
+    {
+      "name": "Operations Community",
+      "homepage": "https://github.com/https://github.com/operations-platform/operations/graphs/contributors"
+    }
+  ],
+  "require": {
+  },
+  "require-dev": {
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-master": "1.x-dev"
+    }
+  },
+  "bin": [
+    "branch-or-tag",
+    "line",
+    "log",
+    "drush-site-active",
+    "run-quiet",
+    "tail-file",
+    "wait-for",
+    "wait-mysql"
+  ],
+  "minimum-stability": "dev"
+}
