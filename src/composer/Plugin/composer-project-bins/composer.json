@@ -1,0 +1,24 @@
+{
+    "name": "jonpugh/composer-project-bins",
+    "description": "Include bin scripts in top level composer projects.",
+    "type": "composer-plugin",
+    "require": {
+        "composer-plugin-api": "^2.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "JonPugh\\": ""
+        }
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jon Pugh",
+            "email": "jon@thinkdrop.net"
+        }
+    ],
+    "minimum-stability": "dev",
+    "extra": {
+        "class": "JonPugh\\ProjectBinPlugin"
+    }
+}
