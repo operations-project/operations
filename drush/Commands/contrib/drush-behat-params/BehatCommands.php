@@ -41,10 +41,15 @@ class BehatCommands extends DrushCommands implements CustomEventAwareInterface
    *   Run bin/behat features/content
    */
   public function behat(array $arguments, $options = [
-    'behat_command' => 'behat --colors',
+    'behat_command' => '',
   ])
   {
     global $_composer_bin_dir;
+
+    if (empty($this->input()->getOption('behat_command'))) {
+      $default_command = $_composer_bin_dir . '/behat';
+      $this->input()->setOption('behat_command', $default_command);
+    }
 
     // Make sure Behat base_url has http in front. Drush works with or without it, but behat needs it to work.
     $uri = $this->commandData->options()['uri'];
@@ -70,7 +75,6 @@ class BehatCommands extends DrushCommands implements CustomEventAwareInterface
 
     $env = [
       "BEHAT_PARAMS" => json_encode($behat_params),
-      "PATH" => $_composer_bin_dir . ':' . getenv('PATH'),
     ];
 
     // Run in vendor/..
