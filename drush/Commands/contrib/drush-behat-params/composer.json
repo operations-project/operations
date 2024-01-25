@@ -1,5 +1,5 @@
 {
-    "name": "drupal-operations/drush-behat-params",
+    "name": "operations/drush-behat-params",
     "description": "Drush command wrapper for behat that pre-configures BEHAT_PARAMS.",
     "type": "drupal-drush",
     "license": "MIT",

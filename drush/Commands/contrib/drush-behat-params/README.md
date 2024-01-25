@@ -8,7 +8,7 @@ A basic drush plugin that calls behat with `BEHAT_PARAMS` with URL, root and dru
 
 1. Install with composer:
 
-       composer require drupal-operations/drush-behat-params`
+       composer require operations/drush-behat-params`
 
 2. Run with drush
 
@@ -19,7 +19,7 @@ A basic drush plugin that calls behat with `BEHAT_PARAMS` with URL, root and dru
 
 Make sure `DRUSH_OPTIONS_URI` value is set so behat tests the right URL.
 
-NOTE: For easy setting of `DRUSH_OPTIONS_URI` on Lando, see https://github.com/drupal-operations/drupal-settings. 
+NOTE: For easy setting of `DRUSH_OPTIONS_URI` on Lando, see https://github.com/operations-platform/drupal-settings.
 
 ## What?
 
