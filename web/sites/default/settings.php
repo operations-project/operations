@@ -41,4 +41,4 @@ if ((bool) getenv('LANDO')) {
 }
 
 
-require $app_root . "/../vendor/drupal-operations/drupal-settings/Settings/settings.include.php";
+require $app_root . "/../vendor/operations/drupal-settings/Settings/settings.include.php";
