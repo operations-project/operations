@@ -60,7 +60,6 @@ class AnsiMarkup extends RenderElement {
 
     $element['output'] = [
       '#type' => 'container',
-      '#attributes' => ['class' => 'task-module ansi-output'],
       '#attached' => ['library' => ['task/task']],
       'output' => [
         '#children' => $converter->convert($element['#output']),
@@ -71,6 +70,12 @@ class AnsiMarkup extends RenderElement {
         '#children' => $theme->asCss(),
       ],
     ];
+
+    // @TODO: extract classes from the theme. It's not that useful yet.
+    $element['output']['#attributes']['class'][] = 'ansi_color_bg_black ansi_color_fg_white';
+    $element['output']['#attributes']['class'][] = 'task-module';
+    $element['output']['#attributes']['class'][] = 'ansi-output';
+
     return $element;
   }
 
