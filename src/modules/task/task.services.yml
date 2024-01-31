@@ -1,0 +1,4 @@
+services:
+  plugin.manager.task_command:
+    class: Drupal\task\TaskCommandPluginManager
+    parent: default_plugin_manager

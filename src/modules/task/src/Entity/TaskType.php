@@ -48,6 +48,7 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *     "id",
  *     "label",
  *     "uuid",
+ *     "command_plugin",
  *     "command_template",
  *     "working_directory_template",
  *   }
@@ -68,6 +69,19 @@ class TaskType extends ConfigEntityBundleBase {
    * @var string
    */
   protected $label;
+
+  /**
+   * @var string
+   */
+  protected $command_plugin;
+
+  /**
+   * The command to run for tasks of this type, with tokens.
+   * @return string
+   */
+  public function commandPlugin() {
+    return $this->command_plugin;
+  }
 
   /**
    * @var string

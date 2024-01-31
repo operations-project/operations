@@ -28,6 +28,21 @@ class TaskTypeForm extends BundleEntityFormBase {
       $form['#title'] = $this->t('Edit %label task type', ['%label' => $entity_type->label()]);
     }
 
+
+    $definitions = \Drupal::service('plugin.manager.task_command')->getDefinitions();
+
+    foreach ($definitions as $plugin_definition) {
+      $options[$plugin_definition['id']] = $plugin_definition['label'];
+    }
+    $form['command_plugin'] = [
+      '#title' => $this->t('Command'),
+      '#type' => 'radios',
+      '#default_value' => $entity_type->commandPlugin(),
+      '#description' => $this->t('The command to run for tasks of this type.'),
+      '#required' => TRUE,
+      '#options' => $options,
+    ];
+
     $form['label'] = [
       '#title' => $this->t('Label'),
       '#type' => 'textfield',
@@ -90,6 +105,7 @@ class TaskTypeForm extends BundleEntityFormBase {
 
     $entity_type->set('id', trim($entity_type->id()));
     $entity_type->set('label', trim($entity_type->label()));
+    $entity_type->set('command_plugin', $entity_type->commandPlugin());
     $entity_type->set('command_template', $entity_type->commandTemplate());
     $entity_type->set('working_directory_template', $entity_type->workingDirectoryTemplate());
 
