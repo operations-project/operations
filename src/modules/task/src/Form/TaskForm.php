@@ -20,7 +20,7 @@ class TaskForm extends ContentEntityForm {
       'command' => [
         '#type' => 'html_tag',
         '#tag' => 'pre',
-        '#value' => $entity_type->commandTemplate(),
+        '#value' => $entity_type->commandPlugin()->command(),
       ],
       '#description' => $this->t('The command that will be run.'),
       '#required' => TRUE,
@@ -37,7 +37,7 @@ class TaskForm extends ContentEntityForm {
     $entity = $this->getEntity();
     $entity_type = $this->getBundleEntity();
 
-    $entity->set('command', $entity_type->commandTemplate());
+    $entity->set('command', $entity_type->commandPlugin()->command());
     $entity->set('working_directory', $entity_type->workingDirectoryTemplate());
 
     $this->setEntity($entity);

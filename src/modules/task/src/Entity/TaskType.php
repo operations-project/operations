@@ -5,6 +5,7 @@ namespace Drupal\task\Entity;
 use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\task\TaskCommandPluginBase;
 
 /**
  * Defines the Task type configuration entity.
@@ -77,10 +78,10 @@ class TaskType extends ConfigEntityBundleBase {
 
   /**
    * The command to run for tasks of this type, with tokens.
-   * @return string
+   * @return TaskCommandPluginBase
    */
-  public function commandPlugin() {
-    return $this->command_plugin;
+  public function commandPlugin($options = []) {
+    return \Drupal::service('plugin.manager.task_command')->createInstance($this->command_plugin, $options);
   }
 
   /**

@@ -17,4 +17,14 @@ abstract class TaskCommandPluginBase extends PluginBase implements TaskCommandIn
     return (string) $this->pluginDefinition['label'];
   }
 
+  /**
+   * Return the "command" property of the plugin definition.
+   *
+   * TaskCommands can override this method to generate a dynamic one.
+   */
+  public function command() {
+    // Cast the command to a string since it is a TranslatableMarkup object.
+    return (string) $this->pluginDefinition['command'];
+  }
+
 }

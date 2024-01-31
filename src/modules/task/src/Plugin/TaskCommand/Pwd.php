@@ -9,8 +9,8 @@ use Drupal\task\TaskCommandPluginBase;
  *
  * @TaskCommand(
  *   id = "pwd",
- *   label = @Translation("Whoami"),
- *   description = @Translation("Runs the whoami command."),
+ *   label = @Translation("Where am I?"),
+ *   description = @Translation("Runs the pwd command."),
  *   command = "pwd"
  * )
  */

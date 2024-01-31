@@ -37,7 +37,7 @@ class TaskTypeForm extends BundleEntityFormBase {
     $form['command_plugin'] = [
       '#title' => $this->t('Command'),
       '#type' => 'radios',
-      '#default_value' => $entity_type->commandPlugin(),
+      '#default_value' => $entity_type->commandPlugin()->getPluginId(),
       '#description' => $this->t('The command to run for tasks of this type.'),
       '#required' => TRUE,
       '#options' => $options,
