@@ -59,6 +59,9 @@ class ProjectBinPlugin implements PluginInterface, EventSubscriberInterface
     $config = $this->composer->getPackage()->getConfig();
     $installer = new BinaryInstaller($this->io, $config['bin-dir'], 'auto');
     $this->io->notice('Installing local bins...');
+
+    // This is the same code that installs dependency bin scripts.
+    // It just runs on the parent project.
     $installer->installBinaries($this->composer->getPackage(), getcwd());
   }
 }
