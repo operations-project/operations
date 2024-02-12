@@ -23,7 +23,7 @@ For example, you can download a binary or phar file into your `vendor/bin` direc
     {
       "extra": {
         "remote-scripts": {
-          "vendor/bin/hello-world": "https://github.com/operations-platform/remote-bin-scripts"
+          "vendor/bin/hello-world": "https://raw.githubusercontent.com/operations-platform/composer-remote-bin-scripts/2.x/hello-world.sh"
         }
       }
     }
