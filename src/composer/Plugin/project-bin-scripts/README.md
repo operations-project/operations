@@ -1,5 +1,5 @@
-# Composer Project Bin Scripts
-## Your scripts in bin-dir.
+# Project Bin Scripts
+## Your scripts in the Composer bin-dir.
 
 This plugin allows you to add your own scripts as composer bins to projects.
 
@@ -19,7 +19,7 @@ See [Composer "Vendor Binaries" Documentation](https://getcomposer.org/doc/artic
 1. Install the plugin.
 
     ```
-    $ composer require operations/composer-project-bins
+    $ composer require operations/project-bin-scripts
     ```
 2. Create a script file.
     ```shell

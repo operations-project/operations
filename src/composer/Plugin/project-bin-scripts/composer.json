@@ -1,5 +1,5 @@
 {
-    "name": "operations/composer-project-bins",
+    "name": "operations/project-bin-scripts",
     "description": "Include bin scripts in top level composer projects.",
     "type": "composer-plugin",
     "require": {
