@@ -1,0 +1,27 @@
+{
+    "name": "operations/remote-bin-scripts",
+    "description": "Download remote scripts to add to a project's bin dir.",
+    "type": "composer-plugin",
+    "require": {
+        "composer-plugin-api": "^2.0"
+    },
+    "require-dev": {
+        "composer/composer": "~1.0 || ~2.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Operations\\": ""
+        }
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jon Pugh",
+            "email": "jon@thinkdrop.net"
+        }
+    ],
+    "minimum-stability": "dev",
+    "extra": {
+        "class": "Operations\\RemoteBinPlugin"
+    }
+}
