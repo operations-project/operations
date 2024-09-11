@@ -1,15 +1,15 @@
-'*':
-  root: /app
-  uri: http://${env-name}.lndo.site
-
-  command:
-    site:
-      install:
-        options:
-          site-name: 'Welcome to ${env-name}'
-
-  env-vars:
-    DRUPAL_SITE_HOST: ${env-name}.lndo.site
+#'*':
+#  root: /app
+#  uri: http://${env-name}.lndo.site
+#
+#  command:
+#    site:
+#      install:
+#        options:
+#          site-name: 'Welcome to ${env-name}'
+#
+#  env-vars:
+#    DRUPAL_SITE_HOST: ${env-name}.lndo.site
 
 #
 #ox:
